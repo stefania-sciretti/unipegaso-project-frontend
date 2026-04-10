@@ -1,0 +1,122 @@
+<main class="container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">🥗 Nutrizione – Simona Ferrara</h1>
+      <p class="page-subtitle">Piani dietetici personalizzati e consulenza nutrizionale</p>
+    </div>
+    <button class="btn btn-success" (click)="openCreate()">+ Nuovo Piano Dieta</button>
+  </div>
+
+  <div class="trainer-grid" style="margin-bottom:1.5rem">
+    <div class="trainer-card nutritionist" style="display:flex;align-items:center;gap:1.5rem;padding:1.5rem">
+      <div style="font-size:3.5rem">👩‍⚕️</div>
+      <div>
+        <div class="trainer-name">Simona Ruberti</div>
+        <span class="trainer-role role-nutritionist">Nutrizionista Certificata</span>
+        <p class="trainer-bio" style="margin-top:0.5rem">
+          Nutrizionista certificata con 10 anni di esperienza in diete sportive e benessere.
+          Specializzata in piani alimentari personalizzati e supporto psicologico alimentare.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="alertMsg" class="alert"
+    [class.alert-success]="alertType==='success'"
+    [class.alert-error]="alertType==='error'">{{ alertMsg }}</div>
+
+  <div class="card">
+    <div class="section-header">
+      <h2>Piani Dieta</h2>
+      <div class="toolbar" style="margin-bottom:0">
+        <label style="font-size:.88rem;font-weight:600;color:var(--text-muted)">Filtro:</label>
+        <select [(ngModel)]="filterActive" [ngModelOptions]="{standalone:true}">
+          <option value="">Tutti</option>
+          <option value="true">Attivi</option>
+          <option value="false">Non attivi</option>
+        </select>
+      </div>
+    </div>
+    <div *ngIf="loading" class="loading">Caricamento…</div>
+    <div class="table-wrapper" *ngIf="!loading">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Cliente</th><th>Titolo</th>
+            <th>Calorie</th><th>Durata</th><th>Stato</th><th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="filtered.length === 0">
+            <td colspan="7" class="empty">Nessun piano dieta trovato.</td>
+          </tr>
+          <tr *ngFor="let p of filtered">
+            <td>{{ p.id }}</td>
+            <td><strong>{{ p.clientFullName }}</strong></td>
+            <td>{{ p.title }}</td>
+            <td>{{ p.calories ? p.calories + ' kcal' : '–' }}</td>
+            <td>{{ p.durationWeeks ? p.durationWeeks + ' sett.' : '–' }}</td>
+            <td>
+              <span class="badge" [class.badge-active]="p.active" [class.badge-inactive]="!p.active">
+                {{ p.active ? 'Attivo' : 'Non attivo' }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="btn btn-secondary btn-sm" (click)="openEdit(p)">Modifica</button>
+              <button class="btn btn-danger btn-sm"    (click)="delete(p.id)">Elimina</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- Modale Piano Dieta -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>{{ editingId ? '✏️ Modifica Piano Dieta' : '🥗 Nuovo Piano Dieta' }}</h3>
+      <button class="modal-close" (click)="showModal = false">&times;</button>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="form-group">
+        <label>Cliente *</label>
+        <select formControlName="clientId">
+          <option value="">– Seleziona cliente –</option>
+          <option *ngFor="let c of clients" [value]="c.id">{{ c.firstName }} {{ c.lastName }}</option>
+        </select>
+        <div class="field-error" *ngIf="isInvalid('clientId')">Campo obbligatorio</div>
+      </div>
+      <div class="form-group">
+        <label>Titolo Piano *</label>
+        <input formControlName="title" type="text" placeholder="es. Piano Dimagrante Estivo"/>
+        <div class="field-error" *ngIf="isInvalid('title')">Campo obbligatorio</div>
+      </div>
+      <div class="form-group">
+        <label>Descrizione</label>
+        <textarea formControlName="description" placeholder="Descrivi gli obiettivi e l'approccio del piano…"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Calorie Giornaliere (kcal)</label>
+          <input formControlName="calories" type="number" placeholder="1800"/>
+        </div>
+        <div class="form-group">
+          <label>Durata (settimane)</label>
+          <input formControlName="durationWeeks" type="number" placeholder="8"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
+          <input type="checkbox" formControlName="active" style="width:auto"/>
+          Piano attivo
+        </label>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" (click)="showModal = false">Annulla</button>
+        <button type="submit" class="btn btn-success">Salva Piano</button>
+      </div>
+    </form>
+  </div>
+</div>

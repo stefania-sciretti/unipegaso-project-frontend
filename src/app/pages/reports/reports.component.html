@@ -1,0 +1,112 @@
+<main class="container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Medical Reports</h1>
+      <p class="page-subtitle">Diagnoses and prescriptions management</p>
+    </div>
+    <button class="btn btn-primary" (click)="openCreate()">+ New Report</button>
+  </div>
+
+  <div *ngIf="alertMsg" class="alert"
+    [class.alert-success]="alertType==='success'"
+    [class.alert-error]="alertType==='error'">
+    {{ alertMsg }}
+  </div>
+
+  <div class="card">
+    <div *ngIf="loading" class="loading">Loading…</div>
+    <div class="table-wrapper" *ngIf="!loading">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Patient</th><th>Doctor</th>
+            <th>Visit Type</th><th>Issued Date</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="reports.length === 0">
+            <td colspan="6" class="empty">No reports found.</td>
+          </tr>
+          <tr *ngFor="let r of reports">
+            <td>{{ r.id }}</td>
+            <td>{{ r.patientFullName }}</td>
+            <td>{{ r.doctorFullName }}</td>
+            <td>{{ r.visitType }}</td>
+            <td>{{ r.issuedDate | date:'dd MMM yyyy' }}</td>
+            <td class="actions">
+              <button class="btn btn-primary btn-sm" (click)="openDetail(r)">View</button>
+              <button class="btn btn-warning btn-sm" (click)="openEdit(r)">Edit</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- Report Form Modal -->
+<div class="modal-overlay" *ngIf="showFormModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>{{ editingId ? 'Edit Report' : 'New Report' }}</h3>
+      <button class="modal-close" (click)="closeFormModal()">&times;</button>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="form-group">
+        <label>Appointment ID *</label>
+        <input formControlName="appointmentId" type="number" placeholder="e.g. 3"/>
+        <div class="field-error" *ngIf="isInvalid('appointmentId')">Required</div>
+      </div>
+      <div class="form-group">
+        <label>Diagnosis *</label>
+        <textarea formControlName="diagnosis" placeholder="Clinical diagnosis…"></textarea>
+        <div class="field-error" *ngIf="isInvalid('diagnosis')">Required</div>
+      </div>
+      <div class="form-group">
+        <label>Prescription</label>
+        <textarea formControlName="prescription" placeholder="Prescribed medications, therapies…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Doctor Notes</label>
+        <textarea formControlName="doctorNotes" placeholder="Internal doctor notes…"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" (click)="closeFormModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Report</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Report Detail Modal -->
+<div class="modal-overlay" *ngIf="showDetailModal && selectedReport">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Report #{{ selectedReport.id }} – Detail</h3>
+      <button class="modal-close" (click)="showDetailModal = false">&times;</button>
+    </div>
+    <div class="form-group"><label>Patient</label><p>{{ selectedReport.patientFullName }}</p></div>
+    <div class="form-group"><label>Doctor</label><p>{{ selectedReport.doctorFullName }}</p></div>
+    <div class="form-group"><label>Visit Type</label><p>{{ selectedReport.visitType }}</p></div>
+    <div class="form-group">
+      <label>Appointment Date</label>
+      <p>{{ selectedReport.scheduledAt | date:'dd MMM yyyy HH:mm' }}</p>
+    </div>
+    <div class="form-group">
+      <label>Issued</label>
+      <p>{{ selectedReport.issuedDate | date:'dd MMM yyyy' }}</p>
+    </div>
+    <div class="form-group"><label>Diagnosis</label><p>{{ selectedReport.diagnosis }}</p></div>
+    <div class="form-group">
+      <label>Prescription</label>
+      <p>{{ selectedReport.prescription || '–' }}</p>
+    </div>
+    <div class="form-group">
+      <label>Doctor Notes</label>
+      <p>{{ selectedReport.doctorNotes || '–' }}</p>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-outline" (click)="showDetailModal = false">Close</button>
+    </div>
+  </div>
+</div>

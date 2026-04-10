@@ -1,0 +1,103 @@
+<main class="container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Patients</h1>
+      <p class="page-subtitle">Patient registry management</p>
+    </div>
+    <button class="btn btn-primary" (click)="openCreate()">+ New Patient</button>
+  </div>
+
+  <div *ngIf="alertMsg" class="alert"
+    [class.alert-success]="alertType==='success'"
+    [class.alert-error]="alertType==='error'">
+    {{ alertMsg }}
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <input type="text" placeholder="Search by name…"
+             (input)="onSearch($event)" style="flex:1;max-width:300px"/>
+    </div>
+    <div *ngIf="loading" class="loading">Loading…</div>
+    <div class="table-wrapper" *ngIf="!loading">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Full Name</th><th>Fiscal Code</th>
+            <th>Birth Date</th><th>Email</th><th>Phone</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="patients.length === 0">
+            <td colspan="7" class="empty">No patients found.</td>
+          </tr>
+          <tr *ngFor="let p of patients">
+            <td>{{ p.id }}</td>
+            <td>{{ p.firstName }} {{ p.lastName }}</td>
+            <td><code>{{ p.fiscalCode }}</code></td>
+            <td>{{ p.birthDate | date:'dd MMM yyyy' }}</td>
+            <td>{{ p.email }}</td>
+            <td>{{ p.phone ?? '–' }}</td>
+            <td class="actions">
+              <button class="btn btn-primary btn-sm" (click)="openEdit(p)">Edit</button>
+              <button class="btn btn-danger btn-sm"  (click)="delete(p.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- Patient Modal -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>{{ editingId ? 'Edit Patient' : 'New Patient' }}</h3>
+      <button class="modal-close" (click)="closeModal()">&times;</button>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input formControlName="firstName" type="text" placeholder="Mario"/>
+          <div class="field-error" *ngIf="isInvalid('firstName')">Required</div>
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input formControlName="lastName" type="text" placeholder="Rossi"/>
+          <div class="field-error" *ngIf="isInvalid('lastName')">Required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Fiscal Code * (16 chars)</label>
+        <input formControlName="fiscalCode" type="text"
+               maxlength="16" placeholder="RSSMRA80A01H501Z"
+               style="text-transform:uppercase"/>
+        <div class="field-error" *ngIf="isInvalid('fiscalCode')">
+          Must be exactly 16 characters
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Birth Date *</label>
+          <input formControlName="birthDate" type="date"/>
+          <div class="field-error" *ngIf="isInvalid('birthDate')">Required</div>
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input formControlName="phone" type="tel" placeholder="+39 333 1234567"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email *</label>
+        <input formControlName="email" type="email" placeholder="mario.rossi@email.it"/>
+        <div class="field-error" *ngIf="isInvalid('email')">Valid email required</div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

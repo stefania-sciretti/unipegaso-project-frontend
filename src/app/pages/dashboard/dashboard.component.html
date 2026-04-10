@@ -1,0 +1,77 @@
+<main class="container">
+  <div class="hero">
+    <div class="hero-icon">🏋️</div>
+    <div>
+      <h1>CentroFitness Simona &amp; Luca</h1>
+      <p>Il tuo centro di riferimento per la nutrizione e il personal training</p>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+  <div *ngIf="loading" class="loading">Caricamento dashboard…</div>
+
+  <div class="stats-grid" *ngIf="!loading && stats">
+    <div class="stat-card" (click)="navigate('/clients')">
+      <div class="stat-icon">👥</div>
+      <div class="stat-value">{{ stats.totalClients }}</div>
+      <div class="stat-label">Clienti Totali</div>
+    </div>
+    <div class="stat-card" (click)="navigate('/appointments')">
+      <div class="stat-icon">📅</div>
+      <div class="stat-value">{{ stats.totalAppointments }}</div>
+      <div class="stat-label">Appuntamenti</div>
+    </div>
+    <div class="stat-card" (click)="navigate('/appointments')">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-value">{{ stats.bookedAppointments }}</div>
+      <div class="stat-label">Prenotati</div>
+    </div>
+    <div class="stat-card" (click)="navigate('/appointments')">
+      <div class="stat-icon">✅</div>
+      <div class="stat-value">{{ stats.completedAppointments }}</div>
+      <div class="stat-label">Completati</div>
+    </div>
+    <div class="stat-card" (click)="navigate('/nutrition')">
+      <div class="stat-icon">🥗</div>
+      <div class="stat-value">{{ stats.activeDietPlans }}</div>
+      <div class="stat-label">Piani Dieta Attivi</div>
+    </div>
+    <div class="stat-card" (click)="navigate('/training')">
+      <div class="stat-icon">💪</div>
+      <div class="stat-value">{{ stats.activeTrainingPlans }}</div>
+      <div class="stat-label">Schede Allenamento Attive</div>
+    </div>
+    <div class="stat-card" (click)="navigate('/recipes')">
+      <div class="stat-icon">🍽️</div>
+      <div class="stat-value">{{ stats.totalRecipes }}</div>
+      <div class="stat-label">Ricette Fit</div>
+    </div>
+  </div>
+
+  <div class="trainer-grid" *ngIf="!loading">
+    <div class="trainer-card nutritionist">
+      <div class="trainer-avatar">👩‍⚕️</div>
+      <div class="trainer-name">Simona Ruberti</div>
+      <span class="trainer-role role-nutritionist">Nutrizionista</span>
+      <p class="trainer-bio">
+        Nutrizionista certificata con 10 anni di esperienza. Offre piani dietetici personalizzati,
+        consulenze nutrizionali e una raccolta di ricette fit per ogni obiettivo.
+      </p>
+      <button class="btn btn-success" style="margin-top:1rem" (click)="navigate('/nutrition')">
+        🥗 Piani Dieta
+      </button>
+    </div>
+    <div class="trainer-card personal-trainer">
+      <div class="trainer-avatar">👨‍🏫</div>
+      <div class="trainer-name">Luca Siretta</div>
+      <span class="trainer-role role-personaltrainer">Personal Trainer</span>
+      <p class="trainer-bio">
+        Personal Trainer ISSA certificato. Crea schede di allenamento su misura per ogni cliente,
+        dal principiante all'atleta avanzato. Specializzato in functional training.
+      </p>
+      <button class="btn btn-primary" style="margin-top:1rem" (click)="navigate('/training')">
+        💪 Schede Allenamento
+      </button>
+    </div>
+  </div>
+</main>
