@@ -6,11 +6,9 @@
     </div>
     <button class="btn btn-primary" (click)="openCreate()">+ Nuovo Appuntamento</button>
   </div>
-
   <ng-container *ngIf="alert$ | async as alert">
     <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
   </ng-container>
-
   <div class="card">
     <div class="toolbar">
       <label style="font-size:.88rem;font-weight:600;color:var(--text-muted)">Stato:</label>
@@ -22,24 +20,17 @@
     <div *ngIf="loading" class="loading">Caricamento…</div>
     <div class="table-wrapper" *ngIf="!loading">
       <table>
-        <thead>
-          <tr>
-            <th>#</th><th>Data e Ora</th><th>Cliente</th>
-            <th>Trainer</th><th>Servizio</th><th>Stato</th><th>Azioni</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>#</th><th>Data e Ora</th><th>Cliente</th>
+          <th>Trainer</th><th>Servizio</th><th>Stato</th><th>Azioni</th>
+        </tr></thead>
         <tbody>
-          <tr *ngIf="appointments.length === 0">
-            <td colspan="7" class="empty">Nessun appuntamento trovato.</td>
-          </tr>
+          <tr *ngIf="appointments.length === 0"><td colspan="7" class="empty">Nessun appuntamento trovato.</td></tr>
           <tr *ngFor="let a of appointments">
             <td>{{ a.id }}</td>
             <td>{{ a.scheduledAt | date:'dd MMM yyyy HH:mm' }}</td>
             <td>{{ a.clientFullName }}</td>
-            <td>
-              {{ a.trainerFullName }}<br/>
-              <small>{{ a.trainerRole === 'NUTRITIONIST' ? 'Nutrizionista' : 'Personal Trainer' }}</small>
-            </td>
+            <td>{{ a.trainerFullName }}<br/><small>{{ a.trainerRole === 'NUTRITIONIST' ? 'Nutrizionista' : 'Personal Trainer' }}</small></td>
             <td>{{ a.serviceType }}</td>
             <td><span [class]="statusClass(a.status)">{{ statusLabel(a.status) }}</span></td>
             <td class="actions">
@@ -53,7 +44,6 @@
   </div>
 </main>
 
-<!-- Modale Nuovo Appuntamento -->
 <div class="modal-overlay" *ngIf="showApptModal">
   <div class="modal">
     <div class="modal-header">
@@ -73,9 +63,7 @@
         <label>Trainer *</label>
         <select formControlName="trainerId">
           <option value="">– Seleziona trainer –</option>
-          <option *ngFor="let t of trainers" [value]="t.id">
-            {{ t.firstName }} {{ t.lastName }} – {{ t.role === 'NUTRITIONIST' ? 'Nutrizionista' : 'Personal Trainer' }}
-          </option>
+          <option *ngFor="let t of trainers" [value]="t.id">{{ t.firstName }} {{ t.lastName }} – {{ t.role === 'NUTRITIONIST' ? 'Nutrizionista' : 'Personal Trainer' }}</option>
         </select>
         <div class="field-error" *ngIf="isInvalid(apptForm,'trainerId')">Campo obbligatorio</div>
       </div>
@@ -105,7 +93,6 @@
   </div>
 </div>
 
-<!-- Modale Aggiorna Stato -->
 <div class="modal-overlay" *ngIf="showStatusModal">
   <div class="modal" style="max-width:360px">
     <div class="modal-header">

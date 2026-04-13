@@ -43,33 +43,23 @@
     <div *ngIf="loading" class="loading">Caricamento…</div>
     <div class="table-wrapper" *ngIf="!loading">
       <table>
-        <thead>
-          <tr>
-            <th>#</th><th>Cliente</th><th>Titolo</th>
-            <th>Durata</th><th>Sessioni/Sett.</th><th>Stato</th><th>Azioni</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>#</th><th>Cliente</th><th>Titolo</th>
+          <th>Durata</th><th>Sessioni/Sett.</th><th>Stato</th><th>Azioni</th>
+        </tr></thead>
         <tbody>
-          <tr *ngIf="filtered.length === 0">
-            <td colspan="7" class="empty">Nessuna scheda trovata.</td>
-          </tr>
+          <tr *ngIf="filtered.length === 0"><td colspan="7" class="empty">Nessuna scheda trovata.</td></tr>
           <tr *ngFor="let p of filtered">
             <td>{{ p.id }}</td>
             <td><strong>{{ p.clientFullName }}</strong></td>
-            <td>
-              <a style="color:var(--primary);cursor:pointer;font-weight:600" (click)="openDetail(p)">{{ p.title }}</a>
-            </td>
+            <td><a style="color:var(--primary);cursor:pointer;font-weight:600" (click)="openDetail(p)">{{ p.title }}</a></td>
             <td>{{ p.weeks ? p.weeks + ' sett.' : '–' }}</td>
             <td>{{ p.sessionsPerWeek ? p.sessionsPerWeek + 'x / sett.' : '–' }}</td>
-            <td>
-              <span class="badge" [class.badge-active]="p.active" [class.badge-inactive]="!p.active">
-                {{ p.active ? 'Attiva' : 'Non attiva' }}
-              </span>
-            </td>
+            <td><span class="badge" [class.badge-active]="p.active" [class.badge-inactive]="!p.active">{{ p.active ? 'Attiva' : 'Non attiva' }}</span></td>
             <td class="actions">
               <button class="btn btn-secondary btn-sm" (click)="openDetail(p)">Dettaglio</button>
-              <button class="btn btn-primary btn-sm"   (click)="openEdit(p)">Modifica</button>
-              <button class="btn btn-danger btn-sm"    (click)="delete(p.id)">Elimina</button>
+              <button class="btn btn-primary btn-sm" (click)="openEdit(p)">Modifica</button>
+              <button class="btn btn-danger btn-sm" (click)="delete(p.id)">Elimina</button>
             </td>
           </tr>
         </tbody>
@@ -78,7 +68,6 @@
   </div>
 </main>
 
-<!-- Modale Dettaglio Scheda -->
 <div class="modal-overlay" *ngIf="showDetail && selected">
   <div class="modal" style="max-width:600px">
     <div class="modal-header">
@@ -87,32 +76,18 @@
     </div>
     <div style="display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap">
       <span class="tag">{{ selected.clientFullName }}</span>
-      <span class="badge" [class.badge-active]="selected.active" [class.badge-inactive]="!selected.active">
-        {{ selected.active ? 'Attiva' : 'Non attiva' }}
-      </span>
+      <span class="badge" [class.badge-active]="selected.active" [class.badge-inactive]="!selected.active">{{ selected.active ? 'Attiva' : 'Non attiva' }}</span>
     </div>
     <div class="form-group" *ngIf="selected.description">
       <label>Descrizione</label>
       <p style="color:var(--text-muted);white-space:pre-line">{{ selected.description }}</p>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label>Durata</label>
-        <p>{{ selected.weeks ? selected.weeks + ' settimane' : '–' }}</p>
-      </div>
-      <div class="form-group">
-        <label>Sessioni / Settimana</label>
-        <p>{{ selected.sessionsPerWeek ? selected.sessionsPerWeek + 'x' : '–' }}</p>
-      </div>
+      <div class="form-group"><label>Durata</label><p>{{ selected.weeks ? selected.weeks + ' settimane' : '–' }}</p></div>
+      <div class="form-group"><label>Sessioni / Settimana</label><p>{{ selected.sessionsPerWeek ? selected.sessionsPerWeek + 'x' : '–' }}</p></div>
     </div>
-    <div class="form-group">
-      <label>Trainer</label>
-      <p>{{ selected.trainerFullName }}</p>
-    </div>
-    <div class="form-group">
-      <label>Creata il</label>
-      <p>{{ selected.createdAt | date:'dd MMM yyyy' }}</p>
-    </div>
+    <div class="form-group"><label>Trainer</label><p>{{ selected.trainerFullName }}</p></div>
+    <div class="form-group"><label>Creata il</label><p>{{ selected.createdAt | date:'dd MMM yyyy' }}</p></div>
     <div class="form-actions">
       <button class="btn btn-outline" (click)="showDetail = false">Chiudi</button>
       <button class="btn btn-primary" (click)="showDetail=false; openEdit(selected!)">Modifica</button>
@@ -120,7 +95,6 @@
   </div>
 </div>
 
-<!-- Modale Form Scheda -->
 <div class="modal-overlay" *ngIf="showModal">
   <div class="modal">
     <div class="modal-header">
@@ -146,19 +120,12 @@
         <textarea formControlName="description" placeholder="Descrivi esercizi, serie, ripetizioni…" style="min-height:110px"></textarea>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label>Durata (settimane)</label>
-          <input formControlName="weeks" type="number" placeholder="8"/>
-        </div>
-        <div class="form-group">
-          <label>Sessioni / Settimana</label>
-          <input formControlName="sessionsPerWeek" type="number" placeholder="3"/>
-        </div>
+        <div class="form-group"><label>Durata (settimane)</label><input formControlName="weeks" type="number" placeholder="8"/></div>
+        <div class="form-group"><label>Sessioni / Settimana</label><input formControlName="sessionsPerWeek" type="number" placeholder="3"/></div>
       </div>
       <div class="form-group">
         <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
-          <input type="checkbox" formControlName="active" style="width:auto"/>
-          Scheda attiva
+          <input type="checkbox" formControlName="active" style="width:auto"/> Scheda attiva
         </label>
       </div>
       <div class="form-actions">

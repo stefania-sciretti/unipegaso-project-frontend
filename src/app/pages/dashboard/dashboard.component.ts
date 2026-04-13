@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { DashboardService } from '../../services/dashboard.service';
-import { DashboardStats } from '../../models/models';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
+import {Router} from '@angular/router';
+import {DashboardService} from '../../services/dashboard.service';
+import {DashboardStats} from '../../models/models';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgOptimizedImage],
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
@@ -25,4 +25,7 @@ export class DashboardComponent implements OnInit {
   }
 
   navigate(path: string): void { this.router.navigate([path]); }
+
+  get hasStats(): boolean { return this.stats !== null; }
+  get safeStats(): DashboardStats { return this.stats as DashboardStats; }
 }

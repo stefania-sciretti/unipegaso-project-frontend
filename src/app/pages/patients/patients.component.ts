@@ -4,15 +4,11 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {Observable} from 'rxjs';
 import {Patient, PatientRequest, PatientService} from '../../services/patient.service';
 import {AlertService, AlertState} from '../../services/alert.service';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-patients',
   standalone: true,
-  imports: [CommonModule, AsyncPipe, ReactiveFormsModule, MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, MatInputModule],
+  imports: [CommonModule, AsyncPipe, ReactiveFormsModule],
   templateUrl: './patients.component.html'
 })
 export class PatientsComponent implements OnInit {
@@ -44,11 +40,11 @@ export class PatientsComponent implements OnInit {
     const value = this.form.value;
     const body: PatientRequest = { firstName: value.firstName, lastName: value.lastName, fiscalCode: value.fiscalCode.toUpperCase(), birthDate: value.birthDate, email: value.email, phone: value.phone || null };
     const request$ = this.editingId ? this.patientService.update(this.editingId, body) : this.patientService.create(body);
-    request$.subscribe({ next: () => { this.alertService.show(this.editingId ? 'Patient updated' : 'Patient created'); this.closeModal(); this.load(); } });
+    request$.subscribe({ next: () => { this.alertService.show(this.editingId ? 'Paziente aggiornato' : 'Paziente creato'); this.closeModal(); this.load(); } });
   }
   delete(id: number): void {
-    if (!confirm('Delete this patient?')) return;
-    this.patientService.delete(id).subscribe({ next: () => { this.alertService.show('Patient deleted'); this.load(); } });
+    if (!confirm('Eliminare questo paziente?')) return;
+    this.patientService.delete(id).subscribe({ next: () => { this.alertService.show('Paziente eliminato'); this.load(); } });
   }
   onSearch(e: Event): void {
     const query = (e.target as HTMLInputElement).value.toLowerCase();

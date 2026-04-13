@@ -6,29 +6,22 @@
     </div>
     <button class="btn btn-primary" (click)="openCreate()">+ New Doctor</button>
   </div>
-
   <ng-container *ngIf="alert$ | async as alert">
     <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
   </ng-container>
-
   <div class="card">
     <div class="toolbar">
-      <input type="text" placeholder="Filter by specialization…"
-             (input)="onFilter($event)" style="flex:1;max-width:300px"/>
+      <input type="text" placeholder="Filter by specialization…" (input)="onFilter($event)" style="flex:1;max-width:300px"/>
     </div>
     <div *ngIf="loading" class="loading">Loading…</div>
     <div class="table-wrapper" *ngIf="!loading">
       <table>
-        <thead>
-          <tr>
-            <th>#</th><th>Full Name</th><th>Specialization</th>
-            <th>Email</th><th>License No.</th><th>Actions</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>#</th><th>Full Name</th><th>Specialization</th>
+          <th>Email</th><th>License No.</th><th>Actions</th>
+        </tr></thead>
         <tbody>
-          <tr *ngIf="doctors.length === 0">
-            <td colspan="6" class="empty">No doctors found.</td>
-          </tr>
+          <tr *ngIf="doctors.length === 0"><td colspan="6" class="empty">No doctors found.</td></tr>
           <tr *ngFor="let d of doctors">
             <td>{{ d.id }}</td>
             <td>{{ d.firstName }} {{ d.lastName }}</td>
@@ -37,7 +30,7 @@
             <td><code>{{ d.licenseNumber }}</code></td>
             <td class="actions">
               <button class="btn btn-primary btn-sm" (click)="openEdit(d)">Edit</button>
-              <button class="btn btn-danger btn-sm"  (click)="delete(d.id)">Delete</button>
+              <button class="btn btn-danger btn-sm" (click)="delete(d.id)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -46,7 +39,6 @@
   </div>
 </main>
 
-<!-- Modal -->
 <div class="modal-overlay" *ngIf="showModal">
   <div class="modal">
     <div class="modal-header">

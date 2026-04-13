@@ -1,7 +1,7 @@
 <main class="container">
   <div class="page-header">
     <div>
-      <h1 class="page-title"><span class="material-icons page-title-icon">restaurant_menu</span> Nutrizione – Simona Ferrara</h1>
+      <h1 class="page-title"><span class="material-icons page-title-icon">restaurant_menu</span> Nutrizione – Simona Ruberti</h1>
       <p class="page-subtitle">Piani dietetici personalizzati e consulenza nutrizionale</p>
     </div>
     <button class="btn btn-success" (click)="openCreate()">+ Nuovo Piano Dieta</button>
@@ -40,30 +40,22 @@
     <div *ngIf="loading" class="loading">Caricamento…</div>
     <div class="table-wrapper" *ngIf="!loading">
       <table>
-        <thead>
-          <tr>
-            <th>#</th><th>Cliente</th><th>Titolo</th>
-            <th>Calorie</th><th>Durata</th><th>Stato</th><th>Azioni</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>#</th><th>Cliente</th><th>Titolo</th>
+          <th>Calorie</th><th>Durata</th><th>Stato</th><th>Azioni</th>
+        </tr></thead>
         <tbody>
-          <tr *ngIf="filtered.length === 0">
-            <td colspan="7" class="empty">Nessun piano dieta trovato.</td>
-          </tr>
+          <tr *ngIf="filtered.length === 0"><td colspan="7" class="empty">Nessun piano dieta trovato.</td></tr>
           <tr *ngFor="let p of filtered">
             <td>{{ p.id }}</td>
             <td><strong>{{ p.clientFullName }}</strong></td>
             <td>{{ p.title }}</td>
             <td>{{ p.calories ? p.calories + ' kcal' : '–' }}</td>
             <td>{{ p.durationWeeks ? p.durationWeeks + ' sett.' : '–' }}</td>
-            <td>
-              <span class="badge" [class.badge-active]="p.active" [class.badge-inactive]="!p.active">
-                {{ p.active ? 'Attivo' : 'Non attivo' }}
-              </span>
-            </td>
+            <td><span class="badge" [class.badge-active]="p.active" [class.badge-inactive]="!p.active">{{ p.active ? 'Attivo' : 'Non attivo' }}</span></td>
             <td class="actions">
               <button class="btn btn-secondary btn-sm" (click)="openEdit(p)">Modifica</button>
-              <button class="btn btn-danger btn-sm"    (click)="delete(p.id)">Elimina</button>
+              <button class="btn btn-danger btn-sm" (click)="delete(p.id)">Elimina</button>
             </td>
           </tr>
         </tbody>
@@ -72,7 +64,6 @@
   </div>
 </main>
 
-<!-- Modale Piano Dieta -->
 <div class="modal-overlay" *ngIf="showModal">
   <div class="modal">
     <div class="modal-header">
@@ -109,8 +100,7 @@
       </div>
       <div class="form-group">
         <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
-          <input type="checkbox" formControlName="active" style="width:auto"/>
-          Piano attivo
+          <input type="checkbox" formControlName="active" style="width:auto"/> Piano attivo
         </label>
       </div>
       <div class="form-actions">

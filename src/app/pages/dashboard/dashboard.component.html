@@ -10,7 +10,6 @@
   <div *ngIf="error" class="alert alert-error">{{ error }}</div>
   <div *ngIf="loading" class="loading">Caricamento dashboard…</div>
 
-  <!-- Sezione: cosa offre la clinica -->
   <div class="dashboard-section-title" *ngIf="!loading">
     <h2>Cosa offriamo</h2>
     <p>Un approccio integrato che unisce medicina, nutrizione e sport per il benessere completo del paziente.</p>
@@ -23,6 +22,9 @@
       <div class="offer-header offer-header--clinico">
         <span class="material-icons offer-icon">medical_services</span>
         <span class="offer-title">Area Clinica</span>
+      </div>
+      <div class="offer-card-img">
+        <img ngSrc="assets/images/visit.webp" alt="Area Clinica" height="2160" width="3840"/>
       </div>
       <ul class="offer-list">
         <li><span class="material-icons offer-list-icon">medical_services</span> Visita Nutrizionistica</li>
@@ -41,6 +43,9 @@
         <span class="material-icons offer-icon">restaurant_menu</span>
         <span class="offer-title">Area Nutrizione</span>
       </div>
+      <div class="offer-card-img">
+        <img ngSrc="assets/images/nutrition.webp" alt="Area Nutrizione" height="3444" width="5166"/>
+      </div>
       <ul class="offer-list">
         <li><span class="material-icons offer-list-icon">restaurant_menu</span> Piano Nutrizionale Personalizzato</li>
         <li><span class="material-icons offer-list-icon">accessibility_new</span> Analisi Composizione Corporea (BIA)</li>
@@ -58,6 +63,9 @@
         <span class="material-icons offer-icon">fitness_center</span>
         <span class="offer-title">Area Sport</span>
       </div>
+      <div class="offer-card-img">
+        <img ngSrc="assets/images/gym.webp" alt="Area Sport" height="3289" width="4933"/>
+      </div>
       <ul class="offer-list">
         <li><span class="material-icons offer-list-icon">fitness_center</span> Scheda di Allenamento Personalizzata</li>
         <li><span class="material-icons offer-list-icon">self_improvement</span> Personal Training</li>
@@ -71,46 +79,47 @@
 
   </div>
 
-  <!-- Statistiche operative -->
-  <div class="dashboard-section-title" *ngIf="!loading && stats">
-    <h2>Statistiche operative</h2>
-  </div>
-  <div class="stats-grid" *ngIf="!loading && stats">
-    <div class="stat-card" (click)="navigate('/clients')">
-      <span class="material-icons stat-icon-mat">group</span>
-      <div class="stat-value">{{ stats.totalClients }}</div>
-      <div class="stat-label">Clienti Totali</div>
+  <ng-container *ngIf="!loading && safeStats">
+    <div class="dashboard-section-title">
+      <h2>Statistiche operative</h2>
     </div>
-    <div class="stat-card" (click)="navigate('/appointments')">
-      <span class="material-icons stat-icon-mat">calendar_today</span>
-      <div class="stat-value">{{ stats.totalAppointments }}</div>
-      <div class="stat-label">Appuntamenti</div>
+    <div class="stats-grid">
+      <div class="stat-card" (click)="navigate('/clients')">
+        <span class="material-icons stat-icon-mat">group</span>
+        <div class="stat-value">{{ safeStats.totalClients }}</div>
+        <div class="stat-label">Clienti Totali</div>
+      </div>
+      <div class="stat-card" (click)="navigate('/appointments')">
+        <span class="material-icons stat-icon-mat">calendar_today</span>
+        <div class="stat-value">{{ safeStats.totalAppointments }}</div>
+        <div class="stat-label">Appuntamenti</div>
+      </div>
+      <div class="stat-card" (click)="navigate('/appointments')">
+        <span class="material-icons stat-icon-mat">schedule</span>
+        <div class="stat-value">{{ safeStats.bookedAppointments }}</div>
+        <div class="stat-label">Prenotati</div>
+      </div>
+      <div class="stat-card" (click)="navigate('/appointments')">
+        <span class="material-icons stat-icon-mat">check_circle</span>
+        <div class="stat-value">{{ safeStats.completedAppointments }}</div>
+        <div class="stat-label">Completati</div>
+      </div>
+      <div class="stat-card" (click)="navigate('/nutrition')">
+        <span class="material-icons stat-icon-mat">restaurant_menu</span>
+        <div class="stat-value">{{ safeStats.activeDietPlans }}</div>
+        <div class="stat-label">Piani Dieta Attivi</div>
+      </div>
+      <div class="stat-card" (click)="navigate('/training')">
+        <span class="material-icons stat-icon-mat">fitness_center</span>
+        <div class="stat-value">{{ safeStats.activeTrainingPlans }}</div>
+        <div class="stat-label">Schede Allenamento Attive</div>
+      </div>
+      <div class="stat-card" (click)="navigate('/recipes')">
+        <span class="material-icons stat-icon-mat">menu_book</span>
+        <div class="stat-value">{{ safeStats.totalRecipes }}</div>
+        <div class="stat-label">Ricette Fit</div>
+      </div>
     </div>
-    <div class="stat-card" (click)="navigate('/appointments')">
-      <span class="material-icons stat-icon-mat">schedule</span>
-      <div class="stat-value">{{ stats.bookedAppointments }}</div>
-      <div class="stat-label">Prenotati</div>
-    </div>
-    <div class="stat-card" (click)="navigate('/appointments')">
-      <span class="material-icons stat-icon-mat">check_circle</span>
-      <div class="stat-value">{{ stats.completedAppointments }}</div>
-      <div class="stat-label">Completati</div>
-    </div>
-    <div class="stat-card" (click)="navigate('/nutrition')">
-      <span class="material-icons stat-icon-mat">restaurant_menu</span>
-      <div class="stat-value">{{ stats.activeDietPlans }}</div>
-      <div class="stat-label">Piani Dieta Attivi</div>
-    </div>
-    <div class="stat-card" (click)="navigate('/training')">
-      <span class="material-icons stat-icon-mat">fitness_center</span>
-      <div class="stat-value">{{ stats.activeTrainingPlans }}</div>
-      <div class="stat-label">Schede Allenamento Attive</div>
-    </div>
-    <div class="stat-card" (click)="navigate('/recipes')">
-      <span class="material-icons stat-icon-mat">menu_book</span>
-      <div class="stat-value">{{ stats.totalRecipes }}</div>
-      <div class="stat-label">Ricette Fit</div>
-    </div>
-  </div>
+  </ng-container>
 
 </main>

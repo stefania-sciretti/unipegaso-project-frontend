@@ -1,0 +1,43 @@
+<nav style="background:#112D4E;color:#fff;height:64px;box-shadow:0 3px 12px rgba(53,88,114,0.25);overflow:visible;position:relative;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 1.5rem;height:100%;display:flex;align-items:center;justify-content:space-between;">
+  <div style="font-size:1.25rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;cursor:pointer" (click)="go('/dashboard')">
+    <span class="material-icons" style="font-size:1.6rem;color:rgba(255,255,255,0.9)">local_hospital</span>
+    Apice Clinic
+  </div>
+
+  <ul class="navbar-links">
+    <li class="dropdown" [class.dropdown-open]="activeMenu==='clinico'">
+      <a class="dropdown-toggle" [class.active-link]="isSection(['/patients','/doctors','/appointments','/reports','/services'])" (click)="toggle('clinico', $event)">
+        <span class="material-icons" style="font-size:1.1rem;line-height:1">medical_services</span> Clinico ▾
+      </a>
+      <ul class="dropdown-menu">
+        <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;" (click)="go('/patients')"><span class="material-icons" style="font-size:1.1rem">people</span> Pazienti</a></li>
+        <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;" (click)="go('/doctors')"><span class="material-icons" style="font-size:1.1rem">badge</span> Medici</a></li>
+        <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;" (click)="go('/appointments')"><span class="material-icons" style="font-size:1.1rem">calendar_today</span> Visite</a></li>
+        <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;" (click)="go('/reports')"><span class="material-icons" style="font-size:1.1rem">assignment</span> Referti</a></li>
+        <li style="border-top:1px solid rgba(255,255,255,0.15);margin:0.3rem 0;pointer-events:none"></li>
+        <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;" (click)="go('/services')"><span class="material-icons" style="font-size:1.1rem">list_alt</span> Elenco Prestazioni</a></li>
+      </ul>
+    </li>
+
+    <li class="dropdown" [class.dropdown-open]="activeMenu==='nutrizione'">
+      <a class="dropdown-toggle" [class.active-link]="isSection(['/clients','/nutrition','/recipes','/glycemia'])" (click)="toggle('nutrizione', $event)">
+        <span class="material-icons" style="font-size:1.1rem;line-height:1">restaurant_menu</span> Nutrizione ▾
+      </a>
+      <ul class="dropdown-menu">
+        <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;" (click)="go('/clients')"><span class="material-icons" style="font-size:1.1rem">group</span> Clienti</a></li>
+        <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;" (click)="go('/nutrition')"><span class="material-icons" style="font-size:1.1rem">restaurant_menu</span> Piani Dieta</a></li>
+        <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;" (click)="go('/recipes')"><span class="material-icons" style="font-size:1.1rem">menu_book</span> Ricette</a></li>
+        <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;" (click)="go('/glycemia')"><span class="material-icons" style="font-size:1.1rem">colorize</span> Glicemia</a></li>
+      </ul>
+    </li>
+
+    <li>
+      <a class="nav-link" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;border-radius:6px;font-size:0.9rem;font-weight:500;"
+         [class.active-link]="isActive('/training')" (click)="go('/training')">
+        <span class="material-icons" style="font-size:1.1rem;line-height:1">fitness_center</span> Sport
+      </a>
+    </li>
+  </ul>
+  </div>
+</nav>

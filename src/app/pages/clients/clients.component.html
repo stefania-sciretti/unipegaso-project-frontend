@@ -6,11 +6,9 @@
     </div>
     <button class="btn btn-primary" (click)="openCreate()">+ Nuovo Cliente</button>
   </div>
-
   <ng-container *ngIf="alert$ | async as alert">
     <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
   </ng-container>
-
   <div class="card">
     <div class="toolbar">
       <input type="text" placeholder="Cerca per nome…" (input)="onSearch($event)" style="flex:1;max-width:320px"/>
@@ -18,15 +16,11 @@
     <div *ngIf="loading" class="loading">Caricamento…</div>
     <div class="table-wrapper" *ngIf="!loading">
       <table>
-        <thead>
-          <tr>
-            <th>#</th><th>Nome Completo</th><th>Email</th><th>Telefono</th><th>Data di Nascita</th><th>Obiettivo</th><th>Azioni</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>#</th><th>Nome Completo</th><th>Email</th><th>Telefono</th><th>Data di Nascita</th><th>Obiettivo</th><th>Azioni</th>
+        </tr></thead>
         <tbody>
-          <tr *ngIf="clients.length === 0">
-            <td colspan="7" class="empty">Nessun cliente trovato.</td>
-          </tr>
+          <tr *ngIf="clients.length === 0"><td colspan="7" class="empty">Nessun cliente trovato.</td></tr>
           <tr *ngFor="let c of clients">
             <td>{{ c.id }}</td>
             <td><strong>{{ c.firstName }} {{ c.lastName }}</strong></td>
@@ -36,7 +30,7 @@
             <td>{{ c.goal ?? '–' }}</td>
             <td class="actions">
               <button class="btn btn-secondary btn-sm" (click)="openEdit(c)">Modifica</button>
-              <button class="btn btn-danger btn-sm"    (click)="delete(c.id)">Elimina</button>
+              <button class="btn btn-danger btn-sm" (click)="delete(c.id)">Elimina</button>
             </td>
           </tr>
         </tbody>
@@ -45,7 +39,6 @@
   </div>
 </main>
 
-<!-- Modale Cliente -->
 <div class="modal-overlay" *ngIf="showModal">
   <div class="modal">
     <div class="modal-header">

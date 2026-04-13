@@ -9,7 +9,6 @@
   <ng-container *ngIf="alert$ | async as alert">
     <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
   </ng-container>
-  <!-- Filtro per cliente -->
   <div class="card" style="margin-bottom:1rem;padding:1rem">
     <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
       <label style="font-weight:600">Filtra per cliente:</label>
@@ -23,44 +22,29 @@
   <div class="card" *ngIf="!loading">
     <div class="table-wrapper">
       <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Cliente</th>
-            <th>Data/Ora</th>
-            <th>Valore (mg/dL)</th>
-            <th>Contesto</th>
-            <th>Classificazione</th>
-            <th>Note</th>
-            <th>Azioni</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>#</th><th>Cliente</th><th>Data/Ora</th>
+          <th>Valore (mg/dL)</th><th>Contesto</th><th>Classificazione</th><th>Note</th><th>Azioni</th>
+        </tr></thead>
         <tbody>
-          <tr *ngIf="measurements.length === 0">
-            <td colspan="8" class="empty">Nessuna misurazione registrata.</td>
-          </tr>
+          <tr *ngIf="measurements.length === 0"><td colspan="8" class="empty">Nessuna misurazione registrata.</td></tr>
           <tr *ngFor="let m of measurements">
             <td>{{ m.id }}</td>
             <td>{{ m.clientFullName }}</td>
             <td>{{ m.measuredAt | date:'dd/MM/yyyy HH:mm' }}</td>
             <td style="font-weight:700;font-size:1.1rem">{{ m.valueMgDl }}</td>
             <td>{{ contextLabel(m.context) }}</td>
-            <td>
-              <span class="badge" [ngClass]="classColor(m.classification)">
-                {{ m.classification }}
-              </span>
-            </td>
+            <td><span class="badge" [ngClass]="classColor(m.classification)">{{ m.classification }}</span></td>
             <td>{{ m.notes ?? '–' }}</td>
             <td class="actions">
               <button class="btn btn-primary btn-sm" (click)="openEdit(m)"><span class="material-icons" style="font-size:1rem">edit</span></button>
-              <button class="btn btn-danger btn-sm"  (click)="delete(m.id)"><span class="material-icons" style="font-size:1rem">delete</span></button>
+              <button class="btn btn-danger btn-sm" (click)="delete(m.id)"><span class="material-icons" style="font-size:1rem">delete</span></button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
-  <!-- Legenda classificazione -->
   <div class="card" style="margin-top:1.5rem;padding:1rem" *ngIf="!loading">
     <h4 style="margin-bottom:.75rem"><span class="material-icons" style="font-size:1.1rem;vertical-align:middle">bar_chart</span> Legenda Classificazione Glicemica (linee guida ADA/OMS)</h4>
     <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
@@ -68,18 +52,18 @@
         <strong>A digiuno:</strong>
         <span class="badge badge-success" style="margin-left:.5rem">&lt; 100 mg/dL = NORMALE</span>
         <span class="badge badge-warning" style="margin-left:.5rem">100–125 = ATTENZIONE</span>
-        <span class="badge badge-danger"  style="margin-left:.5rem">≥ 126 = ELEVATA</span>
+        <span class="badge badge-danger" style="margin-left:.5rem">≥ 126 = ELEVATA</span>
       </div>
       <div>
         <strong>Post-pasto 2h:</strong>
         <span class="badge badge-success" style="margin-left:.5rem">&lt; 140 mg/dL = NORMALE</span>
         <span class="badge badge-warning" style="margin-left:.5rem">140–199 = ATTENZIONE</span>
-        <span class="badge badge-danger"  style="margin-left:.5rem">≥ 200 = ELEVATA</span>
+        <span class="badge badge-danger" style="margin-left:.5rem">≥ 200 = ELEVATA</span>
       </div>
     </div>
   </div>
 </main>
-<!-- Form Modal -->
+
 <div class="modal-overlay" *ngIf="showModal">
   <div class="modal" style="max-width:520px">
     <div class="modal-header">
