@@ -1,17 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
-import { AppointmentService } from '../../services/appointment.service';
-import { ClientService } from '../../services/client.service';
-import { TrainerService } from '../../services/trainer.service';
-import { Client, FitnessAppointment, FitnessAppointmentRequest, AppointmentStatus, Trainer } from '../../models/models';
+import {Component, OnInit} from '@angular/core';
+import {AsyncPipe, CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {forkJoin, Observable} from 'rxjs';
+import {AppointmentService} from '../../services/appointment.service';
+import {ClientService} from '../../services/client.service';
+import {TrainerService} from '../../services/trainer.service';
+import {AlertService, AlertState} from '../../services/alert.service';
+import {AppointmentStatus, Client, FitnessAppointment, FitnessAppointmentRequest, Trainer} from '../../models/models';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-appointments',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule, AsyncPipe, ReactiveFormsModule,
+    MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, MatInputModule
+  ],
   templateUrl: './appointments.component.html'
 })
 export class AppointmentsComponent implements OnInit {
@@ -19,9 +27,8 @@ export class AppointmentsComponent implements OnInit {
   clients: Client[] = [];
   trainers: Trainer[] = [];
   loading = false;
-  alertMsg  = '';
-  alertType = 'success';
   filterStatus = '';
+  readonly alert$: Observable<AlertState | null>;
 
   showApptModal   = false;
   showStatusModal = false;
@@ -31,19 +38,30 @@ export class AppointmentsComponent implements OnInit {
 
   readonly statuses: AppointmentStatus[] = ['BOOKED', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
 
+  private readonly statusLabels: Record<string, string> = {
+    BOOKED: 'Prenotato', CONFIRMED: 'Confermato',
+    COMPLETED: 'Completato', CANCELLED: 'Annullato'
+  };
+
   constructor(
-    private svc: AppointmentService,
-    private clientSvc: ClientService,
-    private trainerSvc: TrainerService,
+    private appointmentService: AppointmentService,
+    private clientService: ClientService,
+    private trainerService: TrainerService,
+    private alertService: AlertService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+    this.alert$ = this.alertService.alert$;
+  }
 
   ngOnInit(): void {
     this.buildForms();
-    this.route.queryParams.subscribe(p => { this.filterStatus = p['status'] ?? ''; this.load(); });
-    forkJoin({ clients: this.clientSvc.getAll(), trainers: this.trainerSvc.getAll() })
+    this.route.queryParams.subscribe(params => {
+      this.filterStatus = params['status'] ?? '';
+      this.load();
+    });
+    forkJoin({ clients: this.clientService.getAll(), trainers: this.trainerService.getAll() })
       .subscribe(({ clients, trainers }) => { this.clients = clients; this.trainers = trainers; });
   }
 
@@ -61,15 +79,18 @@ export class AppointmentsComponent implements OnInit {
   load(): void {
     this.loading = true;
     const filters: { [key: string]: string } = this.filterStatus ? { status: this.filterStatus } : {};
-    this.svc.getAll(filters).subscribe({
+    this.appointmentService.getAll(filters).subscribe({
       next: (data) => { this.appointments = data; this.loading = false; },
-      error: (err) => { this.showAlert(err.error?.message || 'Load failed', 'error'); this.loading = false; }
+      error: () => { this.loading = false; }
     });
   }
 
   onStatusFilter(e: Event): void {
     this.filterStatus = (e.target as HTMLSelectElement).value;
-    this.router.navigate([], { queryParams: this.filterStatus ? { status: this.filterStatus } : {}, replaceUrl: true });
+    this.router.navigate([], {
+      queryParams: this.filterStatus ? { status: this.filterStatus } : {},
+      replaceUrl: true
+    });
     this.load();
   }
 
@@ -77,60 +98,53 @@ export class AppointmentsComponent implements OnInit {
 
   saveAppointment(): void {
     if (this.apptForm.invalid) { this.apptForm.markAllAsTouched(); return; }
-    const v = this.apptForm.value;
+    const value = this.apptForm.value;
     const body: FitnessAppointmentRequest = {
-      clientId: +v.clientId, trainerId: +v.trainerId,
-      scheduledAt: v.scheduledAt, serviceType: v.serviceType,
-      notes: v.notes || null
+      clientId:    +value.clientId,
+      trainerId:   +value.trainerId,
+      scheduledAt: value.scheduledAt,
+      serviceType: value.serviceType,
+      notes:       value.notes || null
     };
-    this.svc.create(body).subscribe({
-      next: () => { this.showAlert('Appuntamento prenotato!'); this.showApptModal = false; this.load(); },
-      error: (err) => this.showAlert(err.error?.message || 'Errore durante la prenotazione', 'error')
+    this.appointmentService.create(body).subscribe({
+      next: () => { this.alertService.show('Appuntamento prenotato!'); this.showApptModal = false; this.load(); }
     });
   }
 
-  openStatusModal(a: FitnessAppointment): void {
-    this.statusEditingId = a.id;
-    this.statusForm.patchValue({ status: a.status });
+  openStatusModal(appointment: FitnessAppointment): void {
+    this.statusEditingId = appointment.id;
+    this.statusForm.patchValue({ status: appointment.status });
     this.showStatusModal = true;
   }
 
   saveStatus(): void {
     if (!this.statusEditingId) return;
-    this.svc.updateStatus(this.statusEditingId, this.statusForm.value.status).subscribe({
-      next: () => { this.showAlert('Stato aggiornato!'); this.showStatusModal = false; this.load(); },
-      error: (err) => this.showAlert(err.error?.message || 'Errore aggiornamento stato', 'error')
+    this.appointmentService.updateStatus(this.statusEditingId, this.statusForm.value.status).subscribe({
+      next: () => { this.alertService.show('Stato aggiornato!'); this.showStatusModal = false; this.load(); }
     });
   }
 
   cancel(id: number): void {
     if (!confirm('Annullare questo appuntamento?')) return;
-    this.svc.delete(id).subscribe({
-      next: () => { this.showAlert('Appuntamento annullato.'); this.load(); },
-      error: (err) => this.showAlert(err.error?.message || 'Errore durante l\'annullamento', 'error')
+    this.appointmentService.delete(id).subscribe({
+      next: () => { this.alertService.show('Appuntamento annullato.'); this.load(); }
     });
   }
 
-  canCancel(a: FitnessAppointment): boolean {
-    return a.status === 'BOOKED' || a.status === 'CONFIRMED';
+  canCancel(appointment: FitnessAppointment): boolean {
+    return appointment.status === 'BOOKED' || appointment.status === 'CONFIRMED';
   }
 
-  statusClass(s: string): string { return `badge badge-${s.toLowerCase()}`; }
+  statusLabel(status: string): string {
+    return this.statusLabels[status] ?? status;
+  }
 
-  statusLabel(s: string): string {
-    const map: Record<string, string> = {
-      BOOKED: 'Prenotato', CONFIRMED: 'Confermato',
-      COMPLETED: 'Completato', CANCELLED: 'Annullato'
-    };
-    return map[s] ?? s;
+  statusClass(status: string): string {
+    return `badge badge-${status.toLowerCase()}`;
   }
 
   isInvalid(form: FormGroup, field: string): boolean {
-    const c = form.get(field); return !!(c && c.invalid && c.touched);
-  }
-
-  showAlert(msg: string, type = 'success'): void {
-    this.alertMsg = msg; this.alertType = type;
-    setTimeout(() => this.alertMsg = '', 3500);
+    const control = form.get(field);
+    return !!(control && control.invalid && control.touched);
   }
 }

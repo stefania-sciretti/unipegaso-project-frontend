@@ -1,25 +1,36 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ClientService } from '../../services/client.service';
-import { Client, ClientRequest } from '../../models/models';
+import {Component, OnInit} from '@angular/core';
+import {AsyncPipe, CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {ClientService} from '../../services/client.service';
+import {AlertService, AlertState} from '../../services/alert.service';
+import {Client, ClientRequest} from '../../models/models';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-clients',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, AsyncPipe, ReactiveFormsModule, MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, MatInputModule],
   templateUrl: './clients.component.html'
 })
 export class ClientsComponent implements OnInit {
   clients: Client[] = [];
   loading = false;
-  alertMsg  = '';
-  alertType = 'success';
   showModal = false;
   editingId: number | null = null;
   form!: FormGroup;
+  readonly alert$: Observable<AlertState | null>;
 
-  constructor(private svc: ClientService, private fb: FormBuilder) {}
+  constructor(
+    private clientService: ClientService,
+    private alertService: AlertService,
+    private fb: FormBuilder
+  ) {
+    this.alert$ = this.alertService.alert$;
+  }
 
   ngOnInit(): void {
     this.buildForm();
@@ -39,20 +50,32 @@ export class ClientsComponent implements OnInit {
 
   load(search = ''): void {
     this.loading = true;
-    this.svc.getAll(search).subscribe({
+    this.clientService.getAll(search).subscribe({
       next: (data) => { this.clients = data; this.loading = false; },
-      error: (err) => { this.showAlert(err.error?.message || 'Load failed', 'error'); this.loading = false; }
+      error: () => { this.loading = false; }
     });
   }
 
-  onSearch(e: Event): void { this.load((e.target as HTMLInputElement).value); }
+  onSearch(e: Event): void {
+    this.load((e.target as HTMLInputElement).value);
+  }
 
-  openCreate(): void { this.editingId = null; this.form.reset(); this.showModal = true; }
+  openCreate(): void {
+    this.editingId = null;
+    this.form.reset();
+    this.showModal = true;
+  }
 
-  openEdit(c: Client): void {
-    this.editingId = c.id;
-    this.form.patchValue({ firstName: c.firstName, lastName: c.lastName, email: c.email,
-      phone: c.phone ?? '', birthDate: c.birthDate ?? '', goal: c.goal ?? '' });
+  openEdit(client: Client): void {
+    this.editingId = client.id;
+    this.form.patchValue({
+      firstName: client.firstName,
+      lastName:  client.lastName,
+      email:     client.email,
+      phone:     client.phone ?? '',
+      birthDate: client.birthDate ?? '',
+      goal:      client.goal ?? ''
+    });
     this.showModal = true;
   }
 
@@ -64,28 +87,28 @@ export class ClientsComponent implements OnInit {
       birthDate: this.form.value.birthDate || null,
       goal:      this.form.value.goal || null
     };
-    const obs = this.editingId ? this.svc.update(this.editingId, body) : this.svc.create(body);
-    obs.subscribe({
-      next: () => { this.showAlert(this.editingId ? 'Client updated!' : 'Client created!'); this.showModal = false; this.load(); },
-      error: (err) => this.showAlert(err.error?.message || 'Save failed', 'error')
+    const request$ = this.editingId
+      ? this.clientService.update(this.editingId, body)
+      : this.clientService.create(body);
+
+    request$.subscribe({
+      next: () => {
+        this.alertService.show(this.editingId ? 'Client updated!' : 'Client created!');
+        this.showModal = false;
+        this.load();
+      }
     });
   }
 
   delete(id: number): void {
     if (!confirm('Delete this client?')) return;
-    this.svc.delete(id).subscribe({
-      next: () => { this.showAlert('Client deleted.'); this.load(); },
-      error: (err) => this.showAlert(err.error?.message || 'Delete failed', 'error')
+    this.clientService.delete(id).subscribe({
+      next: () => { this.alertService.show('Client deleted.'); this.load(); }
     });
   }
 
   isInvalid(field: string): boolean {
-    const c = this.form.get(field);
-    return !!(c && c.invalid && c.touched);
-  }
-
-  showAlert(msg: string, type = 'success'): void {
-    this.alertMsg = msg; this.alertType = type;
-    setTimeout(() => this.alertMsg = '', 3500);
+    const control = this.form.get(field);
+    return !!(control && control.invalid && control.touched);
   }
 }

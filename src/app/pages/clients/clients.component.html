@@ -1,17 +1,15 @@
 <main class="container">
   <div class="page-header">
     <div>
-      <h1 class="page-title">👥 Clienti</h1>
+      <h1 class="page-title"><span class="material-icons page-title-icon">group</span> Clienti</h1>
       <p class="page-subtitle">Gestione anagrafica clienti</p>
     </div>
     <button class="btn btn-primary" (click)="openCreate()">+ Nuovo Cliente</button>
   </div>
 
-  <div *ngIf="alertMsg" class="alert"
-    [class.alert-success]="alertType==='success'"
-    [class.alert-error]="alertType==='error'">
-    {{ alertMsg }}
-  </div>
+  <ng-container *ngIf="alert$ | async as alert">
+    <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
+  </ng-container>
 
   <div class="card">
     <div class="toolbar">
@@ -79,7 +77,11 @@
         </div>
         <div class="form-group">
           <label>Data di Nascita</label>
-          <input formControlName="birthDate" type="date"/>
+          <mat-form-field appearance="outline" class="mat-date-field">
+            <input matInput [matDatepicker]="pickerBirth" formControlName="birthDate" placeholder="gg/mm/aaaa"/>
+            <mat-datepicker-toggle matIconSuffix [for]="pickerBirth"></mat-datepicker-toggle>
+            <mat-datepicker #pickerBirth></mat-datepicker>
+          </mat-form-field>
         </div>
       </div>
       <div class="form-group">

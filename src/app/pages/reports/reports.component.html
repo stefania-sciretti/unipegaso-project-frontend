@@ -1,17 +1,15 @@
 <main class="container">
   <div class="page-header">
     <div>
-      <h1 class="page-title">Medical Reports</h1>
+      <h1 class="page-title"><span class="material-icons page-title-icon">assignment</span> Referti</h1>
       <p class="page-subtitle">Diagnoses and prescriptions management</p>
     </div>
     <button class="btn btn-primary" (click)="openCreate()">+ New Report</button>
   </div>
 
-  <div *ngIf="alertMsg" class="alert"
-    [class.alert-success]="alertType==='success'"
-    [class.alert-error]="alertType==='error'">
-    {{ alertMsg }}
-  </div>
+  <ng-container *ngIf="alert$ | async as alert">
+    <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
+  </ng-container>
 
   <div class="card">
     <div *ngIf="loading" class="loading">Loading…</div>

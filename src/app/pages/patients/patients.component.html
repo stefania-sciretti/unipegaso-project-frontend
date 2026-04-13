@@ -1,17 +1,15 @@
 <main class="container">
   <div class="page-header">
     <div>
-      <h1 class="page-title">Patients</h1>
+      <h1 class="page-title"><span class="material-icons page-title-icon">personal_injury</span> Pazienti</h1>
       <p class="page-subtitle">Patient registry management</p>
     </div>
     <button class="btn btn-primary" (click)="openCreate()">+ New Patient</button>
   </div>
 
-  <div *ngIf="alertMsg" class="alert"
-    [class.alert-success]="alertType==='success'"
-    [class.alert-error]="alertType==='error'">
-    {{ alertMsg }}
-  </div>
+  <ng-container *ngIf="alert$ | async as alert">
+    <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
+  </ng-container>
 
   <div class="card">
     <div class="toolbar">
@@ -80,9 +78,13 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>Birth Date *</label>
-          <input formControlName="birthDate" type="date"/>
-          <div class="field-error" *ngIf="isInvalid('birthDate')">Required</div>
+          <label>Data di Nascita *</label>
+          <mat-form-field appearance="outline" class="mat-date-field">
+            <input matInput [matDatepicker]="pickerBirth" formControlName="birthDate" placeholder="gg/mm/aaaa"/>
+            <mat-datepicker-toggle matIconSuffix [for]="pickerBirth"></mat-datepicker-toggle>
+            <mat-datepicker #pickerBirth></mat-datepicker>
+          </mat-form-field>
+          <div class="field-error" *ngIf="isInvalid('birthDate')">Campo obbligatorio</div>
         </div>
         <div class="form-group">
           <label>Phone</label>

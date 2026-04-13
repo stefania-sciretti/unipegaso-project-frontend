@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RecipeService } from '../../services/report.service';
-import { Recipe, RecipeRequest } from '../../models/models';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {RecipeService} from '../../services/recipe.service';
+import {Recipe, RecipeRequest} from '../../models/models';
 
 @Component({
   selector: 'app-recipes',

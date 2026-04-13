@@ -1,47 +1,51 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { forkJoin } from 'rxjs';
-import { DietPlanService } from '../../services/diet-plan.service';
-import { ClientService } from '../../services/client.service';
-import { TrainerService } from '../../services/trainer.service';
-import { DietPlan, DietPlanRequest, Client } from '../../models/models';
+import {Component, OnInit} from '@angular/core';
+import {AsyncPipe, CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {forkJoin, Observable} from 'rxjs';
+import {DietPlanService} from '../../services/diet-plan.service';
+import {ClientService} from '../../services/client.service';
+import {TrainerService} from '../../services/trainer.service';
+import {AlertService, AlertState} from '../../services/alert.service';
+import {Client, DietPlan, DietPlanRequest} from '../../models/models';
 
 @Component({
   selector: 'app-nutrition',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, AsyncPipe, FormsModule, ReactiveFormsModule],
   templateUrl: './nutrition.component.html'
 })
 export class NutritionComponent implements OnInit {
   plans: DietPlan[] = [];
   clients: Client[] = [];
-  simonaId = 0;
+  /** ID of the nutritionist trainer assigned to new plans */
+  nutritionistId = 0;
   loading = false;
-  alertMsg  = '';
-  alertType = 'success';
   showModal = false;
   editingId: number | null = null;
   filterActive = '';
   form!: FormGroup;
+  readonly alert$: Observable<AlertState | null>;
 
   constructor(
-    private svc: DietPlanService,
-    private clientSvc: ClientService,
-    private trainerSvc: TrainerService,
+    private dietPlanService: DietPlanService,
+    private clientService: ClientService,
+    private trainerService: TrainerService,
+    private alertService: AlertService,
     private fb: FormBuilder
-  ) {}
+  ) {
+    this.alert$ = this.alertService.alert$;
+  }
 
   ngOnInit(): void {
     this.buildForm();
     forkJoin({
-      plans: this.svc.getAll(),
-      clients: this.clientSvc.getAll(),
-      trainers: this.trainerSvc.getAll('NUTRITIONIST')
+      plans:    this.dietPlanService.getAll(),
+      clients:  this.clientService.getAll(),
+      trainers: this.trainerService.getAll('NUTRITIONIST')
     }).subscribe(({ plans, clients, trainers }) => {
-      this.plans = plans;
-      this.clients = clients;
-      this.simonaId = trainers[0]?.id ?? 1;
+      this.plans         = plans;
+      this.clients       = clients;
+      this.nutritionistId = trainers[0]?.id ?? 1;
     });
   }
 
@@ -64,50 +68,65 @@ export class NutritionComponent implements OnInit {
 
   load(): void {
     this.loading = true;
-    this.svc.getAll().subscribe({
-      next: (d) => { this.plans = d; this.loading = false; },
+    this.dietPlanService.getAll().subscribe({
+      next: (data) => { this.plans = data; this.loading = false; },
       error: () => { this.loading = false; }
     });
   }
 
-  openCreate(): void { this.editingId = null; this.form.reset({ active: true }); this.showModal = true; }
+  openCreate(): void {
+    this.editingId = null;
+    this.form.reset({ active: true });
+    this.showModal = true;
+  }
 
-  openEdit(p: DietPlan): void {
-    this.editingId = p.id;
-    this.form.patchValue({ clientId: p.clientId, title: p.title, description: p.description ?? '',
-      calories: p.calories, durationWeeks: p.durationWeeks, active: p.active });
+  openEdit(plan: DietPlan): void {
+    this.editingId = plan.id;
+    this.form.patchValue({
+      clientId:      plan.clientId,
+      title:         plan.title,
+      description:   plan.description ?? '',
+      calories:      plan.calories,
+      durationWeeks: plan.durationWeeks,
+      active:        plan.active
+    });
     this.showModal = true;
   }
 
   save(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-    const v = this.form.value;
+    const value = this.form.value;
     const body: DietPlanRequest = {
-      clientId: +v.clientId, trainerId: this.simonaId, title: v.title,
-      description: v.description || null, calories: v.calories || null,
-      durationWeeks: v.durationWeeks || null, active: v.active ?? true
+      clientId:      +value.clientId,
+      trainerId:     this.nutritionistId,
+      title:         value.title,
+      description:   value.description || null,
+      calories:      value.calories || null,
+      durationWeeks: value.durationWeeks || null,
+      active:        value.active ?? true
     };
-    const obs = this.editingId ? this.svc.update(this.editingId, body) : this.svc.create(body);
-    obs.subscribe({
-      next: () => { this.showAlert(this.editingId ? 'Plan updated!' : 'Plan created!'); this.showModal = false; this.load(); },
-      error: (err) => this.showAlert(err.error?.message || 'Save failed', 'error')
+    const request$ = this.editingId
+      ? this.dietPlanService.update(this.editingId, body)
+      : this.dietPlanService.create(body);
+
+    request$.subscribe({
+      next: () => {
+        this.alertService.show(this.editingId ? 'Plan updated!' : 'Plan created!');
+        this.showModal = false;
+        this.load();
+      }
     });
   }
 
   delete(id: number): void {
     if (!confirm('Delete this diet plan?')) return;
-    this.svc.delete(id).subscribe({
-      next: () => { this.showAlert('Plan deleted.'); this.load(); },
-      error: (err) => this.showAlert(err.error?.message || 'Delete failed', 'error')
+    this.dietPlanService.delete(id).subscribe({
+      next: () => { this.alertService.show('Plan deleted.'); this.load(); }
     });
   }
 
   isInvalid(field: string): boolean {
-    const c = this.form.get(field); return !!(c && c.invalid && c.touched);
-  }
-
-  showAlert(msg: string, type = 'success'): void {
-    this.alertMsg = msg; this.alertType = type;
-    setTimeout(() => this.alertMsg = '', 3500);
+    const control = this.form.get(field);
+    return !!(control && control.invalid && control.touched);
   }
 }

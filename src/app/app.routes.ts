@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -25,6 +25,26 @@ export const routes: Routes = [
   {
     path: 'training',
     loadComponent: () => import('./pages/training/training.component').then(m => m.TrainingComponent)
+  },
+  {
+    path: 'patients',
+    loadComponent: () => import('./pages/patients/patients.component').then(m => m.PatientsComponent)
+  },
+  {
+    path: 'doctors',
+    loadComponent: () => import('./pages/doctors/doctors.component').then(m => m.DoctorsComponent)
+  },
+  {
+    path: 'reports',
+    loadComponent: () => import('./pages/reports/reports.component').then(m => m.ReportsComponent)
+  },
+  {
+    path: 'glycemia',
+    loadComponent: () => import('./pages/glycemia/glycemia.component').then(m => m.GlycemiaComponent)
+  },
+  {
+    path: 'services',
+    loadComponent: () => import('./pages/services/services.component').then(m => m.ServicesComponent)
   },
   { path: '**', redirectTo: 'dashboard' }
 ];

@@ -139,3 +139,33 @@ export interface ApiError {
   message: string;
   fieldErrors?: Record<string, string>;
 }
+
+
+// ─── GlycemiaMeasurement ──────────────────────────────────────────────────────
+
+export type GlycemiaContext = 'FASTING' | 'POST_MEAL_1H' | 'POST_MEAL_2H' | 'RANDOM';
+export type GlycemiaClassification = 'NORMALE' | 'ATTENZIONE' | 'ELEVATA';
+
+export interface GlycemiaMeasurement {
+  id: number;
+  clientId: number;
+  clientFullName: string;
+  trainerId: number;
+  trainerFullName: string;
+  measuredAt: string;
+  valueMgDl: number;
+  context: GlycemiaContext;
+  classification: GlycemiaClassification;
+  notes?: string;
+  createdAt: string;
+}
+
+export interface GlycemiaMeasurementRequest {
+  clientId: number;
+  trainerId: number;
+  measuredAt: string;
+  valueMgDl: number;
+  context: GlycemiaContext;
+  notes?: string | null;
+}
+

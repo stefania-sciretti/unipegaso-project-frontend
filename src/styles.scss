@@ -1,22 +1,23 @@
+
 /* =========================================
-   CentroFitness Simona & Luca – Global Styles
-   Palette: #355872 · #7AAACE · #9CD5FF · #F7F8F0
+   Apice Clinic – Global Styles
+   Palette: #F9F7F7 · #DBE2EF · #3F72AF · #112D4E
    ========================================= */
 
 :root {
-  --primary:      #355872;
-  --primary-mid:  #7AAACE;
-  --primary-light:#9CD5FF;
-  --bg:           #F7F8F0;
+  --primary:      #112D4E;
+  --primary-mid:  #3F72AF;
+  --primary-light:#DBE2EF;
+  --bg:           #F9F7F7;
   --surface:      #ffffff;
-  --border:       #c8d8e8;
-  --text:         #1e2d3b;
-  --text-muted:   #5a7488;
-  --accent:       #4caf82;
+  --border:       #DBE2EF;
+  --text:         #112D4E;
+  --text-muted:   #3F72AF;
+  --accent:       #3F72AF;
   --danger:       #d95550;
   --warning:      #e5992c;
   --radius:       10px;
-  --shadow:       0 2px 14px rgba(53, 88, 114, 0.10);
+  --shadow:       0 2px 14px rgba(17, 45, 78, 0.10);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,7 +30,13 @@ body {
 }
 
 app-root {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-content {
+  flex: 1;
 }
 
 app-navbar {
@@ -49,6 +56,7 @@ app-navbar {
   padding: 0 2rem;
   height: 64px;
   box-shadow: 0 3px 12px rgba(53, 88, 114, 0.25);
+  overflow: visible;
 }
 .navbar-brand {
   font-size: 1.25rem;
@@ -59,8 +67,10 @@ app-navbar {
   gap: 0.5rem;
 }
 .navbar-brand span.logo-icon { font-size: 1.6rem; }
-.navbar-links { list-style: none; display: flex; gap: 0.25rem; }
-.navbar-links li { list-style: none; }
+.navbar-brand-icon { font-size: 1.6rem !important; color: rgba(255,255,255,0.9); }
+.nav-icon { font-size: 1.1rem !important; line-height: 1; }
+.navbar-links { list-style: none; display: flex; align-items: stretch; gap: 0.25rem; }
+.navbar-links > li { list-style: none; display: flex; align-items: center; }
 .navbar-links a {
   color: rgba(255, 255, 255, 0.82);
   text-decoration: none;
@@ -70,7 +80,9 @@ app-navbar {
   border-radius: 6px;
   transition: background 0.18s, color 0.18s;
   cursor: pointer;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
   user-select: none;
 }
 .navbar-links a:hover,
@@ -83,6 +95,73 @@ app-navbar {
   background: rgba(255,255,255,0.25);
   margin: 0.5rem 0.5rem;
   align-self: stretch;
+}
+
+/* ── Dropdown navbar ─────────────────────── */
+.dropdown {
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+}
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  height: 100%;
+  padding: 0 0.85rem;
+  border-radius: 6px;
+  transition: background 0.18s, color 0.18s;
+  user-select: none;
+  color: rgba(255,255,255,0.82);
+  font-size: 0.9rem;
+  font-weight: 500;
+  &:hover { background: rgba(255,255,255,0.15); color: #fff; }
+}
+.dropdown.dropdown-open > .dropdown-toggle {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border-radius: 6px 6px 0 0;
+}
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--primary);
+  border-radius: 0 8px 8px 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.30);
+  min-width: 210px;
+  list-style: none;
+  padding: 0.35rem 0;
+  z-index: 10000;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-top: none;
+}
+.dropdown.dropdown-open .dropdown-menu {
+  display: block;
+}
+.dropdown-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  white-space: nowrap;
+  border-radius: 0 !important;
+  color: rgba(255,255,255,0.82);
+  font-size: 0.9rem;
+  transition: background 0.15s, color 0.15s;
+  cursor: pointer;
+}
+.dropdown-menu li a:hover {
+  background: rgba(255,255,255,0.15) !important;
+  color: #fff !important;
+}
+.dropdown-divider {
+  border-top: 1px solid rgba(255,255,255,0.15);
+  margin: 0.3rem 0;
+  pointer-events: none;
 }
 
 /* ── Layout ─────────────────────────────── */
@@ -413,3 +492,293 @@ code { background: #eef4fa; border-radius: 4px; padding: 2px 6px; font-size: 0.8
   font-size: 0.78rem;
   font-weight: 600;
 }
+.tag-warning { background: #fef3cd; color: #856404; }
+
+/* ── Badge colorati ─────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.badge-success { background: #d4f0e0; color: #1e7a48; }
+.badge-warning { background: #fef3cd; color: #856404; }
+.badge-danger  { background: #fde8e8; color: var(--danger); }
+.badge-info    { background: #d6eaf8; color: var(--primary); }
+
+/* ── Intolleranze tags ───────────────────── */
+.intol-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+
+/* ── Detail modal grid ───────���───────────── */
+.detail-grid { padding: 0 0.5rem; }
+.detail-row  { margin-bottom: 0.75rem; font-size: 0.95rem; }
+.detail-section { margin: 1rem 0; padding: 0.75rem; background: var(--bg); border-radius: 8px; }
+.detail-section strong { display: block; margin-bottom: 0.4rem; color: var(--primary); }
+.detail-section p { color: var(--text); line-height: 1.6; }
+
+/* ── Navbar sezioni ─────────────────────── */
+.nav-section-label {
+  color: rgba(255,255,255,0.45) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
+  text-transform: uppercase !important;
+  padding: 0.4rem 0.85rem 0.1rem !important;
+  cursor: default !important;
+  user-select: none;
+}
+
+/* ── Text muted ─────────────────────────── */
+.text-muted { color: var(--text-muted); }
+
+/* ── Btn outline ────────────────────────── */
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--primary-mid);
+  color: var(--primary);
+  &:hover { background: var(--primary-light); }
+}
+
+/* ── Elenco Prestazioni — Icon grid ─────── */
+.services-section {
+  margin-bottom: 2.5rem;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.services-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.75rem;
+  border-bottom: 2px solid var(--border);
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+    position: relative;
+    padding-bottom: 0.4rem;
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 36px; height: 3px;
+      background: var(--danger);
+      border-radius: 2px;
+    }
+  }
+}
+.services-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  padding: 2.5rem 2rem;
+}
+.service-icon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.85rem;
+}
+.service-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  .material-icons { font-size: 2.4rem; }
+}
+.accordion-arrow {
+  font-size: 1.4rem !important;
+  color: var(--text-muted);
+  transition: transform 0.25s;
+  &.open { transform: rotate(180deg); }
+}
+.service-icon-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+}
+.service-icon-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Angular Material Datepicker override ─ */
+.mat-date-field {
+  width: 100%;
+  .mat-mdc-form-field-subscript-wrapper { display: none; }
+}
+.mat-mdc-form-field.mat-date-field {
+  --mdc-outlined-text-field-outline-color: var(--border);
+  --mdc-outlined-text-field-focus-outline-color: var(--primary-mid);
+  --mdc-outlined-text-field-label-text-color: var(--text-muted);
+  font-size: 0.9rem;
+}
+.mat-mdc-icon-button.mat-mdc-button-base {
+  color: var(--primary-mid);
+}
+.mat-datepicker-content {
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+/* ── Footer ─────────────────────────────── */
+.app-footer {
+  background: var(--primary);
+  color: rgba(255,255,255,0.85);
+  padding: 2.5rem 2rem 1.25rem;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.footer-logo  { font-size: 1.5rem; }
+.footer-name  { font-size: 1.15rem; font-weight: 700; color: #fff; letter-spacing: 0.3px; }
+.footer-contacts {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.footer-link {
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 0.15s;
+  &:hover { color: #fff; text-decoration: underline; }
+}
+.footer-copy {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.45);
+  width: 100%;
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  margin-top: 0.25rem;
+}
+
+/* ── Dropdown divider ───────────────────── */
+.dropdown-divider {
+  border-top: 1px solid rgba(255,255,255,0.15);
+  margin: 0.3rem 0;
+  pointer-events: none;
+}
+
+/* ── Dashboard: icone Material ──────────── */
+.hero-icon-mat {
+  font-size: 3rem !important;
+  color: var(--primary-mid);
+}
+.stat-icon-mat {
+  font-size: 2rem !important;
+  color: var(--primary-mid);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.offer-icon {
+  font-size: 1.8rem !important;
+}
+.offer-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.offer-list-icon {
+  font-size: 1rem !important;
+  color: var(--primary-mid);
+  flex-shrink: 0;
+}
+.page-title-icon {
+  font-size: 1.6rem !important;
+  vertical-align: middle;
+  margin-right: 0.3rem;
+  color: var(--primary-mid);
+}
+.trainer-avatar-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  .material-icons { font-size: 2.5rem !important; color: var(--primary); }
+}
+
+/* ── Dashboard: Cosa offriamo ───────────── */
+.dashboard-section-title {
+  margin: 2.5rem 0 1.25rem;
+  h2 { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 0.3rem; }
+  p  { font-size: 0.9rem; color: var(--text-muted); }
+}
+.dashboard-offer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.offer-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  display: flex;
+  flex-direction: column;
+  &:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(53,88,114,0.15); }
+}
+.offer-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  color: #fff;
+  background: var(--primary);
+}
+.offer-header--clinico    { background: var(--primary); }
+.offer-header--nutrizione { background: var(--primary); }
+.offer-header--sport      { background: var(--primary); }
+.offer-icon  { font-size: 1.8rem; }
+.offer-title { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.2px; }
+.offer-list  {
+  list-style: none;
+  padding: 1rem 1.25rem;
+  flex: 1;
+  li {
+    padding: 0.35rem 0;
+    font-size: 0.88rem;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    &:last-child { border-bottom: none; }
+  }
+}
+.offer-card .btn {
+  margin: 0.75rem 1.25rem 1.25rem;
+  align-self: flex-start;
+}
+

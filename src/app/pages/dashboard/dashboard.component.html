@@ -1,77 +1,116 @@
 <main class="container">
   <div class="hero">
-    <div class="hero-icon">🏋️</div>
+    <span class="material-icons hero-icon-mat">local_hospital</span>
     <div>
-      <h1>CentroFitness Simona &amp; Luca</h1>
-      <p>Il tuo centro di riferimento per la nutrizione e il personal training</p>
+      <h1>Apice Clinic</h1>
+      <p>Clinica privata di nutrizione clinica e medicina dello sport — valutazione, monitoraggio e performance</p>
     </div>
   </div>
 
   <div *ngIf="error" class="alert alert-error">{{ error }}</div>
   <div *ngIf="loading" class="loading">Caricamento dashboard…</div>
 
+  <!-- Sezione: cosa offre la clinica -->
+  <div class="dashboard-section-title" *ngIf="!loading">
+    <h2>Cosa offriamo</h2>
+    <p>Un approccio integrato che unisce medicina, nutrizione e sport per il benessere completo del paziente.</p>
+  </div>
+
+  <div class="dashboard-offer-grid" *ngIf="!loading">
+
+    <!-- Area Clinica -->
+    <div class="offer-card" (click)="navigate('/patients')">
+      <div class="offer-header offer-header--clinico">
+        <span class="material-icons offer-icon">medical_services</span>
+        <span class="offer-title">Area Clinica</span>
+      </div>
+      <ul class="offer-list">
+        <li><span class="material-icons offer-list-icon">medical_services</span> Visita Nutrizionistica</li>
+        <li><span class="material-icons offer-list-icon">event_available</span> Visita di Controllo</li>
+        <li><span class="material-icons offer-list-icon">directions_run</span> Visita Medico-Sportiva</li>
+        <li><span class="material-icons offer-list-icon">assignment</span> Referto Clinico</li>
+      </ul>
+      <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); navigate('/services')">
+        Vedi tutte le prestazioni →
+      </button>
+    </div>
+
+    <!-- Area Nutrizione -->
+    <div class="offer-card" (click)="navigate('/nutrition')">
+      <div class="offer-header offer-header--nutrizione">
+        <span class="material-icons offer-icon">restaurant_menu</span>
+        <span class="offer-title">Area Nutrizione</span>
+      </div>
+      <ul class="offer-list">
+        <li><span class="material-icons offer-list-icon">restaurant_menu</span> Piano Nutrizionale Personalizzato</li>
+        <li><span class="material-icons offer-list-icon">accessibility_new</span> Analisi Composizione Corporea (BIA)</li>
+        <li><span class="material-icons offer-list-icon">colorize</span> Monitoraggio Glicemia (Pungidito)</li>
+        <li><span class="material-icons offer-list-icon">menu_book</span> Ricettario Fit Personalizzato</li>
+      </ul>
+      <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); navigate('/nutrition')">
+        Vedi piani nutrizionali →
+      </button>
+    </div>
+
+    <!-- Area Sport -->
+    <div class="offer-card" (click)="navigate('/training')">
+      <div class="offer-header offer-header--sport">
+        <span class="material-icons offer-icon">fitness_center</span>
+        <span class="offer-title">Area Sport</span>
+      </div>
+      <ul class="offer-list">
+        <li><span class="material-icons offer-list-icon">fitness_center</span> Scheda di Allenamento Personalizzata</li>
+        <li><span class="material-icons offer-list-icon">self_improvement</span> Personal Training</li>
+        <li><span class="material-icons offer-list-icon">healing</span> Riatletizzazione e Recupero Funzionale</li>
+        <li><span class="material-icons offer-list-icon">emoji_events</span> Preparazione Atletica Agonistica</li>
+      </ul>
+      <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); navigate('/training')">
+        Vedi schede allenamento →
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Statistiche operative -->
+  <div class="dashboard-section-title" *ngIf="!loading && stats">
+    <h2>Statistiche operative</h2>
+  </div>
   <div class="stats-grid" *ngIf="!loading && stats">
     <div class="stat-card" (click)="navigate('/clients')">
-      <div class="stat-icon">👥</div>
+      <span class="material-icons stat-icon-mat">group</span>
       <div class="stat-value">{{ stats.totalClients }}</div>
       <div class="stat-label">Clienti Totali</div>
     </div>
     <div class="stat-card" (click)="navigate('/appointments')">
-      <div class="stat-icon">📅</div>
+      <span class="material-icons stat-icon-mat">calendar_today</span>
       <div class="stat-value">{{ stats.totalAppointments }}</div>
       <div class="stat-label">Appuntamenti</div>
     </div>
     <div class="stat-card" (click)="navigate('/appointments')">
-      <div class="stat-icon">⏳</div>
+      <span class="material-icons stat-icon-mat">schedule</span>
       <div class="stat-value">{{ stats.bookedAppointments }}</div>
       <div class="stat-label">Prenotati</div>
     </div>
     <div class="stat-card" (click)="navigate('/appointments')">
-      <div class="stat-icon">✅</div>
+      <span class="material-icons stat-icon-mat">check_circle</span>
       <div class="stat-value">{{ stats.completedAppointments }}</div>
       <div class="stat-label">Completati</div>
     </div>
     <div class="stat-card" (click)="navigate('/nutrition')">
-      <div class="stat-icon">🥗</div>
+      <span class="material-icons stat-icon-mat">restaurant_menu</span>
       <div class="stat-value">{{ stats.activeDietPlans }}</div>
       <div class="stat-label">Piani Dieta Attivi</div>
     </div>
     <div class="stat-card" (click)="navigate('/training')">
-      <div class="stat-icon">💪</div>
+      <span class="material-icons stat-icon-mat">fitness_center</span>
       <div class="stat-value">{{ stats.activeTrainingPlans }}</div>
       <div class="stat-label">Schede Allenamento Attive</div>
     </div>
     <div class="stat-card" (click)="navigate('/recipes')">
-      <div class="stat-icon">🍽️</div>
+      <span class="material-icons stat-icon-mat">menu_book</span>
       <div class="stat-value">{{ stats.totalRecipes }}</div>
       <div class="stat-label">Ricette Fit</div>
     </div>
   </div>
 
-  <div class="trainer-grid" *ngIf="!loading">
-    <div class="trainer-card nutritionist">
-      <div class="trainer-avatar">👩‍⚕️</div>
-      <div class="trainer-name">Simona Ruberti</div>
-      <span class="trainer-role role-nutritionist">Nutrizionista</span>
-      <p class="trainer-bio">
-        Nutrizionista certificata con 10 anni di esperienza. Offre piani dietetici personalizzati,
-        consulenze nutrizionali e una raccolta di ricette fit per ogni obiettivo.
-      </p>
-      <button class="btn btn-success" style="margin-top:1rem" (click)="navigate('/nutrition')">
-        🥗 Piani Dieta
-      </button>
-    </div>
-    <div class="trainer-card personal-trainer">
-      <div class="trainer-avatar">👨‍🏫</div>
-      <div class="trainer-name">Luca Siretta</div>
-      <span class="trainer-role role-personaltrainer">Personal Trainer</span>
-      <p class="trainer-bio">
-        Personal Trainer ISSA certificato. Crea schede di allenamento su misura per ogni cliente,
-        dal principiante all'atleta avanzato. Specializzato in functional training.
-      </p>
-      <button class="btn btn-primary" style="margin-top:1rem" (click)="navigate('/training')">
-        💪 Schede Allenamento
-      </button>
-    </div>
-  </div>
 </main>

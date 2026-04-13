@@ -1,0 +1,28 @@
+<main class="container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Elenco Prestazioni</h1>
+      <p class="page-subtitle">I servizi offerti da Apice Clinic</p>
+    </div>
+  </div>
+
+  <div *ngFor="let cat of categories" class="services-section">
+
+    <div class="services-section-title" (click)="toggle(cat)" style="cursor:pointer">
+      <h2>{{ cat.label }}</h2>
+      <span class="material-icons accordion-arrow" [class.open]="cat.open">expand_more</span>
+    </div>
+
+    <div class="services-icon-grid" *ngIf="cat.open">
+      <div class="service-icon-card" *ngFor="let s of cat.services">
+        <div class="service-circle" [style.background]="cat.bgColor" [style.color]="cat.color">
+          <span class="material-icons">{{ s.icon }}</span>
+        </div>
+        <div class="service-icon-name">{{ s.name | uppercase }}</div>
+        <p class="service-icon-desc">{{ s.description }}</p>
+        <span class="badge badge-info" *ngIf="s.duration">{{ s.duration }}</span>
+      </div>
+    </div>
+
+  </div>
+</main>

@@ -1,25 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { forkJoin } from 'rxjs';
-import { TrainingPlanService } from '../../services/training-plan.service';
-import { ClientService } from '../../services/client.service';
-import { TrainerService } from '../../services/trainer.service';
-import { TrainingPlan, TrainingPlanRequest, Client } from '../../models/models';
+import {Component, OnInit} from '@angular/core';
+import {AsyncPipe, CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {forkJoin, Observable} from 'rxjs';
+import {TrainingPlanService} from '../../services/training-plan.service';
+import {ClientService} from '../../services/client.service';
+import {TrainerService} from '../../services/trainer.service';
+import {AlertService, AlertState} from '../../services/alert.service';
+import {Client, TrainingPlan, TrainingPlanRequest} from '../../models/models';
 
 @Component({
   selector: 'app-training',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, AsyncPipe, FormsModule, ReactiveFormsModule],
   templateUrl: './training.component.html'
 })
 export class TrainingComponent implements OnInit {
   plans: TrainingPlan[] = [];
   clients: Client[] = [];
-  lucaId = 0;
+  /** ID of the personal trainer assigned to new plans */
+  personalTrainerId = 0;
   loading = false;
-  alertMsg  = '';
-  alertType = 'success';
   showModal  = false;
   showDetail = false;
   editingId: number | null = null;
@@ -27,35 +27,39 @@ export class TrainingComponent implements OnInit {
   filterActive = '';
   filterClientId = '';
   form!: FormGroup;
+  readonly alert$: Observable<AlertState | null>;
 
   constructor(
-    private svc: TrainingPlanService,
-    private clientSvc: ClientService,
-    private trainerSvc: TrainerService,
+    private trainingPlanService: TrainingPlanService,
+    private clientService: ClientService,
+    private trainerService: TrainerService,
+    private alertService: AlertService,
     private fb: FormBuilder
-  ) {}
+  ) {
+    this.alert$ = this.alertService.alert$;
+  }
 
   ngOnInit(): void {
     this.buildForm();
     forkJoin({
-      plans: this.svc.getAll(),
-      clients: this.clientSvc.getAll(),
-      trainers: this.trainerSvc.getAll('PERSONAL_TRAINER')
+      plans:    this.trainingPlanService.getAll(),
+      clients:  this.clientService.getAll(),
+      trainers: this.trainerService.getAll('PERSONAL_TRAINER')
     }).subscribe(({ plans, clients, trainers }) => {
-      this.plans = plans;
-      this.clients = clients;
-      this.lucaId = trainers[0]?.id ?? 2;
+      this.plans            = plans;
+      this.clients          = clients;
+      this.personalTrainerId = trainers[0]?.id ?? 2;
     });
   }
 
   buildForm(): void {
     this.form = this.fb.group({
-      clientId:       [null, Validators.required],
-      title:          ['',   Validators.required],
-      description:    [''],
-      weeks:          [null],
-      sessionsPerWeek:[null],
-      active:         [true]
+      clientId:        [null, Validators.required],
+      title:           ['',   Validators.required],
+      description:     [''],
+      weeks:           [null],
+      sessionsPerWeek: [null],
+      active:          [true]
     });
   }
 
@@ -69,47 +73,67 @@ export class TrainingComponent implements OnInit {
 
   load(): void {
     this.loading = true;
-    this.svc.getAll().subscribe({ next: (d) => { this.plans = d; this.loading = false; }, error: () => { this.loading = false; } });
+    this.trainingPlanService.getAll().subscribe({
+      next: (data) => { this.plans = data; this.loading = false; },
+      error: () => { this.loading = false; }
+    });
   }
 
-  openDetail(p: TrainingPlan): void { this.selected = p; this.showDetail = true; }
-  openCreate(): void { this.editingId = null; this.form.reset({ active: true }); this.showModal = true; }
-  openEdit(p: TrainingPlan): void {
-    this.editingId = p.id;
-    this.form.patchValue({ clientId: p.clientId, title: p.title, description: p.description ?? '',
-      weeks: p.weeks, sessionsPerWeek: p.sessionsPerWeek, active: p.active });
+  openDetail(plan: TrainingPlan): void { this.selected = plan; this.showDetail = true; }
+
+  openCreate(): void {
+    this.editingId = null;
+    this.form.reset({ active: true });
+    this.showModal = true;
+  }
+
+  openEdit(plan: TrainingPlan): void {
+    this.editingId = plan.id;
+    this.form.patchValue({
+      clientId:        plan.clientId,
+      title:           plan.title,
+      description:     plan.description ?? '',
+      weeks:           plan.weeks,
+      sessionsPerWeek: plan.sessionsPerWeek,
+      active:          plan.active
+    });
     this.showModal = true;
   }
 
   save(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-    const v = this.form.value;
+    const value = this.form.value;
     const body: TrainingPlanRequest = {
-      clientId: +v.clientId, trainerId: this.lucaId, title: v.title,
-      description: v.description || null, weeks: v.weeks || null,
-      sessionsPerWeek: v.sessionsPerWeek || null, active: v.active ?? true
+      clientId:        +value.clientId,
+      trainerId:       this.personalTrainerId,
+      title:           value.title,
+      description:     value.description || null,
+      weeks:           value.weeks || null,
+      sessionsPerWeek: value.sessionsPerWeek || null,
+      active:          value.active ?? true
     };
-    const obs = this.editingId ? this.svc.update(this.editingId, body) : this.svc.create(body);
-    obs.subscribe({
-      next: () => { this.showAlert(this.editingId ? 'Plan updated!' : 'Plan created!'); this.showModal = false; this.load(); },
-      error: (err) => this.showAlert(err.error?.message || 'Save failed', 'error')
+    const request$ = this.editingId
+      ? this.trainingPlanService.update(this.editingId, body)
+      : this.trainingPlanService.create(body);
+
+    request$.subscribe({
+      next: () => {
+        this.alertService.show(this.editingId ? 'Plan updated!' : 'Plan created!');
+        this.showModal = false;
+        this.load();
+      }
     });
   }
 
   delete(id: number): void {
     if (!confirm('Delete this training plan?')) return;
-    this.svc.delete(id).subscribe({
-      next: () => { this.showAlert('Plan deleted.'); this.load(); },
-      error: (err) => this.showAlert(err.error?.message || 'Delete failed', 'error')
+    this.trainingPlanService.delete(id).subscribe({
+      next: () => { this.alertService.show('Plan deleted.'); this.load(); }
     });
   }
 
   isInvalid(field: string): boolean {
-    const c = this.form.get(field); return !!(c && c.invalid && c.touched);
-  }
-
-  showAlert(msg: string, type = 'success'): void {
-    this.alertMsg = msg; this.alertType = type;
-    setTimeout(() => this.alertMsg = '', 3500);
+    const control = this.form.get(field);
+    return !!(control && control.invalid && control.touched);
   }
 }

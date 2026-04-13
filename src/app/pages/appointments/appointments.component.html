@@ -1,15 +1,15 @@
 <main class="container">
   <div class="page-header">
     <div>
-      <h1 class="page-title">📅 Appuntamenti</h1>
+      <h1 class="page-title"><span class="material-icons page-title-icon">calendar_today</span> Appuntamenti</h1>
       <p class="page-subtitle">Gestione prenotazioni di Simona e Luca</p>
     </div>
     <button class="btn btn-primary" (click)="openCreate()">+ Nuovo Appuntamento</button>
   </div>
 
-  <div *ngIf="alertMsg" class="alert"
-    [class.alert-success]="alertType==='success'"
-    [class.alert-error]="alertType==='error'">{{ alertMsg }}</div>
+  <ng-container *ngIf="alert$ | async as alert">
+    <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
+  </ng-container>
 
   <div class="card">
     <div class="toolbar">
@@ -38,7 +38,7 @@
             <td>{{ a.clientFullName }}</td>
             <td>
               {{ a.trainerFullName }}<br/>
-              <small>{{ a.trainerRole === 'NUTRITIONIST' ? '🥗 Nutrizionista' : '💪 Personal Trainer' }}</small>
+              <small>{{ a.trainerRole === 'NUTRITIONIST' ? 'Nutrizionista' : 'Personal Trainer' }}</small>
             </td>
             <td>{{ a.serviceType }}</td>
             <td><span [class]="statusClass(a.status)">{{ statusLabel(a.status) }}</span></td>
@@ -57,7 +57,7 @@
 <div class="modal-overlay" *ngIf="showApptModal">
   <div class="modal">
     <div class="modal-header">
-      <h3>📅 Nuovo Appuntamento</h3>
+      <h3>Nuovo Appuntamento</h3>
       <button class="modal-close" (click)="showApptModal = false">&times;</button>
     </div>
     <form [formGroup]="apptForm" (ngSubmit)="saveAppointment()">
@@ -74,14 +74,18 @@
         <select formControlName="trainerId">
           <option value="">– Seleziona trainer –</option>
           <option *ngFor="let t of trainers" [value]="t.id">
-            {{ t.firstName }} {{ t.lastName }} – {{ t.role === 'NUTRITIONIST' ? '🥗 Nutrizionista' : '💪 PT' }}
+            {{ t.firstName }} {{ t.lastName }} – {{ t.role === 'NUTRITIONIST' ? 'Nutrizionista' : 'Personal Trainer' }}
           </option>
         </select>
         <div class="field-error" *ngIf="isInvalid(apptForm,'trainerId')">Campo obbligatorio</div>
       </div>
       <div class="form-group">
         <label>Data e Ora *</label>
-        <input formControlName="scheduledAt" type="datetime-local"/>
+        <mat-form-field appearance="outline" class="mat-date-field">
+          <input matInput [matDatepicker]="pickerAppt" formControlName="scheduledAt" placeholder="gg/mm/aaaa"/>
+          <mat-datepicker-toggle matIconSuffix [for]="pickerAppt"></mat-datepicker-toggle>
+          <mat-datepicker #pickerAppt></mat-datepicker>
+        </mat-form-field>
         <div class="field-error" *ngIf="isInvalid(apptForm,'scheduledAt')">Campo obbligatorio</div>
       </div>
       <div class="form-group">

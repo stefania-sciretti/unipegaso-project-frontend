@@ -1,7 +1,7 @@
 <main class="container">
   <div class="page-header">
     <div>
-      <h1 class="page-title">💪 Allenamento – Luca Siretta</h1>
+      <h1 class="page-title"><span class="material-icons page-title-icon">fitness_center</span> Allenamento – Luca Siretta</h1>
       <p class="page-subtitle">Schede di allenamento personalizzate e coaching fitness</p>
     </div>
     <button class="btn btn-primary" (click)="openCreate()">+ Nuova Scheda</button>
@@ -9,7 +9,7 @@
 
   <div class="trainer-grid" style="margin-bottom:1.5rem">
     <div class="trainer-card personal-trainer" style="display:flex;align-items:center;gap:1.5rem;padding:1.5rem">
-      <div style="font-size:3.5rem">👨‍🏫</div>
+      <div class="trainer-avatar-icon"><span class="material-icons">person</span></div>
       <div>
         <div class="trainer-name">Luca Siretta</div>
         <span class="trainer-role role-personaltrainer">Personal Trainer ISSA</span>
@@ -21,9 +21,9 @@
     </div>
   </div>
 
-  <div *ngIf="alertMsg" class="alert"
-    [class.alert-success]="alertType==='success'"
-    [class.alert-error]="alertType==='error'">{{ alertMsg }}</div>
+  <ng-container *ngIf="alert$ | async as alert">
+    <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
+  </ng-container>
 
   <div class="card">
     <div class="section-header">
