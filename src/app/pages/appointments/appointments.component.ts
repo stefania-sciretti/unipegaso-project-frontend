@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AsyncPipe, CommonModule} from '@angular/common';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {forkJoin, Observable} from 'rxjs';
 import {AppointmentService} from '../../services/appointment.service';
@@ -8,17 +8,12 @@ import {ClientService} from '../../services/client.service';
 import {StaffService} from '../../services/trainer.service';
 import {AlertService, AlertState} from '../../services/alert.service';
 import {AppointmentStatus, Client, FitnessAppointment, FitnessAppointmentRequest, Staff} from '../../models/models';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-appointments',
   standalone: true,
   imports: [
-    CommonModule, AsyncPipe, ReactiveFormsModule,
-    MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, MatInputModule
+    CommonModule, AsyncPipe, ReactiveFormsModule, FormsModule
   ],
   templateUrl: './appointments.component.html'
 })
@@ -35,6 +30,30 @@ export class AppointmentsComponent implements OnInit {
   statusEditingId: number | null = null;
   apptForm!: FormGroup;
   statusForm!: FormGroup;
+
+  // custom dropdown clienti
+  clientDropdownOpen = false;
+  clientSearch = '';
+  selectedClientLabel = '';
+
+  get filteredClients(): Client[] {
+    const q = this.clientSearch.toLowerCase();
+    return this.clients.filter(c =>
+      `${c.firstName} ${c.lastName}`.toLowerCase().includes(q)
+    );
+  }
+
+  selectClient(c: Client): void {
+    this.apptForm.patchValue({ clientId: c.id });
+    this.selectedClientLabel = `${c.firstName} ${c.lastName}`;
+    this.clientDropdownOpen = false;
+    this.clientSearch = '';
+  }
+
+  openClientDropdown(): void {
+    this.clientDropdownOpen = true;
+    this.clientSearch = '';
+  }
 
   readonly statuses: AppointmentStatus[] = ['BOOKED', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
 
@@ -94,15 +113,17 @@ export class AppointmentsComponent implements OnInit {
     this.load();
   }
 
-  openCreate(): void { this.apptForm.reset(); this.showApptModal = true; }
+  openCreate(): void { this.apptForm.reset(); this.selectedClientLabel = ''; this.clientDropdownOpen = false; this.showApptModal = true; }
 
   saveAppointment(): void {
     if (this.apptForm.invalid) { this.apptForm.markAllAsTouched(); return; }
     const value = this.apptForm.value;
+    // datetime-local restituisce "2026-04-09T18:00", il backend si aspetta "2026-04-09T18:00:00"
+    const scheduledAt = value.scheduledAt?.length === 16 ? value.scheduledAt + ':00' : value.scheduledAt;
     const body: FitnessAppointmentRequest = {
       clientId:    +value.clientId,
       trainerId:   +value.trainerId,
-      scheduledAt: value.scheduledAt,
+      scheduledAt: scheduledAt,
       serviceType: value.serviceType,
       notes:       value.notes || null
     };
