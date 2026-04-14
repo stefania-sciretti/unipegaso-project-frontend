@@ -1,10 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {AsyncPipe, CommonModule} from '@angular/common';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {Doctor, DoctorRequest, DoctorService} from '../../services/doctor.service';
-import {AlertService, AlertState} from '../../services/alert.service';
-
+import { Component, OnInit } from '@angular/core';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { Doctor, DoctorRequest, DoctorService } from '../../services/doctor.service';
+import { AlertService, AlertState } from '../../services/alert.service';
+export interface StaffMember {
+  firstName: string;
+  lastName: string;
+  role: string;
+  gender: 'male' | 'female';
+  image: string;
+  route: string;
+}
 @Component({
   selector: 'app-doctors',
   standalone: true,
@@ -19,17 +27,27 @@ export class DoctorsComponent implements OnInit {
   editingId: number | null = null;
   form!: FormGroup;
   readonly alert$: Observable<AlertState | null>;
-
+  readonly staff: StaffMember[] = [
+    { firstName: 'Simona',  lastName: 'Ruberti', role: 'Biologa Nutrizionista', gender: 'female', image: 'assets/icons/simona.webp', route: '/staff/simona' },
+    { firstName: 'Luca',    lastName: 'Siretta', role: 'Personal Trainer ISSA', gender: 'male',   image: 'assets/icons/luca.webp',   route: '/staff/luca'   },
+    { firstName: 'Marco',   lastName: 'Lavecri', role: 'Medico dello Sport',    gender: 'male',   image: 'assets/icons/marco.webp',  route: '/staff/marco'  },
+    { firstName: 'Michele', lastName: 'Mudoli',  role: 'Osteopata',             gender: 'male',   image: 'assets/icons/michele.webp',route: '/staff/michele'},
+  ];
   constructor(
     private doctorService: DoctorService,
     private alertService: AlertService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.alert$ = this.alertService.alert$;
   }
-
-  ngOnInit(): void { this.buildForm(); this.load(); }
-
+  ngOnInit(): void {
+    this.buildForm();
+    this.load();
+  }
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
+  }
   load(): void {
     this.loading = true;
     this.doctorService.getAll().subscribe({
@@ -37,7 +55,6 @@ export class DoctorsComponent implements OnInit {
       error: () => { this.loading = false; }
     });
   }
-
   buildForm(): void {
     this.form = this.fb.group({
       firstName:      ['', Validators.required],
@@ -47,9 +64,7 @@ export class DoctorsComponent implements OnInit {
       licenseNumber:  ['', Validators.required]
     });
   }
-
   openCreate(): void { this.editingId = null; this.form.reset(); this.showModal = true; }
-
   openEdit(doctor: Doctor): void {
     this.editingId = doctor.id;
     this.form.patchValue({
@@ -61,16 +76,14 @@ export class DoctorsComponent implements OnInit {
     });
     this.showModal = true;
   }
-
   closeModal(): void { this.showModal = false; }
-
   save(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     const body: DoctorRequest = this.form.value;
-    const request$ = this.editingId
+    const req$ = this.editingId
       ? this.doctorService.update(this.editingId, body)
       : this.doctorService.create(body);
-    request$.subscribe({
+    req$.subscribe({
       next: () => {
         this.alertService.show(this.editingId ? 'Doctor updated' : 'Doctor created');
         this.closeModal();
@@ -78,23 +91,14 @@ export class DoctorsComponent implements OnInit {
       }
     });
   }
-
   delete(id: number): void {
     if (!confirm('Delete this doctor?')) return;
     this.doctorService.delete(id).subscribe({
       next: () => { this.alertService.show('Doctor deleted'); this.load(); }
     });
   }
-
-  onFilter(e: Event): void {
-    const query = (e.target as HTMLInputElement).value.toLowerCase();
-    this.filtered = query
-      ? this.doctors.filter(d => d.specialization.toLowerCase().includes(query))
-      : this.doctors;
-  }
-
   isInvalid(field: string): boolean {
-    const control = this.form.get(field);
-    return !!(control && control.invalid && control.touched);
+    const c = this.form.get(field);
+    return !!(c && c.invalid && c.touched);
   }
 }

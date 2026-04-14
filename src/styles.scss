@@ -61,6 +61,7 @@ app-navbar {
   color: rgba(255,255,255,0.82);
   transition: background 0.15s, color 0.15s;
   text-decoration: none;
+  cursor: pointer;
 }
 .nav-link:hover { background: rgba(255,255,255,0.15); color: #fff; }
 .active-link    { background: rgba(255,255,255,0.15); color: #fff; }
@@ -88,7 +89,8 @@ app-navbar {
   padding: 0.35rem 0; z-index: 10000;
   border: 1px solid rgba(255,255,255,0.12); border-top: none;
 }
-.dropdown-menu li { list-style: none; }
+.dropdown-menu li { list-style: none; cursor: pointer; }
+.dropdown-menu li a { cursor: pointer; }
 .dropdown.dropdown-open .dropdown-menu { display: block; }
 
 /* ── Layout ─────────────────────────────── */
@@ -458,4 +460,212 @@ code { background: #eef4fa; border-radius: 4px; padding: 2px 6px; font-size: 0.8
 .detail-section { margin: 1rem 0; padding: 0.75rem; background: var(--bg); border-radius: 8px; }
 .detail-section strong { display: block; margin-bottom: 0.4rem; color: var(--primary); }
 .detail-section p { color: var(--text); line-height: 1.6; }
+
+/* ── Staff / Doctors Cards ─────────────────── */
+.staff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2rem;
+  padding: 1.5rem 0 2rem;
+}
+
+.staff-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background: transparent;
+}
+
+.staff-avatar-wrap {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.staff-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
+
+.staff-arrow-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--primary-mid);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(63, 114, 175, 0.35);
+  transition: background 0.2s, transform 0.15s;
+  z-index: 2;
+}
+.staff-arrow-btn:hover {
+  background: var(--primary);
+  transform: scale(1.1);
+}
+
+.staff-avatar-clickable {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.staff-avatar-clickable:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 24px rgba(63, 114, 175, 0.25);
+}
+
+.staff-info {
+  text-align: center;
+}
+
+.staff-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--primary-mid);
+  margin-bottom: 0.25rem;
+}
+
+.staff-role {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* ── Staff Detail Pages ─────────────────── */
+.staff-detail-back {
+  margin-bottom: 1.5rem;
+}
+.back-link {
+  color: var(--primary-mid);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--primary); }
+
+.staff-detail-hero {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.staff-detail-avatar {
+  flex-shrink: 0;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--primary-light);
+}
+.staff-detail-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.staff-detail-intro {
+  flex: 1;
+}
+.staff-detail-title {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 0.1rem;
+}
+.staff-detail-name {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.6rem;
+}
+.staff-detail-badge {
+  display: inline-block;
+  background: var(--primary-light);
+  color: var(--primary-mid);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+.staff-detail-bio {
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 0.97rem;
+}
+
+.staff-detail-services-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 1.2rem;
+}
+
+.staff-services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+
+.staff-service-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.4rem 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.staff-service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(17,45,78,0.13);
+}
+.staff-service-icon {
+  font-size: 2rem;
+  color: var(--primary-mid);
+  margin-bottom: 0.6rem;
+  display: block;
+}
+.staff-service-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.4rem;
+}
+.staff-service-card p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .staff-detail-hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
 

@@ -1,82 +1,22 @@
 <main class="container">
   <div class="page-header">
     <div>
-      <h1 class="page-title"><span class="material-icons page-title-icon">badge</span> Medici</h1>
-      <p class="page-subtitle">Medical staff management</p>
+      <h1 class="page-title"><span class="material-icons page-title-icon">badge</span> Il Nostro Staff</h1>
+      <p class="page-subtitle">I professionisti del tuo benessere</p>
     </div>
-    <button class="btn btn-primary" (click)="openCreate()">+ New Doctor</button>
   </div>
-  <ng-container *ngIf="alert$ | async as alert">
-    <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
-  </ng-container>
-  <div class="card">
-    <div class="toolbar">
-      <input type="text" placeholder="Filter by specialization…" (input)="onFilter($event)" style="flex:1;max-width:300px"/>
-    </div>
-    <div *ngIf="loading" class="loading">Loading…</div>
-    <div class="table-wrapper" *ngIf="!loading">
-      <table>
-        <thead><tr>
-          <th>#</th><th>Full Name</th><th>Specialization</th>
-          <th>Email</th><th>License No.</th><th>Actions</th>
-        </tr></thead>
-        <tbody>
-          <tr *ngIf="doctors.length === 0"><td colspan="6" class="empty">No doctors found.</td></tr>
-          <tr *ngFor="let d of doctors">
-            <td>{{ d.id }}</td>
-            <td>{{ d.firstName }} {{ d.lastName }}</td>
-            <td>{{ d.specialization }}</td>
-            <td>{{ d.email }}</td>
-            <td><code>{{ d.licenseNumber }}</code></td>
-            <td class="actions">
-              <button class="btn btn-primary btn-sm" (click)="openEdit(d)">Edit</button>
-              <button class="btn btn-danger btn-sm" (click)="delete(d.id)">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="staff-grid">
+    <div class="staff-card" *ngFor="let member of staff">
+      <div class="staff-avatar-wrap staff-avatar-clickable" (click)="navigateTo(member.route)">
+        <img class="staff-avatar" [src]="member.image" [alt]="member.firstName + ' ' + member.lastName"/>
+      </div>
+      <div class="staff-info">
+        <p class="staff-name">
+          {{ member.gender === 'female' ? 'Dott.ssa' : 'Dott.' }}
+          {{ member.firstName }} {{ member.lastName }}
+        </p>
+        <p class="staff-role">{{ member.role }}</p>
+      </div>
     </div>
   </div>
 </main>
-
-<div class="modal-overlay" *ngIf="showModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>{{ editingId ? 'Edit Doctor' : 'New Doctor' }}</h3>
-      <button class="modal-close" (click)="closeModal()">&times;</button>
-    </div>
-    <form [formGroup]="form" (ngSubmit)="save()">
-      <div class="form-row">
-        <div class="form-group">
-          <label>First Name *</label>
-          <input formControlName="firstName" type="text" placeholder="Laura"/>
-          <div class="field-error" *ngIf="isInvalid('firstName')">Required</div>
-        </div>
-        <div class="form-group">
-          <label>Last Name *</label>
-          <input formControlName="lastName" type="text" placeholder="Bianchi"/>
-          <div class="field-error" *ngIf="isInvalid('lastName')">Required</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Specialization *</label>
-        <input formControlName="specialization" type="text" placeholder="Cardiology"/>
-        <div class="field-error" *ngIf="isInvalid('specialization')">Required</div>
-      </div>
-      <div class="form-group">
-        <label>Email *</label>
-        <input formControlName="email" type="email" placeholder="l.bianchi@clinicasalute.it"/>
-        <div class="field-error" *ngIf="isInvalid('email')">Valid email required</div>
-      </div>
-      <div class="form-group">
-        <label>License Number *</label>
-        <input formControlName="licenseNumber" type="text" placeholder="RM-12345"/>
-        <div class="field-error" *ngIf="isInvalid('licenseNumber')">Required</div>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
-        <button type="submit" class="btn btn-primary">Save</button>
-      </div>
-    </form>
-  </div>
-</div>

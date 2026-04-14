@@ -46,5 +46,21 @@ export const routes: Routes = [
     path: 'services',
     loadComponent: () => import('./pages/services/services.component').then(m => m.ServicesComponent)
   },
+  {
+    path: 'staff/simona',
+    loadComponent: () => import('./pages/staff/simona/simona.component').then(m => m.SimonaComponent)
+  },
+  {
+    path: 'staff/luca',
+    loadComponent: () => import('./pages/staff/luca/luca.component').then(m => m.LucaComponent)
+  },
+  {
+    path: 'staff/marco',
+    loadComponent: () => import('./pages/staff/marco/marco.component').then(m => m.MarcoComponent)
+  },
+  {
+    path: 'staff/michele',
+    loadComponent: () => import('./pages/staff/michele/michele.component').then(m => m.MicheleComponent)
+  },
   { path: '**', redirectTo: 'dashboard' }
 ];
