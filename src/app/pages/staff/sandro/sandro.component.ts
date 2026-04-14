@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
 @Component({
-  selector: 'app-michele',
+  selector: 'app-sandro',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './michele.component.html'
+  templateUrl: './sandro.component.html'
 })
-export class MicheleComponent {}
+export class SandroComponent {}

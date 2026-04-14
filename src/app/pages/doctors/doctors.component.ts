@@ -28,10 +28,11 @@ export class DoctorsComponent implements OnInit {
   form!: FormGroup;
   readonly alert$: Observable<AlertState | null>;
   readonly staff: StaffMember[] = [
-    { firstName: 'Simona',  lastName: 'Ruberti', role: 'Biologa Nutrizionista', gender: 'female', image: 'assets/icons/simona.webp', route: '/staff/simona' },
-    { firstName: 'Luca',    lastName: 'Siretta', role: 'Personal Trainer ISSA', gender: 'male',   image: 'assets/icons/luca.webp',   route: '/staff/luca'   },
-    { firstName: 'Marco',   lastName: 'Lavecri', role: 'Medico dello Sport',    gender: 'male',   image: 'assets/icons/marco.webp',  route: '/staff/marco'  },
-    { firstName: 'Michele', lastName: 'Mudoli',  role: 'Osteopata',             gender: 'male',   image: 'assets/icons/michele.webp',route: '/staff/michele'},
+    { firstName: 'Simona',    lastName: 'Ruberti',  role: 'Biologa Nutrizionista',    gender: 'female', image: 'assets/icons/simona.webp',    route: '/staff/simona'    },
+    { firstName: 'Luca',      lastName: 'Siretta',  role: 'Personal Trainer ISSA',    gender: 'male',   image: 'assets/icons/luca.webp',      route: '/staff/luca'      },
+    { firstName: 'Sandro',    lastName: 'Scrigoni', role: 'Medico dello Sport',        gender: 'male',   image: 'assets/icons/sandro.webp',    route: '/staff/sandro'    },
+    { firstName: 'Mihai',     lastName: 'Lavretti', role: 'Osteopata',                 gender: 'male',   image: 'assets/icons/mihai.webp',     route: '/staff/mihai'     },
+    { firstName: 'Cristiana', lastName: 'Maratti',  role: 'Nutrizionista Sportiva',    gender: 'female', image: 'assets/icons/cristiana.webp', route: '/staff/cristiana' },
   ];
   constructor(
     private doctorService: DoctorService,

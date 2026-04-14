@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {forkJoin, Observable} from 'rxjs';
 import {GlycemiaService} from '../../services/glycemia.service';
 import {ClientService} from '../../services/client.service';
-import {TrainerService} from '../../services/trainer.service';
+import {StaffService} from '../../services/trainer.service';
 import {AlertService, AlertState} from '../../services/alert.service';
 import {Client, GlycemiaContext, GlycemiaMeasurement, GlycemiaMeasurementRequest} from '../../models/models';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -24,7 +24,7 @@ import {MatInputModule} from '@angular/material/input';
 export class GlycemiaComponent implements OnInit {
   measurements: GlycemiaMeasurement[] = [];
   clients: Client[] = [];
-  /** ID of the nutritionist trainer who performs glycemia measurements */
+  /** ID of the nutritionist staff member who performs glycemia measurements */
   nutritionistId = 0;
   loading = false;
   showModal = false;
@@ -43,7 +43,7 @@ export class GlycemiaComponent implements OnInit {
   constructor(
     private glycemiaService: GlycemiaService,
     private clientService: ClientService,
-    private trainerService: TrainerService,
+    private trainerService: StaffService,
     private alertService: AlertService,
     private fb: FormBuilder
   ) {

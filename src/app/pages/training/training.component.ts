@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {forkJoin, Observable} from 'rxjs';
 import {TrainingPlanService} from '../../services/training-plan.service';
 import {ClientService} from '../../services/client.service';
-import {TrainerService} from '../../services/trainer.service';
+import {StaffService} from '../../services/trainer.service';
 import {AlertService, AlertState} from '../../services/alert.service';
 import {Client, TrainingPlan, TrainingPlanRequest} from '../../models/models';
 
@@ -17,7 +17,7 @@ import {Client, TrainingPlan, TrainingPlanRequest} from '../../models/models';
 export class TrainingComponent implements OnInit {
   plans: TrainingPlan[] = [];
   clients: Client[] = [];
-  /** ID of the personal trainer assigned to new plans */
+  /** ID of the personal trainer staff member assigned to new plans */
   personalTrainerId = 0;
   loading = false;
   showModal  = false;
@@ -32,7 +32,7 @@ export class TrainingComponent implements OnInit {
   constructor(
     private trainingPlanService: TrainingPlanService,
     private clientService: ClientService,
-    private trainerService: TrainerService,
+    private trainerService: StaffService,
     private alertService: AlertService,
     private fb: FormBuilder
   ) {

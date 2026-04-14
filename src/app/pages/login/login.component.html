@@ -1,0 +1,60 @@
+<div class="login-page">
+  <div class="login-card">
+
+    <div class="login-logo">
+      <span class="material-icons login-logo-icon">local_hospital</span>
+      <span class="login-logo-name">Apice Clinic</span>
+    </div>
+
+    <h2 class="login-title">Accedi al portale</h2>
+    <p class="login-subtitle">Inserisci le tue credenziali per continuare</p>
+
+    <div class="login-error" *ngIf="error">
+      <span class="material-icons" style="font-size:1.1rem">error_outline</span>
+      {{ error }}
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+      <div class="login-field">
+        <label>Username</label>
+        <div class="login-input-wrap">
+          <span class="material-icons login-input-icon">person</span>
+          <input formControlName="username" type="text" placeholder="es. mario.rossi" autocomplete="username"/>
+        </div>
+        <div class="login-field-error" *ngIf="isInvalid('username')">Campo obbligatorio</div>
+      </div>
+
+      <div class="login-field">
+        <label>Password</label>
+        <div class="login-input-wrap">
+          <span class="material-icons login-input-icon">lock</span>
+          <input formControlName="password" type="password" placeholder="••••••••" autocomplete="current-password"/>
+        </div>
+        <div class="login-field-error" *ngIf="isInvalid('password')">Campo obbligatorio</div>
+      </div>
+
+      <button type="submit" class="login-btn" [disabled]="loading">
+        <span *ngIf="!loading">Accedi</span>
+        <span *ngIf="loading">Caricamento…</span>
+      </button>
+    </form>
+
+    <div class="login-roles">
+      <div class="login-role-box">
+        <span class="material-icons" style="color:var(--primary-mid)">badge</span>
+        <div>
+          <strong>Medici / Staff</strong>
+          <p>Accesso completo alla gestione clinica</p>
+        </div>
+      </div>
+      <div class="login-role-box">
+        <span class="material-icons" style="color:var(--primary-mid)">person</span>
+        <div>
+          <strong>Pazienti</strong>
+          <p>Accesso al proprio profilo e referti</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

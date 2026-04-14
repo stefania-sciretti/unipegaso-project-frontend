@@ -28,6 +28,7 @@ export class PatientService {
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Patient[]> { return this.http.get<Patient[]>(this.base); }
+  search(query: string): Observable<Patient[]> { return this.http.get<Patient[]>(this.base, { params: { search: query } }); }
   getById(id: number): Observable<Patient> { return this.http.get<Patient>(`${this.base}/${id}`); }
   create(body: PatientRequest): Observable<Patient> { return this.http.post<Patient>(this.base, body); }
   update(id: number, body: PatientRequest): Observable<Patient> { return this.http.put<Patient>(`${this.base}/${id}`, body); }

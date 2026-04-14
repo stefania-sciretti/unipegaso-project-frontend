@@ -20,11 +20,11 @@ export interface ClientRequest {
   goal?: string | null;
 }
 
-export interface Trainer {
+export interface Staff {
   id: number;
   firstName: string;
   lastName: string;
-  role: 'NUTRITIONIST' | 'PERSONAL_TRAINER';
+  role: string;
   bio?: string;
   email: string;
   createdAt: string;

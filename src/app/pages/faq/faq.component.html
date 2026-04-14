@@ -1,0 +1,40 @@
+<main class="container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">
+        <span class="material-icons page-title-icon">help_outline</span> Domande Frequenti
+      </h1>
+      <p class="page-subtitle">Tutto quello che devi sapere su Apice Clinic e sul portale</p>
+    </div>
+  </div>
+
+  <div class="faq-list">
+    <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.faq-open]="faq.open">
+      <div class="faq-question" (click)="toggle(faq)" role="button" tabindex="0"
+           (keydown.enter)="toggle(faq)" (keydown.space)="toggle(faq)">
+        <span class="faq-number">{{ i + 1 }}</span>
+        <span class="faq-q-text">{{ faq.q }}</span>
+        <span class="material-icons faq-chevron">{{ faq.open ? 'expand_less' : 'expand_more' }}</span>
+      </div>
+      <div class="faq-answer" *ngIf="faq.open">
+        <p *ngFor="let line of faq.a.split('\n')" [class.faq-line-bullet]="line.startsWith('•')">{{ line }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-contact-box">
+    <span class="material-icons" style="font-size:2rem;color:var(--primary-mid)">support_agent</span>
+    <div>
+      <strong>Non hai trovato quello che cercavi?</strong>
+      <p>Contattaci direttamente:</p>
+      <div class="faq-contact-links">
+        <a href="tel:+393480000000" class="faq-contact-link">
+          <span class="material-icons">phone</span> +39 348 000 0000
+        </a>
+        <a href="mailto:informazioni@apiceclinic.com" class="faq-contact-link">
+          <span class="material-icons">mail_outline</span> informazioni@apiceclinic.com
+        </a>
+      </div>
+    </div>
+  </div>
+</main>

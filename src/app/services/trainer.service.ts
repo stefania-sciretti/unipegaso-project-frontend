@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Trainer } from '../models/models';
+import { Staff } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
-export class TrainerService {
+export class StaffService {
   private readonly base = '/api/trainers';
   constructor(private http: HttpClient) {}
 
-  getAll(role?: string): Observable<Trainer[]> {
+  getAll(role?: string): Observable<Staff[]> {
     const params = role ? new HttpParams().set('role', role) : undefined;
-    return this.http.get<Trainer[]>(this.base, { params });
+    return this.http.get<Staff[]>(this.base, { params });
   }
 
-  getById(id: number): Observable<Trainer> {
-    return this.http.get<Trainer>(`${this.base}/${id}`);
+  getById(id: number): Observable<Staff> {
+    return this.http.get<Staff>(`${this.base}/${id}`);
   }
 }

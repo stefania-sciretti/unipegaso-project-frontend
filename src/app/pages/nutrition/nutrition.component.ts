@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {forkJoin, Observable} from 'rxjs';
 import {DietPlanService} from '../../services/diet-plan.service';
 import {ClientService} from '../../services/client.service';
-import {TrainerService} from '../../services/trainer.service';
+import {StaffService} from '../../services/trainer.service';
 import {AlertService, AlertState} from '../../services/alert.service';
 import {Client, DietPlan, DietPlanRequest} from '../../models/models';
 
@@ -17,7 +17,7 @@ import {Client, DietPlan, DietPlanRequest} from '../../models/models';
 export class NutritionComponent implements OnInit {
   plans: DietPlan[] = [];
   clients: Client[] = [];
-  /** ID of the nutritionist trainer assigned to new plans */
+  /** ID of the nutritionist staff member assigned to new plans */
   nutritionistId = 0;
   loading = false;
   showModal = false;
@@ -29,7 +29,7 @@ export class NutritionComponent implements OnInit {
   constructor(
     private dietPlanService: DietPlanService,
     private clientService: ClientService,
-    private trainerService: TrainerService,
+    private trainerService: StaffService,
     private alertService: AlertService,
     private fb: FormBuilder
   ) {

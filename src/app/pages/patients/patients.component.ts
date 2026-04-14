@@ -47,9 +47,13 @@ export class PatientsComponent implements OnInit {
     this.patientService.delete(id).subscribe({ next: () => { this.alertService.show('Paziente eliminato'); this.load(); } });
   }
   onSearch(e: Event): void {
-    const query = (e.target as HTMLInputElement).value.toLowerCase();
+    const query = (e.target as HTMLInputElement).value.trim();
     if (!query) { this.load(); return; }
-    this.patientService.getAll().subscribe(all => this.patients = all.filter(p => (p.firstName + ' ' + p.lastName).toLowerCase().includes(query)));
+    this.loading = true;
+    this.patientService.search(query).subscribe({
+      next: (data: Patient[]) => { this.patients = data; this.loading = false; },
+      error: () => { this.loading = false; }
+    });
   }
   isInvalid(field: string): boolean {
     const control = this.form.get(field);

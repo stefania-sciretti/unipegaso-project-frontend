@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {NavbarComponent} from './components/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent],
+  imports: [RouterModule, NavbarComponent],
   template: `
     <app-navbar></app-navbar>
     <div class="page-content">
@@ -29,6 +29,12 @@ import {NavbarComponent} from './components/navbar/navbar.component';
           <a href="tel:+393480000000" class="footer-link">
             <span class="material-icons" style="font-size:1rem">phone</span>
             +39 348 000 0000
+          </a>
+        </div>
+        <div class="footer-nav">
+          <a [routerLink]="['/faq']" class="footer-link">
+            <span class="material-icons" style="font-size:1rem">help_outline</span>
+            <span class="footer-link-text">Domande Frequenti (FAQ)</span>
           </a>
         </div>
         <div class="footer-copy">

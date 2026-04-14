@@ -5,9 +5,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {forkJoin, Observable} from 'rxjs';
 import {AppointmentService} from '../../services/appointment.service';
 import {ClientService} from '../../services/client.service';
-import {TrainerService} from '../../services/trainer.service';
+import {StaffService} from '../../services/trainer.service';
 import {AlertService, AlertState} from '../../services/alert.service';
-import {AppointmentStatus, Client, FitnessAppointment, FitnessAppointmentRequest, Trainer} from '../../models/models';
+import {AppointmentStatus, Client, FitnessAppointment, FitnessAppointmentRequest, Staff} from '../../models/models';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -25,7 +25,7 @@ import {MatInputModule} from '@angular/material/input';
 export class AppointmentsComponent implements OnInit {
   appointments: FitnessAppointment[] = [];
   clients: Client[] = [];
-  trainers: Trainer[] = [];
+  trainers: Staff[] = [];
   loading = false;
   filterStatus = '';
   readonly alert$: Observable<AlertState | null>;
@@ -46,7 +46,7 @@ export class AppointmentsComponent implements OnInit {
   constructor(
     private appointmentService: AppointmentService,
     private clientService: ClientService,
-    private trainerService: TrainerService,
+    private trainerService: StaffService,
     private alertService: AlertService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -133,6 +133,18 @@ export class AppointmentsComponent implements OnInit {
 
   canCancel(appointment: FitnessAppointment): boolean {
     return appointment.status === 'BOOKED' || appointment.status === 'CONFIRMED';
+  }
+
+  private readonly roleLabels: Record<string, string> = {
+    NUTRITIONIST:       'Biologa Nutrizionista',
+    PERSONAL_TRAINER:   'Personal Trainer',
+    SPORTS_DOCTOR:      'Medico dello Sport',
+    OSTEOPATH:          'Osteopata',
+    SPORTS_NUTRITIONIST:'Nutrizionista Sportiva'
+  };
+
+  roleLabel(role: string): string {
+    return this.roleLabels[role] ?? role;
   }
 
   statusLabel(status: string): string {
