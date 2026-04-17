@@ -1,0 +1,22 @@
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {ClinicalAppointment} from '../models/models';
+
+@Injectable({ providedIn: 'root' })
+export class ClinicalAppointmentService {
+  private readonly base = '/api/appointments';
+  constructor(private http: HttpClient) {}
+
+  getAll(filters: { patientId?: number; doctorId?: number; status?: string } = {}): Observable<ClinicalAppointment[]> {
+    let params = new HttpParams();
+    if (filters.patientId) params = params.set('patientId', filters.patientId);
+    if (filters.doctorId)  params = params.set('doctorId',  filters.doctorId);
+    if (filters.status)    params = params.set('status',    filters.status);
+    return this.http.get<ClinicalAppointment[]>(this.base, { params });
+  }
+
+  getById(id: number): Observable<ClinicalAppointment> {
+    return this.http.get<ClinicalAppointment>(`${this.base}/${id}`);
+  }
+}

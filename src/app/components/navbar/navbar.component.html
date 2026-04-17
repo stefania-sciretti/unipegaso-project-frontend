@@ -1,8 +1,7 @@
 <nav style="background:#112D4E;color:#fff;height:64px;box-shadow:0 3px 12px rgba(53,88,114,0.25);overflow:visible;position:relative;">
   <div style="max-width:1200px;margin:0 auto;padding:0 1.5rem;height:100%;display:flex;align-items:center;justify-content:space-between;">
-    <div style="font-size:1.25rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;cursor:pointer" (click)="go('/dashboard')">
-      <span class="material-icons" style="font-size:1.6rem;color:rgba(255,255,255,0.9)">local_hospital</span>
-      Apice Clinic
+    <div style="display:flex;align-items:center;cursor:pointer" (click)="go('/dashboard')">
+      <img src="assets/logo/logo-full.svg" alt="Apice Clinic" style="height:36px;width:auto;display:block;filter:brightness(0) invert(1);" />
     </div>
     <ul class="navbar-links">
       <!-- ── Solo admin ─────────────────────────────────────────── -->
@@ -98,8 +97,7 @@
   <div class="login-modal-box" (click)="$event.stopPropagation()">
     <button class="login-modal-close" (click)="closeLogin()">&times;</button>
     <div class="login-modal-logo">
-      <span class="material-icons" style="font-size:1.8rem;color:var(--primary-mid)">local_hospital</span>
-      <span style="font-size:1.2rem;font-weight:700;color:var(--primary)">Apice Clinic</span>
+      <img src="assets/logo/logomark.svg" alt="Apice Clinic" style="height:48px;width:auto;" />
     </div>
     <h2 class="login-modal-title">Accedi al portale</h2>
     <p class="login-modal-sub">Inserisci le tue credenziali per accedere alle funzioni riservate</p>

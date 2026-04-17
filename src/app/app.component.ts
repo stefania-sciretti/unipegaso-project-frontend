@@ -14,8 +14,7 @@ import {NavbarComponent} from './components/navbar/navbar.component';
     <footer class="app-footer">
       <div class="footer-inner">
         <div class="footer-brand">
-          <span class="material-icons footer-logo">fitness_center</span>
-          <span class="footer-name">Apice Clinic</span>
+          <img src="assets/logo/logo-full.svg" alt="Apice Clinic" style="height:32px;width:auto;filter:brightness(0) invert(1);" />
         </div>
         <div class="footer-contacts">
           <a href="mailto:prenotazioni@apiceclinic.com" class="footer-link">

@@ -214,9 +214,9 @@ th {
 td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
 tr:hover td { background: #f0f7ff; }
 .actions { display: flex; gap: 0.5rem; flex-wrap: nowrap; align-items: center; }
-.th-actions { width: 160px; min-width: 160px; text-align: left; }
+.th-actions { width: 200px; min-width: 200px; text-align: left; }
 .td-actions {
-  width: 160px; min-width: 160px;
+  width: 200px; min-width: 200px;
   white-space: nowrap;
   vertical-align: middle;
 }
@@ -243,6 +243,38 @@ small { color: var(--text-muted); }
 .badge-warning   { background: #fef3cd; color: #856404; }
 .badge-danger    { background: #fde8e8; color: var(--danger); }
 .badge-info      { background: #d6eaf8; color: var(--primary); }
+/* Badge per tipo visita (referti) */
+.badge-red    { background: #fde8e8; color: #c0392b; }
+.badge-orange { background: #fef0e0; color: #b7620e; }
+.badge-blue   { background: #ddeefa; color: #1a5680; }
+.badge-pink   { background: #fce4f0; color: #9b2b6e; }
+.badge-green  { background: #d4f0e0; color: #1e7a48; }
+.badge-gray   { background: #f0f0f0; color: #555; }
+
+/* ── Referti: colonne tabella ───────────── */
+.diagnosis-preview { max-width: 280px; color: var(--text-muted); font-size: 0.88rem; }
+.patient-cell { display: flex; align-items: center; gap: 6px; }
+.patient-icon { font-size: 18px; color: var(--primary-mid); }
+
+/* ── Referti: dettaglio modale ──────────── */
+.modal-wide { max-width: 680px !important; width: 90vw; }
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.detail-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.65rem 0.9rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  color: var(--text);
+  min-height: 2.5rem;
+}
 
 /* ── Recipe cards ───────────────────────── */
 .recipe-grid {
