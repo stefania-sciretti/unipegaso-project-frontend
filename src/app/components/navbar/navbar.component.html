@@ -1,9 +1,11 @@
 <nav style="background:#112D4E;color:#fff;height:64px;box-shadow:0 3px 12px rgba(53,88,114,0.25);overflow:visible;position:relative;">
   <div style="max-width:1200px;margin:0 auto;padding:0 1.5rem;height:100%;display:flex;align-items:center;justify-content:space-between;">
-    <div style="display:flex;align-items:center;cursor:pointer" (click)="go('/dashboard')">
-      <img src="assets/logo/logo-full.svg" alt="Apice Clinic" style="height:36px;width:auto;display:block;filter:brightness(0) invert(1);" />
-    </div>
+    <button type="button" class="navbar-logo-btn" aria-label="Vai alla dashboard" (click)="go('/dashboard')" style="display:flex;align-items:center;cursor:pointer;background:transparent;border:0;padding:0;margin:0;">
+      <img ngSrc="assets/logo/logo-full.svg" alt="Apice Clinic" style="height:36px;width:auto;display:block;filter:brightness(0) invert(1);"
+           height="230" width="672"/>
+    </button>
     <ul class="navbar-links">
+
       <!-- ── Solo admin ─────────────────────────────────────────── -->
       <ng-container *ngIf="auth.isAdmin">
         <li class="dropdown" [class.dropdown-open]="activeMenu==='clinico'">
@@ -36,6 +38,7 @@
           </a>
         </li>
       </ng-container>
+
       <!-- ── User loggato (non admin): prenota + referti ────────── -->
       <ng-container *ngIf="auth.isLoggedIn && !auth.isAdmin">
         <li>
@@ -51,6 +54,7 @@
           </a>
         </li>
       </ng-container>
+
       <!-- ── Elenco Prestazioni visibile a tutti ───────────────────────── -->
       <li>
         <a class="nav-link" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;border-radius:6px;font-size:0.9rem;font-weight:500;cursor:pointer;"
@@ -66,6 +70,7 @@
           <span class="material-icons" style="font-size:1.1rem;line-height:1">badge</span> Staff
         </a>
       </li>
+
       <!-- ── Non loggato: pulsante Login ────────────────────────── -->
       <li *ngIf="!auth.isLoggedIn">
         <button (click)="openLogin()"
@@ -74,6 +79,7 @@
           <span class="material-icons" style="font-size:1.1rem">login</span> Login
         </button>
       </li>
+
       <!-- ── Loggato: menu utente ────────────────────────────────── -->
       <li *ngIf="auth.isLoggedIn" class="dropdown" [class.dropdown-open]="activeMenu==='user'">
         <a class="dropdown-toggle" (click)="toggle('user', $event)" style="gap:0.4rem;">
@@ -92,12 +98,14 @@
     </ul>
   </div>
 </nav>
+
 <!-- Modal Login -->
-<div class="login-modal-overlay" *ngIf="showLoginModal" (click)="closeLogin()">
-  <div class="login-modal-box" (click)="$event.stopPropagation()">
+<div class="login-modal-overlay" *ngIf="showLoginModal" (click)="closeLogin()" (keydown.escape)="closeLogin()">
+  <dialog class="login-modal-box" open aria-label="Finestra di login" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <button class="login-modal-close" (click)="closeLogin()">&times;</button>
     <div class="login-modal-logo">
-      <img src="assets/logo/logomark.svg" alt="Apice Clinic" style="height:48px;width:auto;" />
+      <img ngSrc="assets/logo/logomark.svg" alt="Apice Clinic" style="height:48px;width:auto;" height="227"
+           width="249"/>
     </div>
     <h2 class="login-modal-title">Accedi al portale</h2>
     <p class="login-modal-sub">Inserisci le tue credenziali per accedere alle funzioni riservate</p>
@@ -106,22 +114,26 @@
     </div>
     <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" class="login-form">
       <div class="login-field">
-        <label>Username</label>
+        <!-- Associate label and input via for/id for accessibility -->
+        <label for="login-username">Username</label>
         <div class="login-input-wrap">
           <span class="material-icons login-input-icon">person</span>
-          <input formControlName="username" type="text" placeholder="es. mario.rossi" autocomplete="username"/>
+          <input id="login-username" formControlName="username" type="text" placeholder="es. mario.rossi" autocomplete="username" aria-describedby="username-error" />
         </div>
-        <div class="login-field-error" *ngIf="isInvalid('username')">Campo obbligatorio</div>
+        <div class="login-field-error" *ngIf="isInvalid('username')" id="username-error">Campo obbligatorio</div>
       </div>
       <div class="login-field">
-        <label>Password</label>
+        <!-- Associate label and input via for/id for accessibility -->
+        <label for="login-password">Password</label>
         <div class="login-input-wrap">
           <span class="material-icons login-input-icon">lock</span>
-          <input formControlName="password" type="password" placeholder="••••••••" autocomplete="current-password"/>
+          <input id="login-password" formControlName="password" type="password" placeholder="••••••••" autocomplete="current-password" aria-describedby="password-error" />
         </div>
-        <div class="login-field-error" *ngIf="isInvalid('password')">Campo obbligatorio</div>
+        <div class="login-field-error" *ngIf="isInvalid('password')" id="password-error">Campo obbligatorio</div>
       </div>
-      <button type="submit" class="login-btn">Accedi</button>
+      <button type="submit" class="login-btn" [disabled]="loginLoading">
+        {{ loginLoading ? 'Accesso in corso...' : 'Accedi' }}
+      </button>
     </form>
     <div class="login-roles">
       <div class="login-role-box">
@@ -133,5 +145,5 @@
         <div><strong>Pazienti</strong><p>Prenota visite e visualizza i tuoi referti</p></div>
       </div>
     </div>
-  </div>
+  </dialog>
 </div>

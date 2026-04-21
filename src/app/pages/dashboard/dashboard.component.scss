@@ -1,0 +1,696 @@
+/* ─── Booking Banner ─────────────────────────────────────────────────────── */
+.booking-banner {
+  background: linear-gradient(135deg, #112D4E 0%, #1B4A7A 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 20px rgba(17, 45, 78, 0.15);
+  color: white;
+
+  .booking-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 2rem 0;
+    color: white;
+  }
+
+  .booking-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1.5rem;
+    align-items: flex-end;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .booking-step {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .booking-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 0.5px;
+    }
+  }
+
+  /* ─── Dropdown Selector ─────────────────────────────────────────────────── */
+  .booking-dropdown {
+    position: relative;
+
+    .booking-dropdown-trigger {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1.125rem;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+      font-weight: 500;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.5);
+      }
+
+      .material-icons {
+        font-size: 1.2rem;
+      }
+    }
+
+    .booking-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      overflow: hidden;
+      min-width: 100%;
+      max-height: 400px;
+      overflow-y: auto;
+
+      .booking-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 1.125rem;
+        color: #112D4E;
+        cursor: pointer;
+        border-bottom: 1px solid rgba(17, 45, 78, 0.1);
+        transition: background 0.2s ease;
+        font-size: 0.95rem;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background: #f0f4f8;
+        }
+
+        .material-icons {
+          font-size: 1.2rem;
+          color: #112D4E;
+        }
+      }
+    }
+  }
+
+  /* ─── Service Selector ────────────────────────────────────────────────── */
+  .booking-service-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .booking-back-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.25);
+      }
+
+      .material-icons {
+        font-size: 1rem;
+      }
+    }
+
+    .booking-service-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.5);
+        }
+      }
+
+      .booking-service-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 1.125rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.95rem;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.15);
+          border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        &.active {
+          background: rgba(76, 175, 80, 0.25);
+          border-color: #4CAF50;
+        }
+
+        .material-icons {
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+
+  /* ─── Date Picker ──────────────────────────────────────────────────────── */
+  .booking-date-picker {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.125rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:focus-within {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .material-icons {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.2rem;
+    }
+
+    .booking-date-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      font-weight: 500;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      &::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+        cursor: pointer;
+      }
+    }
+
+    .booking-date-hint {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+  }
+
+  /* ─── Dropdown Text Only ────────────────────────────────────────────────── */
+  .booking-dropdown-item-text {
+    padding: 0.875rem 1.125rem;
+    color: #112D4E;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(17, 45, 78, 0.1);
+    transition: background 0.2s ease;
+    font-size: 0.95rem;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: #f0f4f8;
+    }
+  }
+
+  /* ─── Service List Text Only ─────────────────────────────────────────── */
+  .booking-service-item-text {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.125rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    &.active {
+      background: rgba(76, 175, 80, 0.25);
+      border-color: #4CAF50;
+    }
+
+    .material-icons {
+      font-size: 1.2rem;
+    }
+  }
+
+  /* ─── Selected Service Badge ──────────────────────────────────────────── */
+  .booking-selected-service {
+    .selected-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: rgba(76, 175, 80, 0.15);
+      border: 1px solid #4CAF50;
+      border-radius: 20px;
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 500;
+
+      .material-icons {
+        font-size: 1rem;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+
+  /* ─── Calendar Styles ────────────────────────────────────────────────── */
+  .booking-calendar-wrapper {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+
+      h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #112D4E;
+        margin: 0;
+        text-transform: capitalize;
+      }
+
+      .material-icons {
+        cursor: pointer;
+        color: #112D4E;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: #1B4A7A;
+        }
+      }
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+
+      .day-header {
+        text-align: center;
+        font-weight: 600;
+        color: #112D4E;
+        font-size: 0.85rem;
+        padding: 0.5rem;
+      }
+
+      .calendar-day {
+        aspect-ratio: 1;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        background: white;
+        color: #112D4E;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+
+        &:hover:not(.disabled):not(:disabled) {
+          border-color: #112D4E;
+          background: #f0f4f8;
+        }
+
+        &.selected {
+          background: #112D4E;
+          color: white;
+          border-color: #112D4E;
+          font-weight: 700;
+        }
+
+        &.disabled,
+        &:disabled {
+          background: #f5f5f5;
+          color: #999;
+          border-color: #e0e0e0;
+          cursor: not-allowed;
+          opacity: 0.5;
+
+          &:hover {
+            background: #f5f5f5;
+            border-color: #e0e0e0;
+          }
+        }
+      }
+    }
+  }
+
+  /* ─── Doctor Availability ─────────────────────────────────────────────── */
+  .doctor-availability {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .doctor-card {
+      .doctor-header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+        border-bottom: 1px solid #e0e0e0;
+
+        .doctor-icon {
+          font-size: 3rem;
+          color: #112D4E;
+          flex-shrink: 0;
+        }
+
+        .doctor-info {
+          flex: 1;
+
+          h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #112D4E;
+            margin: 0 0 0.25rem 0;
+          }
+
+          p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+          }
+        }
+      }
+
+      .time-slots {
+        padding: 1.5rem;
+
+        .time-slot-header {
+          font-size: 0.9rem;
+          color: #666;
+          font-weight: 500;
+          margin-bottom: 1rem;
+        }
+
+          .time-slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.75rem;
+
+            .time-slot {
+              padding: 0.75rem 1rem;
+              background: white;
+              border: 1px solid #e0e0e0;
+              border-radius: 6px;
+              color: #112D4E;
+              font-size: 0.9rem;
+              font-weight: 500;
+              cursor: pointer;
+              transition: all 0.2s ease;
+
+              &:hover {
+                border-color: #112D4E;
+                background: #f0f4f8;
+              }
+
+              &.selected {
+                background: #112D4E;
+                color: white;
+                border-color: #112D4E;
+                font-weight: 600;
+              }
+            }
+          }
+      }
+    }
+  }
+
+  /* ─── Booking Button ─────────────────────────────────────────────────── */
+  .booking-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #112D4E 0%, #1B4A7A 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(17, 45, 78, 0.3);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, #1B4A7A 0%, #2A5F9E 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(17, 45, 78, 0.4);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 10px rgba(17, 45, 78, 0.3);
+    }
+
+    .material-icons {
+      font-size: 1.3rem;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      &:hover {
+        transform: none;
+        box-shadow: 0 4px 15px rgba(17, 45, 78, 0.3);
+      }
+    }
+  }
+
+  /* ─── Selected Info Display ──────────────────────────────────────────── */
+  .booking-selected-info {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .booking-info-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+
+      .material-icons {
+        font-size: 1.8rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      div {
+        display: flex;
+        flex-direction: column;
+
+        strong {
+          font-size: 0.85rem;
+          color: rgba(255, 255, 255, 0.75);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        p {
+          font-size: 1rem;
+          font-weight: 600;
+          margin: 0.25rem 0 0 0;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+/* ─── Dashboard Sections ─────────────────────────────────────────────────── */
+.dashboard-section-title {
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #112D4E;
+    margin: 0;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #666;
+    margin: 0.5rem 0 0 0;
+  }
+}
+
+.dashboard-offer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.offer-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .offer-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    color: white;
+
+    &--clinico {
+      background: linear-gradient(135deg, #112D4E 0%, #1B4A7A 100%);
+    }
+
+    &--nutrizione {
+      background: linear-gradient(135deg, #112D4E 0%, #1B4A7A 100%);
+    }
+
+    &--sport {
+      background: linear-gradient(135deg, #112D4E 0%, #1B4A7A 100%);
+    }
+
+    .offer-icon {
+      font-size: 2rem;
+    }
+
+    .offer-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+  }
+
+  .offer-card-img {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: #f5f5f5;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .offer-list {
+    padding: 1.5rem;
+    list-style: none;
+    margin: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      color: #333;
+      font-size: 0.95rem;
+
+      .offer-list-icon {
+        font-size: 1.1rem;
+        color: #112D4E;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  .btn {
+    margin: 0 1.5rem 1.5rem 1.5rem;
+    width: calc(100% - 3rem);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &--primary {
+      background: #112D4E;
+      color: white;
+
+      &:hover {
+        background: #1B4A7A;
+      }
+    }
+
+    &--sm {
+      font-size: 0.9rem;
+    }
+  }
+}

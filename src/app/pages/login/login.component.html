@@ -6,8 +6,8 @@
       <span class="login-logo-name">Apice Clinic</span>
     </div>
 
-    <h2 class="login-title">Accedi al portale</h2>
-    <p class="login-subtitle">Inserisci le tue credenziali per continuare</p>
+    <h2 class="login-title">{{ isRegistering ? 'Registrati' : 'Accedi al portale' }}</h2>
+    <p class="login-subtitle">{{ isRegistering ? 'Crea un nuovo account' : 'Inserisci le tue credenziali per continuare' }}</p>
 
     <div class="login-error" *ngIf="error">
       <span class="material-icons" style="font-size:1.1rem">error_outline</span>
@@ -24,22 +24,39 @@
         <div class="login-field-error" *ngIf="isInvalid('username')">Campo obbligatorio</div>
       </div>
 
+      <div class="login-field" *ngIf="isRegistering">
+        <label>Nome Completo</label>
+        <div class="login-input-wrap">
+          <span class="material-icons login-input-icon">badge</span>
+          <input formControlName="displayName" type="text" placeholder="es. Mario Rossi" autocomplete="off"/>
+        </div>
+        <div class="login-field-error" *ngIf="isInvalid('displayName')">Campo obbligatorio</div>
+      </div>
+
       <div class="login-field">
         <label>Password</label>
         <div class="login-input-wrap">
           <span class="material-icons login-input-icon">lock</span>
-          <input formControlName="password" type="password" placeholder="••••••••" autocomplete="current-password"/>
+          <input formControlName="password" type="password" placeholder="••••••••" [attr.autocomplete]="isRegistering ? 'new-password' : 'current-password'"/>
         </div>
         <div class="login-field-error" *ngIf="isInvalid('password')">Campo obbligatorio</div>
       </div>
 
       <button type="submit" class="login-btn" [disabled]="loading">
-        <span *ngIf="!loading">Accedi</span>
+        <span *ngIf="!loading">{{ isRegistering ? 'Registrati' : 'Accedi' }}</span>
         <span *ngIf="loading">Caricamento…</span>
       </button>
     </form>
 
-    <div class="login-roles">
+    <div class="login-toggle">
+      <span *ngIf="!isRegistering">Non hai un account? </span>
+      <span *ngIf="isRegistering">Hai già un account? </span>
+      <a (click)="toggleMode()" class="login-toggle-link">
+        {{ isRegistering ? 'Accedi qui' : 'Registrati qui' }}
+      </a>
+    </div>
+
+    <div class="login-roles" *ngIf="!isRegistering">
       <div class="login-role-box">
         <span class="material-icons" style="color:var(--primary-mid)">badge</span>
         <div>

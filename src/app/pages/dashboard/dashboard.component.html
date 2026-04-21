@@ -7,15 +7,129 @@
     </div>
   </div>
 
-  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
-  <div *ngIf="loading" class="loading">Caricamento dashboard…</div>
+  <!-- ──────── BOOKING BANNER ──────── -->
+  <div class="booking-banner">
+    <h2 class="booking-title">Cosa vuoi prenotare?</h2>
 
-  <div class="dashboard-section-title" *ngIf="!loading">
+    <div class="booking-form">
+      <!-- Step 1: Select Area/Service -->
+      <div class="booking-step">
+        <label class="booking-label">1. Cosa vuoi prenotare? *</label>
+
+        <!-- Area Selector Dropdown -->
+        <div class="booking-dropdown" *ngIf="!selectedArea">
+          <div class="booking-dropdown-trigger" (click)="showAreaDropdown = !showAreaDropdown">
+            <span class="material-icons">calendar_today</span>
+            <span>Seleziona servizio</span>
+            <span class="material-icons" style="margin-left:auto" [class.open]="showAreaDropdown">expand_more</span>
+          </div>
+          <div class="booking-dropdown-menu" *ngIf="showAreaDropdown">
+            <div *ngFor="let area of serviceAreas"
+                 class="booking-dropdown-item-text"
+                 (click)="selectArea(area); showAreaDropdown = false">
+              {{ area.label }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Service List (when area selected) - Text only -->
+        <div class="booking-service-selector" *ngIf="selectedArea">
+          <button class="booking-back-btn" (click)="backToAreas()">
+            <span class="material-icons">arrow_back</span> Torna alle aree
+          </button>
+          <div class="booking-service-list">
+            <div *ngFor="let service of selectedArea.services"
+                 class="booking-service-item-text"
+                 [class.active]="selectedService?.id === service.id"
+                 (click)="selectService(service)">
+              {{ service.name }}
+              <span class="material-icons" *ngIf="selectedService?.id === service.id">check_circle</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Service Display -->
+        <div class="booking-selected-service" *ngIf="selectedService && !selectedArea">
+          <div class="selected-badge">
+            {{ selectedService.name }}
+            <span class="material-icons" style="font-size:1rem;cursor:pointer" (click)="backToAreas()">close</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Select Date with Calendar -->
+      <div class="booking-step" *ngIf="selectedService">
+        <label class="booking-label">2. Da quando sei disponibile? *</label>
+        <div class="booking-calendar-wrapper">
+          <div class="calendar-header">
+            <span class="material-icons" (click)="previousMonth()">chevron_left</span>
+            <h3>{{ currentMonth | date: 'MMMM yyyy' : 'it-IT' }}</h3>
+            <span class="material-icons" (click)="nextMonth()">chevron_right</span>
+          </div>
+          <div class="calendar-grid">
+            <div class="day-header" *ngFor="let day of ['L', 'M', 'M', 'G', 'V', 'S', 'D']">{{ day }}</div>
+            <ng-container *ngFor="let d of getCalendarDays()">
+              <button *ngIf="d !== 0"
+                      class="calendar-day"
+                      [class.selected]="isDateSelected(d)"
+                      [class.disabled]="isDateDisabled(d)"
+                      [disabled]="isDateDisabled(d)"
+                      (click)="selectCalendarDate(d)">
+                {{ d }}
+              </button>
+              <div *ngIf="d === 0" class="calendar-day disabled"></div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Doctor Availability -->
+      <div class="booking-step" *ngIf="selectedService && selectedDate">
+        <label class="booking-label">3. Seleziona orario *</label>
+        <div class="doctor-availability">
+          <!-- Doctor Card -->
+          <div class="doctor-card">
+            <div class="doctor-header">
+              <span class="material-icons doctor-icon">{{ getSelectedDoctor()?.icon }}</span>
+              <div class="doctor-info">
+                <h4>{{ getSelectedDoctor()?.name }}</h4>
+                <p>{{ getSelectedDoctor()?.title }}</p>
+              </div>
+            </div>
+
+            <!-- Time Slots -->
+            <div class="time-slots">
+              <div class="time-slot-header">
+                {{ selectedDate | date: 'd MMMM yyyy' : 'it-IT' }}
+              </div>
+              <div class="time-slots-grid">
+                <button *ngFor="let slot of getAvailableSlots()"
+                        class="time-slot"
+                        [class.selected]="selectedTime === slot"
+                        (click)="selectTime(slot)">
+                  {{ slot }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking Button -->
+      <button class="booking-btn"
+              [disabled]="!selectedService || !selectedDate || !selectedTime"
+              (click)="bookAppointment()">
+        <span class="material-icons">check</span> Prenota
+      </button>
+    </div>
+  </div>
+
+  <div class="dashboard-section-title">
     <h2>Cosa offriamo</h2>
     <p>Un approccio integrato che unisce medicina, nutrizione e sport per il benessere completo del paziente.</p>
   </div>
 
-  <div class="dashboard-offer-grid" *ngIf="!loading">
+  <div class="dashboard-offer-grid">
 
     <!-- Area Clinica -->
     <div class="offer-card" (click)="navigate('/services')" style="cursor:pointer">
@@ -78,48 +192,5 @@
     </div>
 
   </div>
-
-  <ng-container *ngIf="!loading && safeStats">
-    <div class="dashboard-section-title">
-      <h2>Statistiche operative</h2>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-card" (click)="navigate('/clients')">
-        <span class="material-icons stat-icon-mat">group</span>
-        <div class="stat-value">{{ safeStats.totalClients }}</div>
-        <div class="stat-label">Clienti Totali</div>
-      </div>
-      <div class="stat-card" (click)="navigate('/appointments')">
-        <span class="material-icons stat-icon-mat">calendar_today</span>
-        <div class="stat-value">{{ safeStats.totalAppointments }}</div>
-        <div class="stat-label">Appuntamenti</div>
-      </div>
-      <div class="stat-card" (click)="navigate('/appointments')">
-        <span class="material-icons stat-icon-mat">schedule</span>
-        <div class="stat-value">{{ safeStats.bookedAppointments }}</div>
-        <div class="stat-label">Prenotati</div>
-      </div>
-      <div class="stat-card" (click)="navigate('/appointments')">
-        <span class="material-icons stat-icon-mat">check_circle</span>
-        <div class="stat-value">{{ safeStats.completedAppointments }}</div>
-        <div class="stat-label">Completati</div>
-      </div>
-      <div class="stat-card" (click)="navigate('/nutrition')">
-        <span class="material-icons stat-icon-mat">restaurant_menu</span>
-        <div class="stat-value">{{ safeStats.activeDietPlans }}</div>
-        <div class="stat-label">Piani Dieta Attivi</div>
-      </div>
-      <div class="stat-card" (click)="navigate('/training')">
-        <span class="material-icons stat-icon-mat">fitness_center</span>
-        <div class="stat-value">{{ safeStats.activeTrainingPlans }}</div>
-        <div class="stat-label">Schede Allenamento Attive</div>
-      </div>
-      <div class="stat-card" (click)="navigate('/recipes')">
-        <span class="material-icons stat-icon-mat">menu_book</span>
-        <div class="stat-value">{{ safeStats.totalRecipes }}</div>
-        <div class="stat-label">Ricette Fit</div>
-      </div>
-    </div>
-  </ng-container>
 
 </main>

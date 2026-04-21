@@ -1,13 +1,14 @@
-import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
-import { Subscription } from 'rxjs';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {AuthService} from '../../services/auth.service';
+import {Subscription} from 'rxjs';
+
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgOptimizedImage],
   templateUrl: './navbar.component.html',
   styles: [`
     .nav-link { color: rgba(255,255,255,0.82); transition: background 0.15s, color 0.15s; cursor: pointer; }
@@ -21,6 +22,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   activeMenu: string | null = null;
   showLoginModal = false;
   loginError = '';
+  loginLoading = false;
   loginForm!: FormGroup;
   private sub!: Subscription;
   constructor(
@@ -43,17 +45,39 @@ export class NavbarComponent implements OnInit, OnDestroy {
     e.stopPropagation();
     this.activeMenu = this.activeMenu === menu ? null : menu;
   }
-  go(path: string): void {
-    this.router.navigate([path]);
-    this.activeMenu = null;
+  // Use async navigation and handle the returned Promise to avoid ignored-promise warnings
+  async go(path: string): Promise<void> {
+    try {
+      const navigated = await this.router.navigate([path]);
+      if (!navigated) {
+        // navigation returned false (didn't succeed)
+        console.warn('Navigation to', path, 'did not complete successfully');
+      }
+    } catch (err) {
+      // Log unexpected navigation errors
+      console.error('Navigation error to', path, err);
+    } finally {
+      // Close any open menu regardless of navigation outcome
+      this.activeMenu = null;
+    }
   }
   openLogin(): void  { this.auth.openLoginModal(); this.activeMenu = null; }
   closeLogin(): void { this.auth.closeLoginModal(); this.loginForm.reset(); this.loginError = ''; }
   submitLogin(): void {
     if (this.loginForm.invalid) { this.loginForm.markAllAsTouched(); return; }
     const { username, password } = this.loginForm.value;
-    const ok = this.auth.login(username, password);
-    if (!ok) this.loginError = 'Credenziali non valide. Riprova.';
+    this.loginLoading = true;
+    this.loginError = '';
+    this.auth.login(username, password).subscribe({
+      next: (ok) => {
+        this.loginLoading = false;
+        if (!ok) this.loginError = 'Credenziali non valide. Riprova.';
+      },
+      error: () => {
+        this.loginLoading = false;
+        this.loginError = 'Credenziali non valide. Riprova.';
+      }
+    });
   }
   logout(): void { this.auth.logout(); this.activeMenu = null; }
   @HostListener('document:click', ['$event'])
