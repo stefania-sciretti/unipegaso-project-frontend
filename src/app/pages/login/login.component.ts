@@ -26,7 +26,6 @@ export class LoginComponent {
     private router: Router,
     private bookingSvc: BookingService,
     private appointmentSvc: AppointmentService,
-    private clinicalAppointmentSvc: ClinicalAppointmentService
   ) {
     this.form = this.fb.group({
       username: ['', Validators.required],

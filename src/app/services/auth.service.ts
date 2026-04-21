@@ -48,8 +48,6 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private appointmentSvc: AppointmentService,
-    private clinicalAppointmentSvc: ClinicalAppointmentService
   ) {}
 
   openLoginModal(): void  { this._showModal.next(true);  }
