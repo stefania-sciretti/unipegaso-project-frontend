@@ -21,8 +21,8 @@
     <div class="table-wrapper" *ngIf="!loading">
       <table>
         <thead><tr>
-          <th>#</th><th>Data e Ora</th><th>Cliente</th>
-          <th>Trainer</th><th>Servizio</th><th>Stato</th><th class="th-actions">Azioni</th>
+          <th>#</th><th>Data e Ora</th><th>Paziente</th>
+          <th>Specialista</th><th>Servizio</th><th>Stato</th><th class="th-actions">Azioni</th>
         </tr></thead>
         <tbody>
           <tr *ngIf="appointments.length === 0"><td colspan="7" class="empty">Nessun appuntamento trovato.</td></tr>
@@ -54,18 +54,18 @@
     </div>
     <form [formGroup]="apptForm" (ngSubmit)="saveAppointment()">
       <div class="form-group">
-        <label>Cliente *</label>
+        <label>Paziente *</label>
         <div class="custom-dropdown" [class.open]="clientDropdownOpen">
           <div class="custom-dropdown-trigger"
                (click)="openClientDropdown()"
                [class.placeholder]="!selectedClientLabel">
-            {{ selectedClientLabel || '– Seleziona cliente –' }}
-            <span class="dropdown-arrow">▾</span>
+            {{ selectedClientLabel || '– Seleziona paziente –' }}
+            <mat-icon class="dropdown-arrow">keyboard_arrow_down</mat-icon>
           </div>
           <div class="custom-dropdown-panel" *ngIf="clientDropdownOpen">
             <input class="custom-dropdown-search"
                    type="text"
-                   placeholder="Cerca cliente…"
+                   placeholder="Cerca paziente…"
                    [(ngModel)]="clientSearch"
                    [ngModelOptions]="{standalone: true}"
                    (click)="$event.stopPropagation()"
@@ -85,11 +85,15 @@
         <div class="field-error" *ngIf="isInvalid(apptForm,'clientId')">Campo obbligatorio</div>
       </div>
       <div class="form-group">
-        <label>Trainer *</label>
-        <select formControlName="trainerId">
-          <option value="">– Seleziona trainer –</option>
-          <option *ngFor="let t of trainers" [value]="t.id">{{ t.firstName }} {{ t.lastName }} – {{ roleLabel(t.role) }}</option>
-        </select>
+        <label>Specialista *</label>
+        <div class="select-wrapper">
+          <select formControlName="trainerId"
+                  [class.placeholder-active]="!apptForm.get('trainerId')?.value">
+            <option value="" disabled selected hidden>– Seleziona specialista –</option>
+            <option *ngFor="let t of trainers" [value]="t.id">{{ t.firstName }} {{ t.lastName }} – {{ roleLabel(t.role) }}</option>
+          </select>
+          <mat-icon class="select-arrow">keyboard_arrow_down</mat-icon>
+        </div>
         <div class="field-error" *ngIf="isInvalid(apptForm,'trainerId')">Campo obbligatorio</div>
       </div>
       <div class="form-group">

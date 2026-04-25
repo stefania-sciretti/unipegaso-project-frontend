@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit} from '@angular/core';
 import {AsyncPipe, CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {forkJoin, Observable} from 'rxjs';
+import {MatIconModule} from '@angular/material/icon';
 import {AppointmentService} from '../../services/appointment.service';
 import {ClientService} from '../../services/client.service';
 import {StaffService} from '../../services/trainer.service';
@@ -13,7 +14,7 @@ import {AppointmentStatus, Client, FitnessAppointment, FitnessAppointmentRequest
   selector: 'app-appointments',
   standalone: true,
   imports: [
-    CommonModule, AsyncPipe, ReactiveFormsModule, FormsModule
+    CommonModule, AsyncPipe, ReactiveFormsModule, FormsModule, MatIconModule
   ],
   templateUrl: './appointments.component.html'
 })
@@ -35,6 +36,7 @@ export class AppointmentsComponent implements OnInit {
   clientDropdownOpen = false;
   clientSearch = '';
   selectedClientLabel = '';
+  selectedSpecialistLabel = '';
 
   get filteredClients(): Client[] {
     const q = this.clientSearch.toLowerCase();
@@ -69,9 +71,18 @@ export class AppointmentsComponent implements OnInit {
     private alertService: AlertService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private el: ElementRef
   ) {
     this.alert$ = this.alertService.alert$;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.clientDropdownOpen && !this.el.nativeElement.querySelector('.custom-dropdown')?.contains(event.target)) {
+      this.clientDropdownOpen = false;
+      this.clientSearch = '';
+    }
   }
 
   ngOnInit(): void {
@@ -87,7 +98,7 @@ export class AppointmentsComponent implements OnInit {
   buildForms(): void {
     this.apptForm = this.fb.group({
       clientId:    [null, Validators.required],
-      trainerId:   [null, Validators.required],
+      trainerId:   ['',   Validators.required],
       scheduledAt: ['',   Validators.required],
       serviceType: ['',   Validators.required],
       notes:       ['']
