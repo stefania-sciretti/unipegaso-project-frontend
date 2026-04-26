@@ -9,8 +9,8 @@ import {AlertService, AlertState} from '../../services/alert.service';
 import {Client, GlycemiaContext, GlycemiaMeasurement, GlycemiaMeasurementRequest} from '../../models/models';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
-import {MatLegacyFormFieldModule as MatFormFieldModule} from '@angular/material/legacy-form-field';
-import {MatLegacyInputModule as MatInputModule} from '@angular/material/legacy-input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-glycemia',
