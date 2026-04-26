@@ -15,10 +15,13 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "ES2017",
+    "target": "ES2022",
     "module": "ES2020",
     "useDefineForClassFields": false,
-    "lib": ["ES2017", "dom"]
+    "lib": [
+      "ES2017",
+      "dom"
+    ]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
