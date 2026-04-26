@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Recipe, RecipeRequest} from '../models/models';
+import { Observable } from 'rxjs';
+import { Recipe, RecipeRequest } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
   private readonly base = '/api/recipes';
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   getAll(category = '', search = ''): Observable<Recipe[]> {
     let params = new HttpParams();

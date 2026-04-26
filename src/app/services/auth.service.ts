@@ -1,9 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {AppointmentService} from './appointment.service';
-import {ClinicalAppointmentService} from './clinical-appointment.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export type UserRole = 'admin' | 'user';
 export interface AuthUser {
@@ -22,7 +21,7 @@ export interface LoginResponse {
   accessToken: string;
   tokenType: string;
   username: string;
-  role: string;   // es. ROLE_ADMIN | ROLE_USER
+  role: string;
 }
 
 export interface RegisterRequest {
@@ -37,25 +36,22 @@ const API_URL = '/api/auth';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private _user       = new BehaviorSubject<AuthUser | null>(this.loadUserFromStorage());
-  private _showModal  = new BehaviorSubject<boolean>(false);
-  readonly user$       = this._user.asObservable();
-  readonly showModal$  = this._showModal.asObservable();
+  private readonly http = inject(HttpClient);
 
-  get currentUser(): AuthUser | null { return this._user.getValue(); }
-  get isLoggedIn(): boolean          { return this._user.getValue() !== null; }
-  get isAdmin(): boolean             { return this._user.getValue()?.role === 'admin'; }
+  readonly user     = signal<AuthUser | null>(this.loadUserFromStorage());
+  readonly showModal = signal<boolean>(false);
 
-  constructor(
-    private http: HttpClient,
-  ) {}
+  // Observable aliases kept for components that use the async pipe
+  readonly user$      = toObservable(this.user);
+  readonly showModal$ = toObservable(this.showModal);
 
-  openLoginModal(): void  { this._showModal.next(true);  }
-  closeLoginModal(): void { this._showModal.next(false); }
+  get currentUser(): AuthUser | null { return this.user(); }
+  get isLoggedIn(): boolean          { return this.user() !== null; }
+  get isAdmin(): boolean             { return this.user()?.role === 'admin'; }
 
-  /**
-   * Registra un nuovo utente
-   */
+  openLoginModal(): void  { this.showModal.set(true);  }
+  closeLoginModal(): void { this.showModal.set(false); }
+
   register(username: string, password: string, email?: string): Observable<any> {
     const request: RegisterRequest = {
       username: username.trim().toLowerCase(),
@@ -65,36 +61,25 @@ export class AuthService {
     return this.http.post(`${API_URL}/register`, request);
   }
 
-  /**
-   * Effettua il login e salva il token JWT
-   */
   login(username: string, password: string): Observable<boolean> {
     const request: LoginRequest = {
       username: username.trim().toLowerCase(),
       password
     };
-
     return this.http.post<LoginResponse>(`${API_URL}/login`, request).pipe(
       map(response => {
         if (response && response.accessToken) {
-          // Salva il token
           localStorage.setItem(TOKEN_STORAGE_KEY, response.accessToken);
-
-          // Determina il ruolo dall'autorità restituita dal server
           const role: UserRole = response.role === 'ROLE_ADMIN' ? 'admin' : 'user';
-
-          // Crea l'utente e salvalo
           const user: AuthUser = {
             id: Date.now(),
             username: response.username,
             role,
             displayName: response.username
           };
-
-          this._user.next(user);
+          this.user.set(user);
           localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-          this._showModal.next(false);
-
+          this.showModal.set(false);
           return true;
         }
         return false;
@@ -102,38 +87,24 @@ export class AuthService {
     );
   }
 
-  /**
-   * Effettua il logout
-   */
   logout(): void {
-    this._user.next(null);
+    this.user.set(null);
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(TOKEN_STORAGE_KEY);
   }
 
-  /**
-   * Ottiene il token JWT
-   */
   getToken(): string | null {
     return localStorage.getItem(TOKEN_STORAGE_KEY);
   }
 
-  /**
-   * Valida il token JWT
-   */
   validateToken(): Observable<any> {
     const token = this.getToken();
-    if (!token) {
-      throw new Error('No token found');
-    }
+    if (!token) throw new Error('No token found');
     return this.http.get(`${API_URL}/validate`, {
       headers: { Authorization: `Bearer ${token}` }
     });
   }
 
-  /**
-   * Carica l'utente dal localStorage
-   */
   private loadUserFromStorage(): AuthUser | null {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -143,6 +114,3 @@ export class AuthService {
     }
   }
 }
-
-
-

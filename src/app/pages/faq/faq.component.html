@@ -1,26 +1,30 @@
-<main class="container">
-  <div class="page-header">
+<main class="max-w-[1200px] mx-auto my-8 px-6">
+  <div class="flex justify-between items-start mb-6">
     <div>
-      <h1 class="page-title">
-        <span class="material-icons page-title-icon">help_outline</span> Domande Frequenti
+      <h1 class="text-[1.75rem] font-bold mb-1 text-[#112D4E] flex items-center">
+        <span class="material-icons text-[1.6rem] align-middle mr-[0.3rem] text-[#3F72AF]">help_outline</span> Domande Frequenti
       </h1>
-      <p class="page-subtitle">Tutto quello che devi sapere su Apice Clinic e sul portale</p>
+      <p class="text-[#3F72AF] text-[0.95rem]">Tutto quello che devi sapere su Apice Clinic e sul portale</p>
     </div>
   </div>
 
-  <div class="faq-list">
+  <div class="flex flex-col gap-3 mb-10">
     @for (faq of faqs; track faq; let i = $index) {
-      <div class="faq-item" [class.faq-open]="faq.open">
-        <div class="faq-question" (click)="toggle(faq)" role="button" tabindex="0"
-          (keydown.enter)="toggle(faq)" (keydown.space)="toggle(faq)">
-          <span class="faq-number">{{ i + 1 }}</span>
-          <span class="faq-q-text">{{ faq.q }}</span>
-          <span class="material-icons faq-chevron">{{ faq.open ? 'expand_less' : 'expand_more' }}</span>
-        </div>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] overflow-hidden border-[1.5px] transition-colors duration-200"
+           [ngClass]="faq.open ? 'border-[#3F72AF]' : 'border-[#DBE2EF]'">
+        <button class="w-full flex items-center gap-4 px-5 py-[1.1rem] bg-transparent border-0 cursor-pointer text-left text-[1rem] font-semibold text-[#112D4E] transition-colors duration-150 hover:bg-[#F9F7F7] select-none"
+                (click)="toggle(faq)" role="button" tabindex="0"
+                (keydown.enter)="toggle(faq)" (keydown.space)="toggle(faq)">
+          <span class="min-w-[28px] h-7 rounded-full bg-[#DBE2EF] text-[#3F72AF] text-[0.85rem] font-bold flex items-center justify-center shrink-0 pointer-events-none">{{ i + 1 }}</span>
+          <span class="flex-1">{{ faq.q }}</span>
+          <span class="material-icons text-[#3F72AF] shrink-0 transition-transform duration-200"
+                [class.rotate-180]="faq.open">expand_more</span>
+        </button>
         @if (faq.open) {
-          <div class="faq-answer">
+          <div class="px-5 pb-[1.1rem] pl-[4rem] border-t border-[#DBE2EF]">
             @for (line of faq.a.split('\n'); track line) {
-              <p [class.faq-line-bullet]="line.startsWith('•')">{{ line }}</p>
+              <p class="text-[0.93rem] text-[#112D4E] leading-[1.7] mt-[0.6rem]"
+                 [ngClass]="line.startsWith('•') ? 'pl-1 text-[#3F72AF]' : ''">{{ line }}</p>
             }
           </div>
         }
@@ -28,17 +32,19 @@
     }
   </div>
 
-  <div class="faq-contact-box">
-    <span class="material-icons" style="font-size:2rem;color:var(--primary-mid)">support_agent</span>
+  <div class="flex items-start gap-5 bg-[#DBE2EF] rounded-[10px] px-7 py-6 mt-4">
+    <span class="material-icons text-[2rem] text-[#3F72AF] shrink-0">support_agent</span>
     <div>
-      <strong>Non hai trovato quello che cercavi?</strong>
-      <p>Contattaci direttamente:</p>
-      <div class="faq-contact-links">
-        <a href="tel:+393480000000" class="faq-contact-link">
-          <span class="material-icons">phone</span> +39 348 000 0000
+      <strong class="block text-[1rem] text-[#112D4E] mb-1">Non hai trovato quello che cercavi?</strong>
+      <p class="text-[0.875rem] text-[#3F72AF] mb-[0.6rem]">Contattaci direttamente:</p>
+      <div class="flex gap-6 flex-wrap">
+        <a href="tel:+393480000000"
+           class="flex items-center gap-[0.35rem] text-[#3F72AF] font-semibold text-[0.9rem] no-underline transition-colors duration-200 hover:text-[#112D4E] hover:underline">
+          <span class="material-icons text-[1.1rem]">phone</span> +39 348 000 0000
         </a>
-        <a href="mailto:informazioni@apiceclinic.com" class="faq-contact-link">
-          <span class="material-icons">mail_outline</span> informazioni&#64;apiceclinic.com
+        <a href="mailto:informazioni@apiceclinic.com"
+           class="flex items-center gap-[0.35rem] text-[#3F72AF] font-semibold text-[0.9rem] no-underline transition-colors duration-200 hover:text-[#112D4E] hover:underline">
+          <span class="material-icons text-[1.1rem]">mail_outline</span> informazioni&#64;apiceclinic.com
         </a>
       </div>
     </div>

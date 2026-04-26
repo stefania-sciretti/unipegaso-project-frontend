@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Client, ClientRequest } from '../models/models';
@@ -6,7 +6,7 @@ import { Client, ClientRequest } from '../models/models';
 @Injectable({ providedIn: 'root' })
 export class ClientService {
   private readonly base = '/api/clients';
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   getAll(search = ''): Observable<Client[]> {
     const params = search ? new HttpParams().set('search', search) : undefined;

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FitnessAppointment, FitnessAppointmentRequest } from '../models/models';
@@ -6,7 +6,7 @@ import { FitnessAppointment, FitnessAppointmentRequest } from '../models/models'
 @Injectable({ providedIn: 'root' })
 export class AppointmentService {
   private readonly base = '/api/fitness-appointments';
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   getAll(filters: { [key: string]: string } = {}): Observable<FitnessAppointment[]> {
     let params = new HttpParams();

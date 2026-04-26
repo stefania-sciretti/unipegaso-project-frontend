@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TrainingPlan, TrainingPlanRequest } from '../models/models';
@@ -6,7 +6,7 @@ import { TrainingPlan, TrainingPlanRequest } from '../models/models';
 @Injectable({ providedIn: 'root' })
 export class TrainingPlanService {
   private readonly base = '/api/training-plans';
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   getAll(clientId?: number): Observable<TrainingPlan[]> {
     const params = clientId ? new HttpParams().set('clientId', clientId) : undefined;

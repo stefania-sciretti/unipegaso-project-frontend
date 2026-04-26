@@ -1,38 +1,34 @@
-import {Component} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {AuthService} from '../../services/auth.service';
-import {BookingService} from '../../services/booking.service';
-import {AppointmentService} from '../../services/appointment.service';
-import {ClinicalAppointmentService} from '../../services/clinical-appointment.service';
+import { Component, inject } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { BookingService } from '../../services/booking.service';
+import { AppointmentService } from '../../services/appointment.service';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  imports: [ReactiveFormsModule, NgClass],
+  templateUrl: './login.component.html'
 })
 export class LoginComponent {
-  form: FormGroup;
-  error = '';
-  loading = false;
+  private readonly fb             = inject(FormBuilder);
+  private readonly auth           = inject(AuthService);
+  private readonly router         = inject(Router);
+  private readonly bookingSvc     = inject(BookingService);
+  private readonly appointmentSvc = inject(AppointmentService);
+
+  error         = '';
+  loading       = false;
   isRegistering = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private auth: AuthService,
-    private router: Router,
-    private bookingSvc: BookingService,
-    private appointmentSvc: AppointmentService,
-  ) {
-    this.form = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      displayName: ['', Validators.required]
-    });
-    // Se già loggato, redirect
+  readonly form: FormGroup = this.fb.group({
+    username:    ['', Validators.required],
+    password:    ['', Validators.required],
+    displayName: ['', Validators.required]
+  });
+
+  constructor() {
     if (this.auth.isLoggedIn) {
       this.router.navigate(['/dashboard']);
     }
@@ -47,8 +43,7 @@ export class LoginComponent {
   submit(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.loading = true;
-    this.error = '';
-
+    this.error   = '';
     if (this.isRegistering) {
       this.register();
     } else {
@@ -58,51 +53,52 @@ export class LoginComponent {
 
   private login(): void {
     const { username, password } = this.form.value;
-    const ok = this.auth.login(username, password);
-    this.loading = false;
-    if (ok) {
-      // Check if there's a pending booking
-      const pendingBooking = this.bookingSvc.pendingBooking;
-      if (pendingBooking) {
-        this.completePendingBooking(pendingBooking);
-      } else {
-        this.router.navigate(['/dashboard']);
+    this.auth.login(username, password).subscribe({
+      next: (ok) => {
+        this.loading = false;
+        if (ok) {
+          const pending = this.bookingSvc.pendingBooking;
+          if (pending) {
+            this.completePendingBooking(pending);
+          } else {
+            this.router.navigate(['/dashboard']);
+          }
+        } else {
+          this.error = 'Credenziali non valide. Riprova.';
+        }
+      },
+      error: () => {
+        this.loading = false;
+        this.error = 'Credenziali non valide. Riprova.';
       }
-    } else {
-      this.error = 'Credenziali non valide. Riprova.';
-    }
+    });
   }
 
   private register(): void {
     const { username, password, displayName } = this.form.value;
-    // Simple registration: just login with the new account
-    const ok = this.auth.register(username, password, displayName);
-    this.loading = false;
-    if (ok) {
-      this.error = '';
-      alert('Registrazione completata! Effettua il login.');
-      this.isRegistering = false;
-      this.form.reset();
-    } else {
-      this.error = 'Username già esistente o dati non validi.';
-    }
+    this.auth.register(username, password, displayName).subscribe({
+      next: () => {
+        this.loading = false;
+        alert('Registrazione completata! Effettua il login.');
+        this.isRegistering = false;
+        this.form.reset();
+      },
+      error: () => {
+        this.loading = false;
+        this.error = 'Username già esistente o dati non validi.';
+      }
+    });
   }
 
-  private completePendingBooking(pendingBooking: any): void {
+  private completePendingBooking(pending: any): void {
     const bookingRequest = {
-      clientId: this.auth.currentUser!.id,
-      trainerId: pendingBooking.trainerId,
-      scheduledAt: pendingBooking.scheduledAt,
-      serviceType: pendingBooking.serviceType
+      clientId:    this.auth.currentUser!.id,
+      trainerId:   pending.trainerId,
+      scheduledAt: pending.scheduledAt,
+      serviceType: pending.serviceType
     };
 
-    if (pendingBooking.appointmentType === 'clinical') {
-      console.log('Completing pending clinical appointment:', {
-        patientId: this.auth.currentUser!.id,
-        doctorId: pendingBooking.trainerId,
-        scheduledAt: pendingBooking.scheduledAt,
-        visitType: pendingBooking.visitType
-      });
+    if (pending.appointmentType === 'clinical') {
       alert('Prenotazione completata con successo!');
       this.bookingSvc.clearPendingBooking();
       this.router.navigate(['/dashboard']);

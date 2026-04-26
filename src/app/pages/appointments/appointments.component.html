@@ -1,18 +1,23 @@
-<main class="container">
-  <div class="page-header">
+<main class="max-w-[1200px] mx-auto my-8 px-6">
+  <div class="flex justify-between items-start mb-6">
     <div>
-      <h1 class="page-title"><span class="material-icons page-title-icon">calendar_today</span> Appuntamenti</h1>
-      <p class="page-subtitle">Gestione prenotazioni</p>
+      <h1 class="text-[1.75rem] font-bold mb-1 text-[#112D4E] flex items-center">
+        <span class="material-icons text-[1.6rem] align-middle mr-[0.3rem] text-[#3F72AF]">calendar_today</span> Appuntamenti
+      </h1>
+      <p class="text-[#3F72AF] text-[0.95rem]">Gestione prenotazioni</p>
     </div>
-    <button class="btn btn-primary" (click)="openCreate()">+ Nuovo Appuntamento</button>
+    <button class="px-[1.1rem] py-2 border-0 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#112D4E] text-white hover:bg-[#264560]"
+            (click)="openCreate()">+ Nuovo Appuntamento</button>
   </div>
-  @if (alert$ | async; as alert) {
-    <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
+  @if (alertSignal(); as alert) {
+    <div class="px-[1.1rem] py-[0.8rem] rounded-[10px] mb-4 text-[0.9rem] flex items-center gap-2 border-l-4"
+         [ngClass]="alert.type==='success' ? 'bg-[#d4f0e0] text-[#1e7a48] border-[#3F72AF]' : 'bg-[#fde8e8] text-[#d95550] border-[#d95550]'">{{ alert.message }}</div>
   }
-  <div class="card">
-    <div class="toolbar">
-      <label style="font-size:.88rem;font-weight:600;color:var(--text-muted)">Stato:</label>
-      <select [value]="filterStatus" (change)="onStatusFilter($event)">
+  <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 mb-8">
+    <div class="flex items-center gap-3 mb-5 flex-wrap">
+      <label class="text-[0.88rem] font-semibold text-[#3F72AF]">Stato:</label>
+      <select [value]="filterStatus" (change)="onStatusFilter($event)"
+              class="px-3 py-2 border-[1.5px] border-[#DBE2EF] rounded-[10px] text-[0.9rem] outline-none transition-[border-color] duration-200 focus:border-[#3F72AF] bg-white">
         <option value="">Tutti</option>
         @for (s of statuses; track s) {
           <option [value]="s">{{ statusLabel(s) }}</option>
@@ -20,32 +25,39 @@
       </select>
     </div>
     @if (loading) {
-      <div class="loading">Caricamento…</div>
+      <div class="text-[#3F72AF] italic py-6 text-center">Caricamento…</div>
     }
     @if (!loading) {
-      <div class="table-wrapper">
-        <table>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-[0.9rem]">
           <thead><tr>
-            <th>#</th><th>Data e Ora</th><th>Paziente</th>
-            <th>Specialista</th><th>Servizio</th><th>Stato</th><th class="th-actions">Azioni</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">#</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Data e Ora</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Paziente</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Specialista</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Servizio</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Stato</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap w-[200px] min-w-[200px]">Azioni</th>
           </tr></thead>
           <tbody>
             @if (appointments.length === 0) {
-              <tr><td colspan="7" class="empty">Nessun appuntamento trovato.</td></tr>
+              <tr><td colspan="7" class="text-[#3F72AF] text-center py-10 text-[0.95rem]">Nessun appuntamento trovato.</td></tr>
             }
             @for (a of appointments; track a) {
-              <tr>
-                <td>{{ a.id }}</td>
-                <td>{{ a.scheduledAt | date:'dd MMM yyyy HH:mm' }}</td>
-                <td>{{ a.clientFullName }}</td>
-                <td>{{ a.trainerFullName }}<br/><small>{{ roleLabel(a.trainerRole) }}</small></td>
-                <td>{{ a.serviceType }}</td>
-                <td><span [class]="statusClass(a.status)">{{ statusLabel(a.status) }}</span></td>
-                <td class="td-actions">
-                  <div class="td-actions-inner">
-                    <button class="btn btn-warning btn-sm" (click)="openStatusModal(a)">Stato</button>
+              <tr class="hover:[&>td]:bg-[#f0f7ff]">
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ a.id }}</td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ a.scheduledAt | date:'dd MMM yyyy HH:mm' }}</td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ a.clientFullName }}</td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ a.trainerFullName }}<br/><small class="text-[#3F72AF]">{{ roleLabel(a.trainerRole) }}</small></td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ a.serviceType }}</td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle"><span [class]="statusClass(a.status)">{{ statusLabel(a.status) }}</span></td>
+                <td class="w-[200px] min-w-[200px] whitespace-nowrap px-4 py-3 border-b border-[#DBE2EF] align-middle">
+                  <div class="flex items-center gap-2">
+                    <button class="px-[0.7rem] py-[0.3rem] border-0 rounded-[10px] text-[0.8rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#e5992c] text-white hover:bg-[#c47f20]"
+                            (click)="openStatusModal(a)">Stato</button>
                     @if (canCancel(a)) {
-                      <button class="btn btn-danger btn-sm" (click)="cancel(a.id)">Annulla</button>
+                      <button class="px-[0.7rem] py-[0.3rem] border-0 rounded-[10px] text-[0.8rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#d95550] text-white hover:bg-[#b84140]"
+                              (click)="cancel(a.id)">Annulla</button>
                     }
                   </div>
                 </td>
@@ -59,15 +71,16 @@
 </main>
 
 @if (showApptModal) {
-  <div class="modal-overlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>Nuovo Appuntamento</h3>
-        <button class="modal-close" (click)="showApptModal = false">&times;</button>
+  <div class="fixed inset-0 bg-[rgba(30,45,59,0.5)] z-[99999] flex items-center justify-center p-4">
+    <div class="bg-white rounded-[10px] shadow-[0_10px_40px_rgba(53,88,114,0.22)] p-8 w-full max-w-[560px] max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#DBE2EF]">
+        <h3 class="text-[1.15rem] text-[#112D4E] font-bold">Nuovo Appuntamento</h3>
+        <button class="bg-transparent border-0 text-[1.4rem] cursor-pointer text-[#3F72AF] leading-none hover:text-[#d95550] transition-colors duration-200"
+                (click)="showApptModal = false">&times;</button>
       </div>
       <form [formGroup]="apptForm" (ngSubmit)="saveAppointment()">
-        <div class="form-group">
-          <label>Paziente *</label>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Paziente *</label>
           <div class="custom-dropdown" [class.open]="clientDropdownOpen">
             <div class="custom-dropdown-trigger"
               (click)="openClientDropdown()"
@@ -99,17 +112,17 @@
                 </div>
               }
             </div>
-            <!-- campo hidden per la validazione reactive form -->
             <input type="hidden" formControlName="clientId"/>
             @if (isInvalid(apptForm,'clientId')) {
-              <div class="field-error">Campo obbligatorio</div>
+              <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
             }
           </div>
-          <div class="form-group">
-            <label>Specialista *</label>
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Specialista *</label>
             <div class="select-wrapper">
               <select formControlName="trainerId"
-                [class.placeholder-active]="!apptForm.get('trainerId')?.value">
+                      class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] appearance-none pr-9 bg-white cursor-pointer"
+                      [class.placeholder-active]="!apptForm.get('trainerId')?.value">
                 <option value="" disabled selected hidden>– Seleziona specialista –</option>
                 @for (t of trainers; track t) {
                   <option [value]="t.id">{{ t.firstName }} {{ t.lastName }} – {{ roleLabel(t.role) }}</option>
@@ -118,30 +131,36 @@
               <mat-icon class="select-arrow">keyboard_arrow_down</mat-icon>
             </div>
             @if (isInvalid(apptForm,'trainerId')) {
-              <div class="field-error">Campo obbligatorio</div>
+              <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
             }
           </div>
-          <div class="form-group">
-            <label>Data e Ora *</label>
-            <input type="datetime-local" formControlName="scheduledAt"/>
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Data e Ora *</label>
+            <input type="datetime-local" formControlName="scheduledAt"
+                   class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
             @if (isInvalid(apptForm,'scheduledAt')) {
-              <div class="field-error">Campo obbligatorio</div>
+              <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
             }
           </div>
-          <div class="form-group">
-            <label>Tipo di Servizio *</label>
-            <input formControlName="serviceType" type="text" placeholder="es. Consulenza Nutrizionale"/>
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Tipo di Servizio *</label>
+            <input formControlName="serviceType" type="text" placeholder="es. Consulenza Nutrizionale"
+                   class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
             @if (isInvalid(apptForm,'serviceType')) {
-              <div class="field-error">Campo obbligatorio</div>
+              <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
             }
           </div>
-          <div class="form-group">
-            <label>Note</label>
-            <textarea formControlName="notes" placeholder="Note opzionali…"></textarea>
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Note</label>
+            <textarea formControlName="notes" placeholder="Note opzionali…"
+                      class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] resize-vertical min-h-[85px]"></textarea>
           </div>
-          <div class="form-actions">
-            <button type="button" class="btn btn-outline" (click)="showApptModal = false">Annulla</button>
-            <button type="submit" class="btn btn-primary">Prenota</button>
+          <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-[#DBE2EF]">
+            <button type="button"
+                    class="px-[1.1rem] py-2 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-transparent border-[1.5px] border-[#112D4E] text-[#112D4E] hover:bg-[#112D4E] hover:text-white"
+                    (click)="showApptModal = false">Annulla</button>
+            <button type="submit"
+                    class="px-[1.1rem] py-2 border-0 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#112D4E] text-white hover:bg-[#264560]">Prenota</button>
           </div>
         </form>
       </div>
@@ -149,24 +168,29 @@
   }
 
   @if (showStatusModal) {
-    <div class="modal-overlay">
-      <div class="modal" style="max-width:360px">
-        <div class="modal-header">
-          <h3>Aggiorna Stato</h3>
-          <button class="modal-close" (click)="showStatusModal = false">&times;</button>
+    <div class="fixed inset-0 bg-[rgba(30,45,59,0.5)] z-[99999] flex items-center justify-center p-4">
+      <div class="bg-white rounded-[10px] shadow-[0_10px_40px_rgba(53,88,114,0.22)] p-8 w-full max-w-[360px] max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#DBE2EF]">
+          <h3 class="text-[1.15rem] text-[#112D4E] font-bold">Aggiorna Stato</h3>
+          <button class="bg-transparent border-0 text-[1.4rem] cursor-pointer text-[#3F72AF] leading-none hover:text-[#d95550] transition-colors duration-200"
+                  (click)="showStatusModal = false">&times;</button>
         </div>
         <form [formGroup]="statusForm" (ngSubmit)="saveStatus()">
-          <div class="form-group">
-            <label>Nuovo Stato *</label>
-            <select formControlName="status">
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Nuovo Stato *</label>
+            <select formControlName="status"
+                    class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] bg-white">
               @for (s of statuses; track s) {
                 <option [value]="s">{{ statusLabel(s) }}</option>
               }
             </select>
           </div>
-          <div class="form-actions">
-            <button type="button" class="btn btn-outline" (click)="showStatusModal = false">Annulla</button>
-            <button type="submit" class="btn btn-primary">Aggiorna</button>
+          <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-[#DBE2EF]">
+            <button type="button"
+                    class="px-[1.1rem] py-2 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-transparent border-[1.5px] border-[#112D4E] text-[#112D4E] hover:bg-[#112D4E] hover:text-white"
+                    (click)="showStatusModal = false">Annulla</button>
+            <button type="submit"
+                    class="px-[1.1rem] py-2 border-0 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#112D4E] text-white hover:bg-[#264560]">Aggiorna</button>
           </div>
         </form>
       </div>

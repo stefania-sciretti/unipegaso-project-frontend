@@ -1,16 +1,17 @@
-<main class="container">
-  <div class="staff-detail-back">
-    <a routerLink="/doctors" class="back-link">&#8592; Torna allo Staff</a>
+<main class="max-w-[1200px] mx-auto my-8 px-6">
+  <div class="mb-6">
+    <a routerLink="/doctors" class="text-[#3F72AF] no-underline font-semibold text-[0.95rem] inline-flex items-center gap-1 transition-colors hover:text-[#112D4E]">&#8592; Torna allo Staff</a>
   </div>
-  <div class="staff-detail-hero">
-    <div class="staff-detail-avatar">
-      <img src="assets/icons/sandro.webp" alt="Sandro Scrigoni"/>
+
+  <div class="flex flex-col sm:flex-row gap-10 items-center sm:items-start text-center sm:text-left bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-8 mb-8">
+    <div class="shrink-0 w-[180px] h-[180px] rounded-full overflow-hidden bg-[#DBE2EF]">
+      <img src="assets/icons/sandro.webp" alt="Sandro Scrigoni" class="w-full h-full object-cover"/>
     </div>
-    <div class="staff-detail-intro">
-      <p class="staff-detail-title">Dott.</p>
-      <h1 class="staff-detail-name">Sandro Scrigoni</h1>
-      <span class="staff-detail-badge">Medico dello Sport</span>
-      <p class="staff-detail-bio">
+    <div class="flex-1">
+      <p class="text-[0.9rem] text-[#3F72AF] mb-[0.1rem]">Dott.</p>
+      <h1 class="text-[1.9rem] font-bold text-[#112D4E] mb-[0.6rem]">Sandro Scrigoni</h1>
+      <span class="inline-block bg-[#DBE2EF] text-[#3F72AF] font-semibold text-[0.85rem] px-[0.9rem] py-[0.3rem] rounded-full mb-4">Medico dello Sport</span>
+      <p class="text-[#112D4E] leading-[1.7] text-[0.97rem]">
         Il Dott. Sandro Scrigoni è un medico specializzato in Medicina dello Sport, con competenze
         nell'idoneità sportiva, nella prevenzione e nel trattamento degli infortuni atletici.
         Collabora con atleti di ogni livello per ottimizzare le performance e tutelare la salute
@@ -18,38 +19,39 @@
       </p>
     </div>
   </div>
-  <div class="staff-detail-services">
-    <h2 class="staff-detail-services-title">Servizi offerti</h2>
-    <div class="staff-services-grid">
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">assignment</span>
-        <h3>Visita di idoneità sportiva</h3>
-        <p>Certificazione medica per attività sportive agonistiche e non agonistiche, con ECG e spirometria.</p>
+
+  <div class="mb-8">
+    <h2 class="text-[1.3rem] font-bold text-[#112D4E] mb-5">Servizi offerti</h2>
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-5">
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">assignment</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Visita di idoneità sportiva</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Certificazione medica per attività sportive agonistiche e non agonistiche, con ECG e spirometria.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">healing</span>
-        <h3>Trattamento infortuni sportivi</h3>
-        <p>Diagnosi e trattamento di distorsioni, contratture, tendinopatie e altri infortuni legati all'attività fisica.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">healing</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Trattamento infortuni sportivi</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Diagnosi e trattamento di distorsioni, contratture, tendinopatie e altri infortuni legati all'attività fisica.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">speed</span>
-        <h3>Test da sforzo</h3>
-        <p>Valutazione della capacità cardiorespiratoria tramite test ergometrici per definire le zone di allenamento ottimali.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">speed</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Test da sforzo</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Valutazione della capacità cardiorespiratoria tramite test ergometrici per definire le zone di allenamento ottimali.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">shield</span>
-        <h3>Prevenzione infortuni</h3>
-        <p>Programmi preventivi personalizzati per ridurre il rischio di infortuni nello sport e nel lavoro fisico.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">shield</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Prevenzione infortuni</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Programmi preventivi personalizzati per ridurre il rischio di infortuni nello sport e nel lavoro fisico.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">medical_services</span>
-        <h3>Terapia infiltrativa</h3>
-        <p>Infiltrazioni di acido ialuronico, PRP e corticosteroidi per il trattamento di patologie articolari e tendinee.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">medical_services</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Terapia infiltrativa</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Infiltrazioni di acido ialuronico, PRP e corticosteroidi per il trattamento di patologie articolari e tendinee.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">trending_up</span>
-        <h3>Ottimizzazione della performance</h3>
-        <p>Consulenza medica per atleti agonisti volta a massimizzare le prestazioni nel rispetto della salute.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">trending_up</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Ottimizzazione della performance</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Consulenza medica per atleti agonisti volta a massimizzare le prestazioni nel rispetto della salute.</p>
       </div>
     </div>
   </div>

@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 
 export interface Doctor {
   id: number;
@@ -23,7 +23,7 @@ export interface DoctorRequest {
 @Injectable({ providedIn: 'root' })
 export class DoctorService {
   private readonly base = '/api/doctors';
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   getAll(): Observable<Doctor[]> {
     return this.http.get<Doctor[]>(this.base);

@@ -1,66 +1,71 @@
-<main class="container">
-  <div class="page-header">
+<main class="max-w-[1200px] mx-auto my-8 px-6">
+  <div class="flex justify-between items-start mb-6">
     <div>
-      <h1 class="page-title"><span class="material-icons page-title-icon">assignment</span> Referti Medici</h1>
-      <p class="page-subtitle">Gestione diagnosi, prescrizioni e note cliniche</p>
+      <h1 class="text-[1.75rem] font-bold mb-1 text-[#112D4E] flex items-center">
+        <span class="material-icons text-[1.6rem] align-middle mr-[0.3rem] text-[#3F72AF]">assignment</span> Referti Medici
+      </h1>
+      <p class="text-[#3F72AF] text-[0.95rem]">Gestione diagnosi, prescrizioni e note cliniche</p>
     </div>
-    <button class="btn btn-primary" (click)="openCreate()">+ Nuovo Referto</button>
+    <button class="px-[1.1rem] py-2 border-0 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#112D4E] text-white hover:bg-[#264560]" (click)="openCreate()">+ Nuovo Referto</button>
   </div>
 
-  @if (alert$ | async; as alert) {
-    <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">
+  @if (alertSignal(); as alert) {
+    <div
+      class="px-[1.1rem] py-[0.8rem] rounded-[10px] mb-4 text-[0.9rem] flex items-center border-l-4"
+      [ngClass]="alert.type==='success' ? 'bg-[#d4f0e0] text-[#1e7a48] border-[#3F72AF]' : 'bg-[#fde8e8] text-[#d95550] border-[#d95550]'"
+    >
       {{ alert.message }}
     </div>
   }
 
-  <div class="card">
+  <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 mb-8">
     @if (loading) {
-      <div class="loading">Caricamento in corso…</div>
+      <div class="text-[#3F72AF] italic py-6 text-center">Caricamento in corso…</div>
     }
     @if (!loading) {
-      <div class="table-wrapper">
-        <table>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-[0.9rem]">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Paziente</th>
-              <th>Medico</th>
-              <th>Tipo Visita</th>
-              <th>Data Emissione</th>
-              <th>Diagnosi (sintesi)</th>
-              <th class="th-actions">Azioni</th>
+              <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">#</th>
+              <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Paziente</th>
+              <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Medico</th>
+              <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Tipo Visita</th>
+              <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Data Emissione</th>
+              <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Diagnosi (sintesi)</th>
+              <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap w-[200px] min-w-[200px]">Azioni</th>
             </tr>
           </thead>
           <tbody>
             @if (reports.length === 0) {
               <tr>
-                <td colspan="7" class="empty">Nessun referto trovato.</td>
+                <td colspan="7" class="px-4 py-3 border-b border-[#DBE2EF] align-middle text-[#3F72AF] text-center py-10 text-[0.95rem]">Nessun referto trovato.</td>
               </tr>
             }
             @for (r of reports; track r) {
-              <tr>
-                <td><strong>{{ r.id }}</strong></td>
-                <td>
-                  <div class="patient-cell">
-                    <span class="material-icons patient-icon">person</span>
+              <tr class="hover:[&>td]:bg-[#f0f7ff]">
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle"><strong>{{ r.id }}</strong></td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">
+                  <div class="flex items-center gap-[6px]">
+                    <span class="material-icons text-[18px] text-[#3F72AF]">person</span>
                     {{ r.patientFullName }}
                   </div>
                 </td>
-                <td>{{ r.doctorFullName }}</td>
-                <td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ r.doctorFullName }}</td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">
                   <span class="badge" [ngClass]="getVisitTypeBadgeClass(r.visitType)">
                     {{ r.visitType }}
                   </span>
                 </td>
-                <td>{{ r.issuedDate | date:'dd MMM yyyy' }}</td>
-                <td class="diagnosis-preview">{{ r.diagnosis | slice:0:60 }}{{ r.diagnosis.length > 60 ? '…' : '' }}</td>
-                <td class="td-actions">
-                  <div class="td-actions-inner">
-                    <button class="btn btn-primary btn-sm" (click)="openDetail(r)">
-                      <span class="material-icons" style="font-size:15px;vertical-align:middle">visibility</span> Dettaglio
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ r.issuedDate | date:'dd MMM yyyy' }}</td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle max-w-[280px] text-[#3F72AF] text-[0.88rem]">{{ r.diagnosis | slice:0:60 }}{{ r.diagnosis.length > 60 ? '…' : '' }}</td>
+                <td class="w-[200px] min-w-[200px] whitespace-nowrap align-middle px-4 py-3 border-b border-[#DBE2EF]">
+                  <div class="flex items-center gap-2">
+                    <button class="px-[0.7rem] py-[0.3rem] text-[0.8rem] border-0 rounded-[10px] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#112D4E] text-white hover:bg-[#264560]" (click)="openDetail(r)">
+                      <span class="material-icons text-[15px] align-middle">visibility</span> Dettaglio
                     </button>
-                    <button class="btn btn-warning btn-sm" (click)="openEdit(r)">
-                      <span class="material-icons" style="font-size:15px;vertical-align:middle">edit</span> Modifica
+                    <button class="px-[0.7rem] py-[0.3rem] text-[0.8rem] border-0 rounded-[10px] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#e5992c] text-white hover:bg-[#c47f20]" (click)="openEdit(r)">
+                      <span class="material-icons text-[15px] align-middle">edit</span> Modifica
                     </button>
                   </div>
                 </td>
@@ -75,18 +80,17 @@
 
 <!-- Modale: Crea / Modifica Referto -->
 @if (showFormModal) {
-  <div class="modal-overlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>{{ editingId ? 'Modifica Referto' : 'Nuovo Referto' }}</h3>
-        <button class="modal-close" (click)="closeFormModal()">&times;</button>
+  <div class="fixed inset-0 bg-[rgba(30,45,59,0.5)] z-[99999] flex items-center justify-center p-4">
+    <div class="bg-white rounded-[10px] shadow-[0_10px_40px_rgba(53,88,114,0.22)] p-8 w-full max-w-[560px] max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#DBE2EF]">
+        <h3 class="text-[1.15rem] text-[#112D4E] font-bold">{{ editingId ? 'Modifica Referto' : 'Nuovo Referto' }}</h3>
+        <button class="bg-transparent border-0 text-[1.4rem] cursor-pointer text-[#3F72AF] leading-none hover:text-[#d95550] transition-colors duration-200" (click)="closeFormModal()">&times;</button>
       </div>
       <form [formGroup]="form" (ngSubmit)="save()">
-        <!-- In creazione: selezione appuntamento completato -->
         @if (!editingId) {
-          <div class="form-group">
-            <label>Appuntamento *</label>
-            <select formControlName="appointmentId">
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Appuntamento *</label>
+            <select class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]" formControlName="appointmentId">
               <option [ngValue]="null" disabled>— Seleziona un appuntamento completato —</option>
               @for (a of completedAppointments; track a) {
                 <option [ngValue]="a.id">
@@ -95,40 +99,39 @@
               }
             </select>
             @if (isInvalid('appointmentId')) {
-              <div class="field-error">Seleziona un appuntamento</div>
+              <div class="text-[#d95550] text-[0.8rem] mt-1">Seleziona un appuntamento</div>
             }
             @if (completedAppointments.length === 0) {
-              <small class="text-muted">
+              <small class="text-sm text-[#3F72AF]">
                 Nessun appuntamento completato disponibile senza referto.
               </small>
             }
           </div>
         }
-        <!-- In modifica: campo readonly -->
         @if (editingId) {
-          <div class="form-group">
-            <label>Appuntamento</label>
-            <input type="text" [value]="'Appuntamento #' + form.get('appointmentId')?.value + ' – ' + selectedReport?.patientFullName + ' / ' + selectedReport?.visitType" disabled/>
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Appuntamento</label>
+            <input class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]" type="text" [value]="'Appuntamento #' + form.get('appointmentId')?.value + ' – ' + selectedReport?.patientFullName + ' / ' + selectedReport?.visitType" disabled/>
           </div>
         }
-        <div class="form-group">
-          <label>Diagnosi *</label>
-          <textarea formControlName="diagnosis" rows="3" placeholder="Diagnosi clinica…"></textarea>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Diagnosi *</label>
+          <textarea class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]" formControlName="diagnosis" rows="3" placeholder="Diagnosi clinica…"></textarea>
           @if (isInvalid('diagnosis')) {
-            <div class="field-error">Campo obbligatorio</div>
+            <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
           }
         </div>
-        <div class="form-group">
-          <label>Prescrizione</label>
-          <textarea formControlName="prescription" rows="2" placeholder="Farmaci prescritti, terapie…"></textarea>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Prescrizione</label>
+          <textarea class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]" formControlName="prescription" rows="2" placeholder="Farmaci prescritti, terapie…"></textarea>
         </div>
-        <div class="form-group">
-          <label>Note del Medico</label>
-          <textarea formControlName="doctorNotes" rows="2" placeholder="Note interne del medico…"></textarea>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Note del Medico</label>
+          <textarea class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]" formControlName="doctorNotes" rows="2" placeholder="Note interne del medico…"></textarea>
         </div>
-        <div class="form-actions">
-          <button type="button" class="btn btn-outline" (click)="closeFormModal()">Annulla</button>
-          <button type="submit" class="btn btn-primary">Salva Referto</button>
+        <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-[#DBE2EF]">
+          <button type="button" class="px-[1.1rem] py-2 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-transparent border-[1.5px] border-[#112D4E] text-[#112D4E] hover:bg-[#112D4E] hover:text-white" (click)="closeFormModal()">Annulla</button>
+          <button type="submit" class="px-[1.1rem] py-2 border-0 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#112D4E] text-white hover:bg-[#264560]">Salva Referto</button>
         </div>
       </form>
     </div>
@@ -137,57 +140,57 @@
 
 <!-- Modale: Dettaglio Referto -->
 @if (showDetailModal && selectedReport) {
-  <div class="modal-overlay">
-    <div class="modal modal-wide">
-      <div class="modal-header">
-        <h3>
-          <span class="material-icons" style="vertical-align:middle;margin-right:6px">assignment</span>
+  <div class="fixed inset-0 bg-[rgba(30,45,59,0.5)] z-[99999] flex items-center justify-center p-4">
+    <div class="bg-white rounded-[10px] shadow-[0_10px_40px_rgba(53,88,114,0.22)] p-8 w-full max-w-[680px] w-[90vw] max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#DBE2EF]">
+        <h3 class="text-[1.15rem] text-[#112D4E] font-bold">
+          <span class="material-icons align-middle mr-[6px]">assignment</span>
           Referto #{{ selectedReport.id }}
         </h3>
-        <button class="modal-close" (click)="showDetailModal = false">&times;</button>
+        <button class="bg-transparent border-0 text-[1.4rem] cursor-pointer text-[#3F72AF] leading-none hover:text-[#d95550] transition-colors duration-200" (click)="showDetailModal = false">&times;</button>
       </div>
-      <div class="detail-grid">
-        <div class="form-group">
-          <label>Paziente</label>
+      <div class="grid grid-cols-2 gap-x-6 mb-2">
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Paziente</label>
           <p><strong>{{ selectedReport.patientFullName }}</strong></p>
         </div>
-        <div class="form-group">
-          <label>Medico</label>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Medico</label>
           <p>{{ selectedReport.doctorFullName }}</p>
         </div>
-        <div class="form-group">
-          <label>Tipo Visita</label>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Tipo Visita</label>
           <p>
             <span class="badge" [ngClass]="getVisitTypeBadgeClass(selectedReport.visitType)">
               {{ selectedReport.visitType }}
             </span>
           </p>
         </div>
-        <div class="form-group">
-          <label>Data Appuntamento</label>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Data Appuntamento</label>
           <p>{{ selectedReport.scheduledAt | date:'dd MMM yyyy – HH:mm' }}</p>
         </div>
-        <div class="form-group">
-          <label>Data Emissione Referto</label>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Data Emissione Referto</label>
           <p>{{ selectedReport.issuedDate | date:'dd MMM yyyy' }}</p>
         </div>
       </div>
-      <div class="form-group">
-        <label>Diagnosi</label>
-        <div class="detail-box">{{ selectedReport.diagnosis }}</div>
+      <div class="mb-4">
+        <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Diagnosi</label>
+        <div class="bg-[#F9F7F7] border border-[#DBE2EF] rounded-[10px] px-[0.9rem] py-[0.65rem] text-[0.92rem] leading-[1.55] whitespace-pre-wrap text-[#112D4E] min-h-[2.5rem]">{{ selectedReport.diagnosis }}</div>
       </div>
-      <div class="form-group">
-        <label>Prescrizione</label>
-        <div class="detail-box">{{ selectedReport.prescription || '–' }}</div>
+      <div class="mb-4">
+        <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Prescrizione</label>
+        <div class="bg-[#F9F7F7] border border-[#DBE2EF] rounded-[10px] px-[0.9rem] py-[0.65rem] text-[0.92rem] leading-[1.55] whitespace-pre-wrap text-[#112D4E] min-h-[2.5rem]">{{ selectedReport.prescription || '–' }}</div>
       </div>
-      <div class="form-group">
-        <label>Note del Medico</label>
-        <div class="detail-box">{{ selectedReport.doctorNotes || '–' }}</div>
+      <div class="mb-4">
+        <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Note del Medico</label>
+        <div class="bg-[#F9F7F7] border border-[#DBE2EF] rounded-[10px] px-[0.9rem] py-[0.65rem] text-[0.92rem] leading-[1.55] whitespace-pre-wrap text-[#112D4E] min-h-[2.5rem]">{{ selectedReport.doctorNotes || '–' }}</div>
       </div>
-      <div class="form-actions">
-        <button class="btn btn-outline" (click)="showDetailModal = false">Chiudi</button>
-        <button class="btn btn-warning" (click)="openEdit(selectedReport!); showDetailModal = false">
-          <span class="material-icons" style="font-size:15px;vertical-align:middle">edit</span> Modifica
+      <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-[#DBE2EF]">
+        <button class="px-[1.1rem] py-2 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-transparent border-[1.5px] border-[#112D4E] text-[#112D4E] hover:bg-[#112D4E] hover:text-white" (click)="showDetailModal = false">Chiudi</button>
+        <button class="px-[1.1rem] py-2 border-0 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#e5992c] text-white hover:bg-[#c47f20]" (click)="openEdit(selectedReport!); showDetailModal = false">
+          <span class="material-icons text-[15px] align-middle">edit</span> Modifica
         </button>
       </div>
     </div>

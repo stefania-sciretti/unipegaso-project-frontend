@@ -1,18 +1,24 @@
-<main class="container">
-  <div class="page-header">
+<main class="max-w-[1200px] mx-auto my-8 px-6">
+  <div class="flex justify-between items-start mb-6">
     <div>
-      <h1 class="page-title"><span class="material-icons page-title-icon">menu_book</span> Ricette Fit</h1>
-      <p class="page-subtitle">La raccolta di ricette salutari di Simona</p>
+      <h1 class="text-[1.75rem] font-bold mb-1 text-[#112D4E] flex items-center">
+        <span class="material-icons text-[1.6rem] align-middle mr-[0.3rem] text-[#3F72AF]">menu_book</span> Ricette Fit
+      </h1>
+      <p class="text-[#3F72AF] text-[0.95rem]">La raccolta di ricette salutari di Simona</p>
     </div>
-    <button class="btn btn-success" (click)="openCreate()">+ Nuova Ricetta</button>
+    <button class="px-[1.1rem] py-2 border-0 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#3F72AF] text-white hover:bg-[#3a9569]"
+            (click)="openCreate()">+ Nuova Ricetta</button>
   </div>
-  @if (alertMsg) {
-    <div class="alert" [class.alert-success]="alertType==='success'" [class.alert-error]="alertType==='error'">{{ alertMsg }}</div>
+  @if (alertSignal(); as a) {
+    <div class="px-[1.1rem] py-[0.8rem] rounded-[10px] mb-4 text-[0.9rem] flex items-center gap-2 border-l-4"
+         [ngClass]="a.type==='success' ? 'bg-[#d4f0e0] text-[#1e7a48] border-[#3F72AF]' : 'bg-[#fde8e8] text-[#d95550] border-[#d95550]'">{{ a.message }}</div>
   }
-  <div class="card">
-    <div class="toolbar">
-      <input type="text" placeholder="Cerca ricette…" (input)="onSearch($event)" style="flex:1;max-width:280px"/>
-      <select (change)="onCategory($event)">
+  <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 mb-8">
+    <div class="flex items-center gap-3 mb-5 flex-wrap">
+      <input type="text" placeholder="Cerca ricette…" (input)="onSearch($event)"
+             class="flex-1 max-w-[280px] px-3 py-2 border-[1.5px] border-[#DBE2EF] rounded-[10px] text-[0.9rem] outline-none transition-[border-color] duration-200 focus:border-[#3F72AF] bg-white"/>
+      <select (change)="onCategory($event)"
+              class="px-3 py-2 border-[1.5px] border-[#DBE2EF] rounded-[10px] text-[0.9rem] outline-none transition-[border-color] duration-200 focus:border-[#3F72AF] bg-white">
         <option value="">Tutte le categorie</option>
         @for (cat of categories; track cat) {
           <option [value]="cat">{{ cat }}</option>
@@ -20,24 +26,29 @@
       </select>
     </div>
     @if (loading) {
-      <div class="loading">Caricamento…</div>
+      <div class="text-[#3F72AF] italic py-6 text-center">Caricamento…</div>
     }
     @if (!loading) {
-      <div class="recipe-grid">
+      <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5">
         @if (recipes.length === 0) {
-          <div class="empty" style="grid-column:1/-1">Nessuna ricetta trovata.</div>
+          <div class="col-span-full text-[#3F72AF] text-center py-10 text-[0.95rem]">Nessuna ricetta trovata.</div>
         }
         @for (r of recipes; track r) {
-          <div class="recipe-card" (click)="openDetail(r)">
-            <div class="recipe-category">{{ r.category ?? 'Generale' }}</div>
-            <div class="recipe-title">{{ r.title }}</div>
-            <div class="recipe-desc">{{ r.description }}</div>
-            <div class="recipe-meta">@if (r.calories) {
-              <span>🔥 {{ r.calories }} kcal</span>
-            }</div>
-            <div style="display:flex;gap:.5rem;margin-top:1rem" (click)="$event.stopPropagation()">
-              <button class="btn btn-secondary btn-sm" (click)="openEdit(r)">Modifica</button>
-              <button class="btn btn-danger btn-sm" (click)="delete(r.id)">Elimina</button>
+          <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 border-l-4 border-[#DBE2EF] transition-[transform,box-shadow] duration-150 cursor-pointer hover:-translate-y-[3px] hover:shadow-[0_6px_18px_rgba(53,88,114,0.13)]"
+               (click)="openDetail(r)">
+            <div class="text-[0.75rem] font-bold uppercase tracking-[0.5px] text-[#3F72AF] mb-2">{{ r.category ?? 'Generale' }}</div>
+            <div class="text-[1.1rem] font-bold text-[#112D4E] mb-[0.4rem]">{{ r.title }}</div>
+            <div class="text-[0.875rem] text-[#3F72AF] mb-3 leading-[1.5]">{{ r.description }}</div>
+            <div class="text-[0.8rem] text-[#3F72AF] flex gap-4">
+              @if (r.calories) {
+                <span>🔥 {{ r.calories }} kcal</span>
+              }
+            </div>
+            <div class="flex gap-2 mt-4" (click)="$event.stopPropagation()">
+              <button class="px-[0.7rem] py-[0.3rem] border-0 rounded-[10px] text-[0.8rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#3F72AF] text-white hover:bg-[#5e96be]"
+                      (click)="openEdit(r)">Modifica</button>
+              <button class="px-[0.7rem] py-[0.3rem] border-0 rounded-[10px] text-[0.8rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#d95550] text-white hover:bg-[#b84140]"
+                      (click)="delete(r.id)">Elimina</button>
             </div>
           </div>
         }
@@ -47,67 +58,102 @@
 </main>
 
 @if (showDetail && selected) {
-  <div class="modal-overlay">
-    <div class="modal" style="max-width:640px">
-      <div class="modal-header">
-        <h3>🍽️ {{ selected.title }}</h3>
-        <button class="modal-close" (click)="showDetail = false">&times;</button>
+  <div class="fixed inset-0 bg-[rgba(30,45,59,0.5)] z-[99999] flex items-center justify-center p-4">
+    <div class="bg-white rounded-[10px] shadow-[0_10px_40px_rgba(53,88,114,0.22)] p-8 w-full max-w-[640px] max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#DBE2EF]">
+        <h3 class="text-[1.15rem] text-[#112D4E] font-bold">{{ selected.title }}</h3>
+        <button class="bg-transparent border-0 text-[1.4rem] cursor-pointer text-[#3F72AF] leading-none hover:text-[#d95550] transition-colors duration-200"
+                (click)="showDetail = false">&times;</button>
       </div>
       @if (selected.category) {
-        <div style="margin-bottom:1rem">
-          <span class="tag">{{ selected.category }}</span>
+        <div class="mb-4">
+          <span class="inline-block bg-[#DBE2EF] text-[#112D4E] px-[0.55rem] py-[0.15rem] rounded-lg text-[0.78rem] font-semibold">{{ selected.category }}</span>
           @if (selected.calories) {
-            <span style="margin-left:.75rem;color:var(--text-muted);font-size:.9rem">🔥 {{ selected.calories }} kcal</span>
+            <span class="ml-3 text-[#3F72AF] text-[0.9rem]">🔥 {{ selected.calories }} kcal</span>
           }
         </div>
       }
       @if (selected.description) {
-        <div class="form-group"><label>Descrizione</label><p style="color:var(--text-muted)">{{ selected.description }}</p></div>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Descrizione</label>
+          <p class="text-[#3F72AF]">{{ selected.description }}</p>
+        </div>
       }
       @if (selected.ingredients) {
-        <div class="form-group"><label>🛒 Ingredienti</label><p style="white-space:pre-line">{{ selected.ingredients }}</p></div>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Ingredienti</label>
+          <p class="whitespace-pre-line">{{ selected.ingredients }}</p>
+        </div>
       }
       @if (selected.instructions) {
-        <div class="form-group"><label>📋 Preparazione</label><p style="white-space:pre-line">{{ selected.instructions }}</p></div>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Preparazione</label>
+          <p class="whitespace-pre-line">{{ selected.instructions }}</p>
+        </div>
       }
-      <div class="form-actions"><button class="btn btn-outline" (click)="showDetail = false">Chiudi</button></div>
+      <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-[#DBE2EF]">
+        <button class="px-[1.1rem] py-2 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-transparent border-[1.5px] border-[#112D4E] text-[#112D4E] hover:bg-[#112D4E] hover:text-white"
+                (click)="showDetail = false">Chiudi</button>
+      </div>
     </div>
   </div>
 }
 
 @if (showModal) {
-  <div class="modal-overlay">
-    <div class="modal" style="max-width:600px">
-      <div class="modal-header">
-        <h3>{{ editingId ? '✏️ Modifica Ricetta' : '🍽️ Nuova Ricetta' }}</h3>
-        <button class="modal-close" (click)="showModal = false">&times;</button>
+  <div class="fixed inset-0 bg-[rgba(30,45,59,0.5)] z-[99999] flex items-center justify-center p-4">
+    <div class="bg-white rounded-[10px] shadow-[0_10px_40px_rgba(53,88,114,0.22)] p-8 w-full max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#DBE2EF]">
+        <h3 class="text-[1.15rem] text-[#112D4E] font-bold">{{ editingId ? 'Modifica Ricetta' : 'Nuova Ricetta' }}</h3>
+        <button class="bg-transparent border-0 text-[1.4rem] cursor-pointer text-[#3F72AF] leading-none hover:text-[#d95550] transition-colors duration-200"
+                (click)="showModal = false">&times;</button>
       </div>
       <form [formGroup]="form" (ngSubmit)="save()">
-        <div class="form-group">
-          <label>Titolo *</label>
-          <input formControlName="title" type="text" placeholder="es. Smoothie Proteico Verde"/>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Titolo *</label>
+          <input formControlName="title" type="text" placeholder="es. Smoothie Proteico Verde"
+                 class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
           @if (isInvalid('title')) {
-            <div class="field-error">Campo obbligatorio</div>
+            <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
           }
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Categoria</label>
-            <select formControlName="category">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Categoria</label>
+            <select formControlName="category"
+                    class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] bg-white">
               <option value="">– Nessuna –</option>
               @for (cat of categories; track cat) {
                 <option [value]="cat">{{ cat }}</option>
               }
             </select>
           </div>
-          <div class="form-group"><label>Calorie (kcal)</label><input formControlName="calories" type="number" placeholder="320"/></div>
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Calorie (kcal)</label>
+            <input formControlName="calories" type="number" placeholder="320"
+                   class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
+          </div>
         </div>
-        <div class="form-group"><label>Descrizione breve</label><input formControlName="description" type="text" placeholder="Breve descrizione…"/></div>
-        <div class="form-group"><label>Ingredienti</label><textarea formControlName="ingredients" placeholder="Elenca gli ingredienti, uno per riga…" style="min-height:100px"></textarea></div>
-        <div class="form-group"><label>Preparazione</label><textarea formControlName="instructions" placeholder="Preparazione passo dopo passo…" style="min-height:100px"></textarea></div>
-        <div class="form-actions">
-          <button type="button" class="btn btn-outline" (click)="showModal = false">Annulla</button>
-          <button type="submit" class="btn btn-success">Salva Ricetta</button>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Descrizione breve</label>
+          <input formControlName="description" type="text" placeholder="Breve descrizione…"
+                 class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
+        </div>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Ingredienti</label>
+          <textarea formControlName="ingredients" placeholder="Elenca gli ingredienti, uno per riga…"
+                    class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] resize-vertical min-h-[100px]"></textarea>
+        </div>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Preparazione</label>
+          <textarea formControlName="instructions" placeholder="Preparazione passo dopo passo…"
+                    class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] resize-vertical min-h-[100px]"></textarea>
+        </div>
+        <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-[#DBE2EF]">
+          <button type="button"
+                  class="px-[1.1rem] py-2 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-transparent border-[1.5px] border-[#112D4E] text-[#112D4E] hover:bg-[#112D4E] hover:text-white"
+                  (click)="showModal = false">Annulla</button>
+          <button type="submit"
+                  class="px-[1.1rem] py-2 border-0 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#3F72AF] text-white hover:bg-[#3a9569]">Salva Ricetta</button>
         </div>
       </form>
     </div>

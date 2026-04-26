@@ -1,17 +1,17 @@
-<main class="container">
-  <div class="staff-detail-back">
-    <a routerLink="/doctors" class="back-link">&#8592; Torna allo Staff</a>
+<main class="max-w-[1200px] mx-auto my-8 px-6">
+  <div class="mb-6">
+    <a routerLink="/doctors" class="text-[#3F72AF] no-underline font-semibold text-[0.95rem] inline-flex items-center gap-1 transition-colors hover:text-[#112D4E]">&#8592; Torna allo Staff</a>
   </div>
 
-  <div class="staff-detail-hero">
-    <div class="staff-detail-avatar">
-      <img src="assets/icons/mihai.webp" alt="Mihai Lavretti"/>
+  <div class="flex flex-col sm:flex-row gap-10 items-center sm:items-start text-center sm:text-left bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-8 mb-8">
+    <div class="shrink-0 w-[180px] h-[180px] rounded-full overflow-hidden bg-[#DBE2EF]">
+      <img src="assets/icons/mihai.webp" alt="Mihai Lavretti" class="w-full h-full object-cover"/>
     </div>
-    <div class="staff-detail-intro">
-      <p class="staff-detail-title">Dott.</p>
-      <h1 class="staff-detail-name">Mihai Lavretti</h1>
-      <span class="staff-detail-badge">Osteopata</span>
-      <p class="staff-detail-bio">
+    <div class="flex-1">
+      <p class="text-[0.9rem] text-[#3F72AF] mb-[0.1rem]">Dott.</p>
+      <h1 class="text-[1.9rem] font-bold text-[#112D4E] mb-[0.6rem]">Mihai Lavretti</h1>
+      <span class="inline-block bg-[#DBE2EF] text-[#3F72AF] font-semibold text-[0.85rem] px-[0.9rem] py-[0.3rem] rounded-full mb-4">Osteopata</span>
+      <p class="text-[#112D4E] leading-[1.7] text-[0.97rem]">
         Il Dott. Mihai Lavretti è un osteopata con una solida formazione in medicina manuale.
         Attraverso tecniche manuali dolci e precise, tratta le disfunzioni strutturali del corpo
         per ripristinare l'equilibrio fisiologico e ridurre il dolore, con un approccio
@@ -20,38 +20,38 @@
     </div>
   </div>
 
-  <div class="staff-detail-services">
-    <h2 class="staff-detail-services-title">Servizi offerti</h2>
-    <div class="staff-services-grid">
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">back_hand</span>
-        <h3>Manipolazione osteopatica</h3>
-        <p>Trattamenti manuali per correggere le restrizioni di mobilità articolare e tissutale e ripristinare la funzione ottimale.</p>
+  <div class="mb-8">
+    <h2 class="text-[1.3rem] font-bold text-[#112D4E] mb-5">Servizi offerti</h2>
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-5">
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">back_hand</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Manipolazione osteopatica</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Trattamenti manuali per correggere le restrizioni di mobilità articolare e tissutale e ripristinare la funzione ottimale.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">airline_seat_flat</span>
-        <h3>Trattamento del mal di schiena</h3>
-        <p>Approccio osteopatico per lombalgia, cervicalgia, ernie discali e tensioni muscolari croniche.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">airline_seat_flat</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Trattamento del mal di schiena</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Approccio osteopatico per lombalgia, cervicalgia, ernie discali e tensioni muscolari croniche.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">pregnant_woman</span>
-        <h3>Osteopatia in gravidanza</h3>
-        <p>Trattamenti delicati e sicuri per alleviare i dolori tipici della gravidanza e preparare il corpo al parto.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">pregnant_woman</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Osteopatia in gravidanza</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Trattamenti delicati e sicuri per alleviare i dolori tipici della gravidanza e preparare il corpo al parto.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">child_care</span>
-        <h3>Osteopatia pediatrica</h3>
-        <p>Trattamenti specifici per neonati e bambini per risolvere le tensioni legate al parto e favorire uno sviluppo armonioso.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">child_care</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Osteopatia pediatrica</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Trattamenti specifici per neonati e bambini per risolvere le tensioni legate al parto e favorire uno sviluppo armonioso.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">sports_handball</span>
-        <h3>Osteopatia sportiva</h3>
-        <p>Prevenzione e recupero degli infortuni sportivi, miglioramento della mobilità e ottimizzazione della performance.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">sports_handball</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Osteopatia sportiva</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Prevenzione e recupero degli infortuni sportivi, miglioramento della mobilità e ottimizzazione della performance.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">sentiment_very_satisfied</span>
-        <h3>Trattamento cefalee e emicranie</h3>
-        <p>Terapia manuale osteopatica per la riduzione della frequenza e dell'intensità di cefalee tensionali ed emicranie.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">sentiment_very_satisfied</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Trattamento cefalee e emicranie</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Terapia manuale osteopatica per la riduzione della frequenza e dell'intensità di cefalee tensionali ed emicranie.</p>
       </div>
     </div>
   </div>

@@ -1,43 +1,66 @@
-<main class="container">
-  <div class="page-header">
+<main class="max-w-[1200px] mx-auto my-8 px-6">
+  <div class="flex justify-between items-start mb-6">
     <div>
-      <h1 class="page-title"><span class="material-icons page-title-icon">personal_injury</span> Pazienti</h1>
-      <p class="page-subtitle">Gestione anagrafica pazienti</p>
+      <h1 class="text-[1.75rem] font-bold mb-1 text-[#112D4E] flex items-center">
+        <span class="material-icons text-[1.6rem] align-middle mr-[0.3rem] text-[#3F72AF]">personal_injury</span> Pazienti
+      </h1>
+      <p class="text-[#3F72AF] text-[0.95rem]">Gestione anagrafica pazienti</p>
     </div>
-    <button class="btn btn-primary" (click)="openCreate()">+ Nuovo Paziente</button>
+    <button
+      class="px-[1.1rem] py-2 border-0 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#112D4E] text-white hover:bg-[#264560]"
+      (click)="openCreate()">+ Nuovo Paziente</button>
   </div>
-  @if (alert$ | async; as alert) {
-    <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
+  @if (alertSignal(); as alert) {
+    <div
+      class="px-[1.1rem] py-[0.8rem] rounded-[10px] mb-4 text-[0.9rem] flex items-center gap-2 border-l-4"
+      [ngClass]="alert.type==='success'
+        ? 'bg-[#d4f0e0] text-[#1e7a48] border-[#3F72AF]'
+        : 'bg-[#fde8e8] text-[#d95550] border-[#d95550]'">{{ alert.message }}</div>
   }
-  <div class="card">
-    <div class="toolbar">
-      <input type="text" placeholder="Cerca per nome…" (input)="onSearch($event)" style="flex:1;max-width:300px"/>
+  <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 mb-8">
+    <div class="flex items-center gap-3 mb-5 flex-wrap">
+      <input
+        type="text"
+        placeholder="Cerca per nome…"
+        (input)="onSearch($event)"
+        class="flex-1 max-w-[300px] px-3 py-2 border-[1.5px] border-[#DBE2EF] rounded-[10px] text-[0.9rem] outline-none focus:border-[#3F72AF]"/>
     </div>
     @if (loading) {
-      <div class="loading">Caricamento…</div>
+      <div class="text-[#3F72AF] italic py-6 text-center">Caricamento…</div>
     }
     @if (!loading) {
-      <div class="table-wrapper">
-        <table>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-[0.9rem]">
           <thead><tr>
-            <th>#</th><th>Nome e Cognome</th><th>Codice Fiscale</th>
-            <th>Data di Nascita</th><th>Email</th><th>Telefono</th><th>Azioni</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">#</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Nome e Cognome</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Codice Fiscale</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Data di Nascita</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Email</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Telefono</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Azioni</th>
           </tr></thead>
           <tbody>
             @if (patients.length === 0) {
-              <tr><td colspan="7" class="empty">Nessun paziente trovato.</td></tr>
+              <tr><td colspan="7" class="text-[#3F72AF] text-center py-10 text-[0.95rem]">Nessun paziente trovato.</td></tr>
             }
             @for (p of patients; track p) {
-              <tr>
-                <td>{{ p.id }}</td>
-                <td>{{ p.firstName }} {{ p.lastName }}</td>
-                <td><code>{{ p.fiscalCode }}</code></td>
-                <td>{{ p.birthDate | date:'dd MMM yyyy' }}</td>
-                <td>{{ p.email }}</td>
-                <td>{{ p.phone ?? '–' }}</td>
-                <td class="actions">
-                  <button class="btn btn-primary btn-sm" (click)="openEdit(p)">Modifica</button>
-                  <button class="btn btn-danger btn-sm" (click)="delete(p.id)">Elimina</button>
+              <tr class="hover:[&>td]:bg-[#f0f7ff]">
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ p.id }}</td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ p.firstName }} {{ p.lastName }}</td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle"><code class="bg-[#eef4fa] rounded px-[6px] py-[2px] text-[0.85rem] text-[#112D4E]">{{ p.fiscalCode }}</code></td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ p.birthDate | date:'dd MMM yyyy' }}</td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ p.email }}</td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ p.phone ?? '–' }}</td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">
+                  <div class="flex gap-2 flex-nowrap items-center">
+                    <button
+                      class="px-[0.7rem] py-[0.3rem] text-[0.8rem] border-0 rounded-[10px] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#112D4E] text-white hover:bg-[#264560]"
+                      (click)="openEdit(p)">Modifica</button>
+                    <button
+                      class="px-[0.7rem] py-[0.3rem] text-[0.8rem] border-0 rounded-[10px] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#d95550] text-white hover:bg-[#b84140]"
+                      (click)="delete(p.id)">Elimina</button>
+                  </div>
                 </td>
               </tr>
             }
@@ -49,59 +72,90 @@
 </main>
 
 @if (showModal) {
-  <div class="modal-overlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>{{ editingId ? 'Modifica Paziente' : 'Nuovo Paziente' }}</h3>
-        <button class="modal-close" (click)="closeModal()">&times;</button>
+  <div class="fixed inset-0 bg-[rgba(30,45,59,0.5)] z-[99999] flex items-center justify-center p-4">
+    <div class="bg-white rounded-[10px] shadow-[0_10px_40px_rgba(53,88,114,0.22)] p-8 w-full max-w-[560px] max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#DBE2EF]">
+        <h3 class="text-[1.15rem] text-[#112D4E] font-bold">{{ editingId ? 'Modifica Paziente' : 'Nuovo Paziente' }}</h3>
+        <button
+          class="bg-transparent border-0 text-[1.4rem] cursor-pointer text-[#3F72AF] leading-none hover:text-[#d95550] transition-colors duration-200"
+          (click)="closeModal()">&times;</button>
       </div>
       <form [formGroup]="form" (ngSubmit)="save()">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Nome *</label>
-            <input formControlName="firstName" type="text" placeholder="Mario"/>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Nome *</label>
+            <input
+              formControlName="firstName"
+              type="text"
+              placeholder="Mario"
+              class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
             @if (isInvalid('firstName')) {
-              <div class="field-error">Campo obbligatorio</div>
+              <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
             }
           </div>
-          <div class="form-group">
-            <label>Cognome *</label>
-            <input formControlName="lastName" type="text" placeholder="Rossi"/>
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Cognome *</label>
+            <input
+              formControlName="lastName"
+              type="text"
+              placeholder="Rossi"
+              class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
             @if (isInvalid('lastName')) {
-              <div class="field-error">Campo obbligatorio</div>
+              <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
             }
           </div>
         </div>
-        <div class="form-group">
-          <label>Codice Fiscale * (16 caratteri)</label>
-          <input formControlName="fiscalCode" type="text" maxlength="16" placeholder="RSSMRA80A01H501Z" style="text-transform:uppercase"/>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Codice Fiscale * (16 caratteri)</label>
+          <input
+            formControlName="fiscalCode"
+            type="text"
+            maxlength="16"
+            placeholder="RSSMRA80A01H501Z"
+            class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] uppercase"/>
           @if (isInvalid('fiscalCode')) {
-            <div class="field-error">Deve essere esattamente 16 caratteri</div>
+            <div class="text-[#d95550] text-[0.8rem] mt-1">Deve essere esattamente 16 caratteri</div>
           }
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Data di Nascita *</label>
-            <input formControlName="birthDate" type="date"/>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Data di Nascita *</label>
+            <input
+              formControlName="birthDate"
+              type="date"
+              class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
             @if (isInvalid('birthDate')) {
-              <div class="field-error">Campo obbligatorio</div>
+              <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
             }
           </div>
-          <div class="form-group">
-            <label>Telefono</label>
-            <input formControlName="phone" type="tel" placeholder="+39 333 1234567"/>
+          <div class="mb-4">
+            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Telefono</label>
+            <input
+              formControlName="phone"
+              type="tel"
+              placeholder="+39 333 1234567"
+              class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
           </div>
         </div>
-        <div class="form-group">
-          <label>Email *</label>
-          <input formControlName="email" type="email" placeholder="mario.rossi@email.it"/>
+        <div class="mb-4">
+          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Email *</label>
+          <input
+            formControlName="email"
+            type="email"
+            placeholder="mario.rossi@email.it"
+            class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
           @if (isInvalid('email')) {
-            <div class="field-error">Email non valida</div>
+            <div class="text-[#d95550] text-[0.8rem] mt-1">Email non valida</div>
           }
         </div>
-        <div class="form-actions">
-          <button type="button" class="btn btn-outline" (click)="closeModal()">Annulla</button>
-          <button type="submit" class="btn btn-primary">Salva</button>
+        <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-[#DBE2EF]">
+          <button
+            type="button"
+            class="px-[1.1rem] py-2 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-transparent border-[1.5px] border-[#112D4E] text-[#112D4E] hover:bg-[#112D4E] hover:text-white"
+            (click)="closeModal()">Annulla</button>
+          <button
+            type="submit"
+            class="px-[1.1rem] py-2 border-0 rounded-[10px] text-[0.9rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#112D4E] text-white hover:bg-[#264560]">Salva</button>
         </div>
       </form>
     </div>

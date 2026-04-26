@@ -1,61 +1,53 @@
-import {Component, OnInit} from '@angular/core';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {forkJoin, Observable} from 'rxjs';
-import {DietPlanService} from '../../services/diet-plan.service';
-import {ClientService} from '../../services/client.service';
-import {StaffService} from '../../services/trainer.service';
-import {AlertService, AlertState} from '../../services/alert.service';
-import {Client, DietPlan, DietPlanRequest} from '../../models/models';
+import { Component, inject } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
+import { DietPlanService } from '../../services/diet-plan.service';
+import { ClientService } from '../../services/client.service';
+import { StaffService } from '../../services/trainer.service';
+import { AlertService } from '../../services/alert.service';
+import { Client, DietPlan, DietPlanRequest } from '../../models/models';
 
 @Component({
-    selector: 'app-nutrition',
-    imports: [CommonModule, AsyncPipe, FormsModule, ReactiveFormsModule],
-    templateUrl: './nutrition.component.html'
+  selector: 'app-nutrition',
+  imports: [FormsModule, ReactiveFormsModule, NgClass],
+  templateUrl: './nutrition.component.html'
 })
-export class NutritionComponent implements OnInit {
+export class NutritionComponent {
+  private readonly dietPlanService = inject(DietPlanService);
+  private readonly clientService   = inject(ClientService);
+  private readonly trainerService  = inject(StaffService);
+  private readonly alertSvc        = inject(AlertService);
+  private readonly fb              = inject(FormBuilder);
+
+  protected readonly alertSignal = this.alertSvc.alert;
+
   plans: DietPlan[] = [];
   clients: Client[] = [];
-  /** ID of the nutritionist staff member assigned to new plans */
   nutritionistId = 0;
-  loading = false;
-  showModal = false;
+  loading        = false;
+  showModal      = false;
   editingId: number | null = null;
-  filterActive = '';
-  form!: FormGroup;
-  readonly alert$: Observable<AlertState | null>;
+  filterActive   = '';
 
-  constructor(
-    private dietPlanService: DietPlanService,
-    private clientService: ClientService,
-    private trainerService: StaffService,
-    private alertService: AlertService,
-    private fb: FormBuilder
-  ) {
-    this.alert$ = this.alertService.alert$;
-  }
+  readonly form: FormGroup = this.fb.group({
+    clientId:      [null, Validators.required],
+    title:         ['',   Validators.required],
+    description:   [''],
+    calories:      [null],
+    durationWeeks: [null],
+    active:        [true]
+  });
 
-  ngOnInit(): void {
-    this.buildForm();
+  constructor() {
     forkJoin({
       plans:    this.dietPlanService.getAll(),
       clients:  this.clientService.getAll(),
       trainers: this.trainerService.getAll('NUTRITIONIST')
     }).subscribe(({ plans, clients, trainers }) => {
-      this.plans         = plans;
-      this.clients       = clients;
+      this.plans          = plans;
+      this.clients        = clients;
       this.nutritionistId = trainers[0]?.id ?? 1;
-    });
-  }
-
-  buildForm(): void {
-    this.form = this.fb.group({
-      clientId:      [null, Validators.required],
-      title:         ['',   Validators.required],
-      description:   [''],
-      calories:      [null],
-      durationWeeks: [null],
-      active:        [true]
     });
   }
 
@@ -69,7 +61,7 @@ export class NutritionComponent implements OnInit {
     this.loading = true;
     this.dietPlanService.getAll().subscribe({
       next: (data) => { this.plans = data; this.loading = false; },
-      error: () => { this.loading = false; }
+      error: ()    => { this.loading = false; }
     });
   }
 
@@ -104,13 +96,10 @@ export class NutritionComponent implements OnInit {
       durationWeeks: value.durationWeeks || null,
       active:        value.active ?? true
     };
-    const request$ = this.editingId
-      ? this.dietPlanService.update(this.editingId, body)
-      : this.dietPlanService.create(body);
-
-    request$.subscribe({
+    const req$ = this.editingId ? this.dietPlanService.update(this.editingId, body) : this.dietPlanService.create(body);
+    req$.subscribe({
       next: () => {
-        this.alertService.show(this.editingId ? 'Plan updated!' : 'Plan created!');
+        this.alertSvc.show(this.editingId ? 'Piano aggiornato!' : 'Piano creato!');
         this.showModal = false;
         this.load();
       }
@@ -118,9 +107,9 @@ export class NutritionComponent implements OnInit {
   }
 
   delete(id: number): void {
-    if (!confirm('Delete this diet plan?')) return;
+    if (!confirm('Eliminare questo piano dieta?')) return;
     this.dietPlanService.delete(id).subscribe({
-      next: () => { this.alertService.show('Plan deleted.'); this.load(); }
+      next: () => { this.alertSvc.show('Piano eliminato.'); this.load(); }
     });
   }
 

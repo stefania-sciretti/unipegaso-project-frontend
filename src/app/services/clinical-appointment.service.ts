@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {ClinicalAppointment} from '../models/models';
+import { Observable } from 'rxjs';
+import { ClinicalAppointment } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class ClinicalAppointmentService {
   private readonly base = '/api/appointments';
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   getAll(filters: { patientId?: number; doctorId?: number; status?: string } = {}): Observable<ClinicalAppointment[]> {
     let params = new HttpParams();

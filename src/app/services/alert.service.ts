@@ -1,31 +1,27 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import { Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 export interface AlertState {
   message: string;
   type: 'success' | 'error' | 'warning';
 }
 
-/**
- * Centralises alert notification logic (Single Responsibility Principle).
- *
- * Previously the `showAlert()` + `setTimeout()` pattern was duplicated in every
- * page component (ClientsComponent, AppointmentsComponent, NutritionComponent,
- * TrainingComponent, GlycemiaComponent). This service is the single source of truth.
- */
 @Injectable({ providedIn: 'root' })
 export class AlertService {
   private readonly AUTO_DISMISS_MS = 3500;
-  private readonly alertSubject = new BehaviorSubject<AlertState | null>(null);
+  private readonly alertSignal = signal<AlertState | null>(null);
 
-  readonly alert$: Observable<AlertState | null> = this.alertSubject.asObservable();
+  // Readonly signal for template binding
+  readonly alert = this.alertSignal.asReadonly();
+  // Observable alias kept for components using the async pipe
+  readonly alert$ = toObservable(this.alertSignal);
 
   show(message: string, type: AlertState['type'] = 'success'): void {
-    this.alertSubject.next({ message, type });
-    setTimeout(() => this.alertSubject.next(null), this.AUTO_DISMISS_MS);
+    this.alertSignal.set({ message, type });
+    setTimeout(() => this.alertSignal.set(null), this.AUTO_DISMISS_MS);
   }
 
   clear(): void {
-    this.alertSubject.next(null);
+    this.alertSignal.set(null);
   }
 }

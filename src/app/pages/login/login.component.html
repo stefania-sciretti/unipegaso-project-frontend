@@ -1,77 +1,99 @@
-<div class="login-page">
-  <div class="login-card">
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#112D4E] to-[#3F72AF] p-4">
+  <div class="w-full max-w-[420px] bg-white rounded-2xl shadow-[0_8px_40px_rgba(17,45,78,0.25)] p-8">
 
-    <div class="login-logo">
-      <span class="material-icons login-logo-icon">local_hospital</span>
-      <span class="login-logo-name">Apice Clinic</span>
+    <div class="flex items-center gap-3 mb-6">
+      <span class="material-icons text-4xl text-[#3F72AF]">local_hospital</span>
+      <span class="text-[1.4rem] font-bold text-[#112D4E] tracking-wide">Apice Clinic</span>
     </div>
 
-    <h2 class="login-title">{{ isRegistering ? 'Registrati' : 'Accedi al portale' }}</h2>
-    <p class="login-subtitle">{{ isRegistering ? 'Crea un nuovo account' : 'Inserisci le tue credenziali per continuare' }}</p>
+    <h2 class="text-[1.4rem] font-bold text-[#112D4E] mb-1">{{ isRegistering ? 'Registrati' : 'Accedi al portale' }}</h2>
+    <p class="text-[#3F72AF] text-[0.9rem] mb-6">{{ isRegistering ? 'Crea un nuovo account' : 'Inserisci le tue credenziali per continuare' }}</p>
 
-    <div class="login-error" *ngIf="error">
-      <span class="material-icons" style="font-size:1.1rem">error_outline</span>
-      {{ error }}
-    </div>
+    @if (error) {
+      <div class="flex items-center gap-2 px-4 py-3 rounded-lg bg-[#fde8e8] text-[#d95550] text-[0.9rem] mb-4 border-l-4 border-[#d95550]">
+        <span class="material-icons text-[1.1rem]">error_outline</span>
+        {{ error }}
+      </div>
+    }
 
-    <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
-      <div class="login-field">
-        <label>Username</label>
-        <div class="login-input-wrap">
-          <span class="material-icons login-input-icon">person</span>
-          <input formControlName="username" type="text" placeholder="es. mario.rossi" autocomplete="username"/>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4">
+
+      <div class="flex flex-col gap-1">
+        <label class="text-[0.85rem] font-semibold text-[#112D4E]">Username</label>
+        <div class="flex items-center border-[1.5px] rounded-lg overflow-hidden focus-within:border-[#3F72AF]"
+          [ngClass]="isInvalid('username') ? 'border-[#d95550]' : 'border-[#DBE2EF]'">
+          <span class="material-icons text-[#3F72AF] px-3 text-[1.2rem]">person</span>
+          <input formControlName="username" type="text" placeholder="es. mario.rossi" autocomplete="username"
+            class="flex-1 py-[0.6rem] pr-3 outline-none text-[0.9rem] text-[#112D4E] bg-transparent"/>
         </div>
-        <div class="login-field-error" *ngIf="isInvalid('username')">Campo obbligatorio</div>
+        @if (isInvalid('username')) {
+          <span class="text-[#d95550] text-[0.78rem]">Campo obbligatorio</span>
+        }
       </div>
 
-      <div class="login-field" *ngIf="isRegistering">
-        <label>Nome Completo</label>
-        <div class="login-input-wrap">
-          <span class="material-icons login-input-icon">badge</span>
-          <input formControlName="displayName" type="text" placeholder="es. Mario Rossi" autocomplete="off"/>
+      @if (isRegistering) {
+        <div class="flex flex-col gap-1">
+          <label class="text-[0.85rem] font-semibold text-[#112D4E]">Nome Completo</label>
+          <div class="flex items-center border-[1.5px] rounded-lg overflow-hidden focus-within:border-[#3F72AF]"
+            [ngClass]="isInvalid('displayName') ? 'border-[#d95550]' : 'border-[#DBE2EF]'">
+            <span class="material-icons text-[#3F72AF] px-3 text-[1.2rem]">badge</span>
+            <input formControlName="displayName" type="text" placeholder="es. Mario Rossi" autocomplete="off"
+              class="flex-1 py-[0.6rem] pr-3 outline-none text-[0.9rem] text-[#112D4E] bg-transparent"/>
+          </div>
+          @if (isInvalid('displayName')) {
+            <span class="text-[#d95550] text-[0.78rem]">Campo obbligatorio</span>
+          }
         </div>
-        <div class="login-field-error" *ngIf="isInvalid('displayName')">Campo obbligatorio</div>
+      }
+
+      <div class="flex flex-col gap-1">
+        <label class="text-[0.85rem] font-semibold text-[#112D4E]">Password</label>
+        <div class="flex items-center border-[1.5px] rounded-lg overflow-hidden focus-within:border-[#3F72AF]"
+          [ngClass]="isInvalid('password') ? 'border-[#d95550]' : 'border-[#DBE2EF]'">
+          <span class="material-icons text-[#3F72AF] px-3 text-[1.2rem]">lock</span>
+          <input formControlName="password" type="password" placeholder="••••••••"
+            [attr.autocomplete]="isRegistering ? 'new-password' : 'current-password'"
+            class="flex-1 py-[0.6rem] pr-3 outline-none text-[0.9rem] text-[#112D4E] bg-transparent"/>
+        </div>
+        @if (isInvalid('password')) {
+          <span class="text-[#d95550] text-[0.78rem]">Campo obbligatorio</span>
+        }
       </div>
 
-      <div class="login-field">
-        <label>Password</label>
-        <div class="login-input-wrap">
-          <span class="material-icons login-input-icon">lock</span>
-          <input formControlName="password" type="password" placeholder="••••••••" [attr.autocomplete]="isRegistering ? 'new-password' : 'current-password'"/>
-        </div>
-        <div class="login-field-error" *ngIf="isInvalid('password')">Campo obbligatorio</div>
-      </div>
-
-      <button type="submit" class="login-btn" [disabled]="loading">
-        <span *ngIf="!loading">{{ isRegistering ? 'Registrati' : 'Accedi' }}</span>
-        <span *ngIf="loading">Caricamento…</span>
+      <button type="submit"
+        class="w-full py-[0.75rem] rounded-xl bg-[#112D4E] text-white font-semibold text-[0.95rem] cursor-pointer transition-colors duration-200 hover:bg-[#1a3f6e] disabled:opacity-60 disabled:cursor-not-allowed mt-1"
+        [disabled]="loading">
+        @if (!loading) { {{ isRegistering ? 'Registrati' : 'Accedi' }} }
+        @if (loading) { Caricamento… }
       </button>
     </form>
 
-    <div class="login-toggle">
-      <span *ngIf="!isRegistering">Non hai un account? </span>
-      <span *ngIf="isRegistering">Hai già un account? </span>
-      <a (click)="toggleMode()" class="login-toggle-link">
+    <div class="mt-5 text-center text-[0.88rem] text-[#3F72AF]">
+      @if (!isRegistering) { <span>Non hai un account? </span> }
+      @if (isRegistering) { <span>Hai già un account? </span> }
+      <a (click)="toggleMode()" class="font-semibold cursor-pointer underline hover:text-[#112D4E]">
         {{ isRegistering ? 'Accedi qui' : 'Registrati qui' }}
       </a>
     </div>
 
-    <div class="login-roles" *ngIf="!isRegistering">
-      <div class="login-role-box">
-        <span class="material-icons" style="color:var(--primary-mid)">badge</span>
-        <div>
-          <strong>Medici / Staff</strong>
-          <p>Accesso completo alla gestione clinica</p>
+    @if (!isRegistering) {
+      <div class="mt-6 flex flex-col gap-3">
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-[#f8f9fb] border border-[#DBE2EF]">
+          <span class="material-icons text-[#3F72AF]">badge</span>
+          <div>
+            <strong class="text-[0.85rem] text-[#112D4E] block">Medici / Staff</strong>
+            <p class="text-[0.78rem] text-[#3F72AF] m-0">Accesso completo alla gestione clinica</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-[#f8f9fb] border border-[#DBE2EF]">
+          <span class="material-icons text-[#3F72AF]">person</span>
+          <div>
+            <strong class="text-[0.85rem] text-[#112D4E] block">Pazienti</strong>
+            <p class="text-[0.78rem] text-[#3F72AF] m-0">Accesso al proprio profilo e referti</p>
+          </div>
         </div>
       </div>
-      <div class="login-role-box">
-        <span class="material-icons" style="color:var(--primary-mid)">person</span>
-        <div>
-          <strong>Pazienti</strong>
-          <p>Accesso al proprio profilo e referti</p>
-        </div>
-      </div>
-    </div>
+    }
 
   </div>
 </div>

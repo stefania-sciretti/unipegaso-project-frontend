@@ -1,17 +1,17 @@
-<main class="container">
-  <div class="staff-detail-back">
-    <a routerLink="/doctors" class="back-link">&#8592; Torna allo Staff</a>
+<main class="max-w-[1200px] mx-auto my-8 px-6">
+  <div class="mb-6">
+    <a routerLink="/doctors" class="text-[#3F72AF] no-underline font-semibold text-[0.95rem] inline-flex items-center gap-1 transition-colors hover:text-[#112D4E]">&#8592; Torna allo Staff</a>
   </div>
 
-  <div class="staff-detail-hero">
-    <div class="staff-detail-avatar">
-      <img src="assets/icons/simona.webp" alt="Simona Ruberti"/>
+  <div class="flex flex-col sm:flex-row gap-10 items-center sm:items-start text-center sm:text-left bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-8 mb-8">
+    <div class="shrink-0 w-[180px] h-[180px] rounded-full overflow-hidden bg-[#DBE2EF]">
+      <img src="assets/icons/simona.webp" alt="Simona Ruberti" class="w-full h-full object-cover"/>
     </div>
-    <div class="staff-detail-intro">
-      <p class="staff-detail-title">Dott.ssa</p>
-      <h1 class="staff-detail-name">Simona Ruberti</h1>
-      <span class="staff-detail-badge">Biologa Nutrizionista</span>
-      <p class="staff-detail-bio">
+    <div class="flex-1">
+      <p class="text-[0.9rem] text-[#3F72AF] mb-[0.1rem]">Dott.ssa</p>
+      <h1 class="text-[1.9rem] font-bold text-[#112D4E] mb-[0.6rem]">Simona Ruberti</h1>
+      <span class="inline-block bg-[#DBE2EF] text-[#3F72AF] font-semibold text-[0.85rem] px-[0.9rem] py-[0.3rem] rounded-full mb-4">Biologa Nutrizionista</span>
+      <p class="text-[#112D4E] leading-[1.7] text-[0.97rem]">
         La Dott.ssa Simona Ruberti è una biologa nutrizionista specializzata nella gestione
         del peso corporeo, nei disturbi metabolici e nell'elaborazione di piani alimentari
         personalizzati. Con un approccio scientifico e attento alle esigenze individuali,
@@ -20,38 +20,38 @@
     </div>
   </div>
 
-  <div class="staff-detail-services">
-    <h2 class="staff-detail-services-title">Servizi offerti</h2>
-    <div class="staff-services-grid">
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">restaurant_menu</span>
-        <h3>Piano alimentare personalizzato</h3>
-        <p>Elaborazione di piani nutrizionali su misura basati su analisi della composizione corporea e obiettivi specifici.</p>
+  <div class="mb-8">
+    <h2 class="text-[1.3rem] font-bold text-[#112D4E] mb-5">Servizi offerti</h2>
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-5">
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">restaurant_menu</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Piano alimentare personalizzato</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Elaborazione di piani nutrizionali su misura basati su analisi della composizione corporea e obiettivi specifici.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">monitor_weight</span>
-        <h3>Gestione del peso</h3>
-        <p>Programmi di dimagrimento o aumento della massa muscolare con monitoraggio continuo dei progressi.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">monitor_weight</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Gestione del peso</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Programmi di dimagrimento o aumento della massa muscolare con monitoraggio continuo dei progressi.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">science</span>
-        <h3>Nutrizione sportiva</h3>
-        <p>Piani alimentari specifici per atleti e sportivi, ottimizzati per le performance e il recupero.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">science</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Nutrizione sportiva</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Piani alimentari specifici per atleti e sportivi, ottimizzati per le performance e il recupero.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">favorite</span>
-        <h3>Nutrizione clinica</h3>
-        <p>Supporto nutrizionale per patologie metaboliche come diabete, ipertensione, dislipidemia e intolleranze alimentari.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">favorite</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Nutrizione clinica</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Supporto nutrizionale per patologie metaboliche come diabete, ipertensione, dislipidemia e intolleranze alimentari.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">groups</span>
-        <h3>Educazione alimentare</h3>
-        <p>Percorsi di consapevolezza alimentare per famiglie e gruppi, con focus sulla corretta lettura delle etichette.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">groups</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Educazione alimentare</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Percorsi di consapevolezza alimentare per famiglie e gruppi, con focus sulla corretta lettura delle etichette.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">refresh</span>
-        <h3>Follow-up e monitoraggio</h3>
-        <p>Visite di controllo periodiche per adattare il piano nutrizionale all'evoluzione del paziente.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">refresh</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Follow-up e monitoraggio</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Visite di controllo periodiche per adattare il piano nutrizionale all'evoluzione del paziente.</p>
       </div>
     </div>
   </div>

@@ -1,64 +1,56 @@
-import {Component, OnInit} from '@angular/core';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {forkJoin, Observable} from 'rxjs';
-import {TrainingPlanService} from '../../services/training-plan.service';
-import {ClientService} from '../../services/client.service';
-import {StaffService} from '../../services/trainer.service';
-import {AlertService, AlertState} from '../../services/alert.service';
-import {Client, TrainingPlan, TrainingPlanRequest} from '../../models/models';
+import { Component, inject } from '@angular/core';
+import { DatePipe, NgClass } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
+import { TrainingPlanService } from '../../services/training-plan.service';
+import { ClientService } from '../../services/client.service';
+import { StaffService } from '../../services/trainer.service';
+import { AlertService } from '../../services/alert.service';
+import { Client, TrainingPlan, TrainingPlanRequest } from '../../models/models';
 
 @Component({
-    selector: 'app-training',
-    imports: [CommonModule, AsyncPipe, FormsModule, ReactiveFormsModule],
-    templateUrl: './training.component.html'
+  selector: 'app-training',
+  imports: [FormsModule, ReactiveFormsModule, DatePipe, NgClass],
+  templateUrl: './training.component.html'
 })
-export class TrainingComponent implements OnInit {
+export class TrainingComponent {
+  private readonly trainingPlanService = inject(TrainingPlanService);
+  private readonly clientService       = inject(ClientService);
+  private readonly trainerService      = inject(StaffService);
+  private readonly alertSvc            = inject(AlertService);
+  private readonly fb                  = inject(FormBuilder);
+
+  protected readonly alertSignal = this.alertSvc.alert;
+
   plans: TrainingPlan[] = [];
   clients: Client[] = [];
-  /** ID of the personal trainer staff member assigned to new plans */
   personalTrainerId = 0;
-  loading = false;
-  showModal  = false;
-  showDetail = false;
-  editingId: number | null = null;
+  loading        = false;
+  showModal      = false;
+  showDetail     = false;
+  editingId: number | null      = null;
   selected: TrainingPlan | null = null;
-  filterActive = '';
+  filterActive   = '';
   filterClientId = '';
-  form!: FormGroup;
-  readonly alert$: Observable<AlertState | null>;
 
-  constructor(
-    private trainingPlanService: TrainingPlanService,
-    private clientService: ClientService,
-    private trainerService: StaffService,
-    private alertService: AlertService,
-    private fb: FormBuilder
-  ) {
-    this.alert$ = this.alertService.alert$;
-  }
+  readonly form: FormGroup = this.fb.group({
+    clientId:        [null, Validators.required],
+    title:           ['',   Validators.required],
+    description:     [''],
+    weeks:           [null],
+    sessionsPerWeek: [null],
+    active:          [true]
+  });
 
-  ngOnInit(): void {
-    this.buildForm();
+  constructor() {
     forkJoin({
       plans:    this.trainingPlanService.getAll(),
       clients:  this.clientService.getAll(),
       trainers: this.trainerService.getAll('PERSONAL_TRAINER')
     }).subscribe(({ plans, clients, trainers }) => {
-      this.plans            = plans;
-      this.clients          = clients;
+      this.plans             = plans;
+      this.clients           = clients;
       this.personalTrainerId = trainers[0]?.id ?? 2;
-    });
-  }
-
-  buildForm(): void {
-    this.form = this.fb.group({
-      clientId:        [null, Validators.required],
-      title:           ['',   Validators.required],
-      description:     [''],
-      weeks:           [null],
-      sessionsPerWeek: [null],
-      active:          [true]
     });
   }
 
@@ -74,7 +66,7 @@ export class TrainingComponent implements OnInit {
     this.loading = true;
     this.trainingPlanService.getAll().subscribe({
       next: (data) => { this.plans = data; this.loading = false; },
-      error: () => { this.loading = false; }
+      error: ()    => { this.loading = false; }
     });
   }
 
@@ -111,13 +103,10 @@ export class TrainingComponent implements OnInit {
       sessionsPerWeek: value.sessionsPerWeek || null,
       active:          value.active ?? true
     };
-    const request$ = this.editingId
-      ? this.trainingPlanService.update(this.editingId, body)
-      : this.trainingPlanService.create(body);
-
-    request$.subscribe({
+    const req$ = this.editingId ? this.trainingPlanService.update(this.editingId, body) : this.trainingPlanService.create(body);
+    req$.subscribe({
       next: () => {
-        this.alertService.show(this.editingId ? 'Plan updated!' : 'Plan created!');
+        this.alertSvc.show(this.editingId ? 'Scheda aggiornata!' : 'Scheda creata!');
         this.showModal = false;
         this.load();
       }
@@ -125,9 +114,9 @@ export class TrainingComponent implements OnInit {
   }
 
   delete(id: number): void {
-    if (!confirm('Delete this training plan?')) return;
+    if (!confirm('Eliminare questa scheda di allenamento?')) return;
     this.trainingPlanService.delete(id).subscribe({
-      next: () => { this.alertService.show('Plan deleted.'); this.load(); }
+      next: () => { this.alertSvc.show('Scheda eliminata.'); this.load(); }
     });
   }
 

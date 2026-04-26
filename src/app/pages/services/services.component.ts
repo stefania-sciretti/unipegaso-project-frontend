@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import { CommonModule, UpperCasePipe } from '@angular/common';
+import { Component } from '@angular/core';
+import { UpperCasePipe } from '@angular/common';
 
 interface ServiceItem {
-  icon: string;  // Material Icon name
+  icon: string;
   name: string;
   description: string;
   duration?: string;
@@ -18,9 +18,9 @@ interface ServiceCategory {
 }
 
 @Component({
-    selector: 'app-services',
-    imports: [CommonModule, UpperCasePipe],
-    templateUrl: './services.component.html'
+  selector: 'app-services',
+  imports: [UpperCasePipe],
+  templateUrl: './services.component.html'
 })
 export class ServicesComponent {
   categories: ServiceCategory[] = [

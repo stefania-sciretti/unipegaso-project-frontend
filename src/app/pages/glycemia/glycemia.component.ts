@@ -1,55 +1,52 @@
-import {Component, OnInit} from '@angular/core';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {forkJoin, Observable} from 'rxjs';
-import {GlycemiaService} from '../../services/glycemia.service';
-import {ClientService} from '../../services/client.service';
-import {StaffService} from '../../services/trainer.service';
-import {AlertService, AlertState} from '../../services/alert.service';
-import {Client, GlycemiaContext, GlycemiaMeasurement, GlycemiaMeasurementRequest} from '../../models/models';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
+import { Component, inject } from '@angular/core';
+import { DatePipe, NgClass } from '@angular/common';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { GlycemiaService } from '../../services/glycemia.service';
+import { ClientService } from '../../services/client.service';
+import { StaffService } from '../../services/trainer.service';
+import { AlertService } from '../../services/alert.service';
+import { Client, GlycemiaContext, GlycemiaMeasurement, GlycemiaMeasurementRequest } from '../../models/models';
 
 @Component({
-    selector: 'app-glycemia',
-    imports: [
-        CommonModule, AsyncPipe, FormsModule, ReactiveFormsModule,
-        MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, MatInputModule
-    ],
-    templateUrl: './glycemia.component.html'
+  selector: 'app-glycemia',
+  imports: [
+    FormsModule, ReactiveFormsModule, DatePipe, NgClass,
+    MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, MatInputModule
+  ],
+  templateUrl: './glycemia.component.html'
 })
-export class GlycemiaComponent implements OnInit {
+export class GlycemiaComponent {
+  private readonly glycemiaService = inject(GlycemiaService);
+  private readonly clientService   = inject(ClientService);
+  private readonly trainerService  = inject(StaffService);
+  private readonly alertSvc        = inject(AlertService);
+  private readonly fb              = inject(FormBuilder);
+
+  protected readonly alertSignal = this.alertSvc.alert;
+
   measurements: GlycemiaMeasurement[] = [];
   clients: Client[] = [];
-  /** ID of the nutritionist staff member who performs glycemia measurements */
   nutritionistId = 0;
-  loading = false;
-  showModal = false;
+  loading        = false;
+  showModal      = false;
   editingId: number | null = null;
   filterClientId: number | '' = '';
-  form!: FormGroup;
-  readonly alert$: Observable<AlertState | null>;
 
   readonly contexts: { value: GlycemiaContext; label: string }[] = [
-    { value: 'FASTING',      label: 'A digiuno' },
-    { value: 'POST_MEAL_1H', label: 'Post-pasto 1h' },
-    { value: 'POST_MEAL_2H', label: 'Post-pasto 2h' },
-    { value: 'RANDOM',       label: 'Casuale' }
+    { value: 'FASTING',      label: 'A digiuno'      },
+    { value: 'POST_MEAL_1H', label: 'Post-pasto 1h'  },
+    { value: 'POST_MEAL_2H', label: 'Post-pasto 2h'  },
+    { value: 'RANDOM',       label: 'Casuale'         }
   ];
 
-  constructor(
-    private glycemiaService: GlycemiaService,
-    private clientService: ClientService,
-    private trainerService: StaffService,
-    private alertService: AlertService,
-    private fb: FormBuilder
-  ) {
-    this.alert$ = this.alertService.alert$;
-  }
+  form!: FormGroup;
 
-  ngOnInit(): void {
+  constructor() {
     this.buildForm();
     this.load();
   }
@@ -63,25 +60,23 @@ export class GlycemiaComponent implements OnInit {
       trainers:     this.trainerService.getAll('NUTRITIONIST')
     }).subscribe({
       next: ({ measurements, clients, trainers }) => {
-        this.measurements  = measurements;
-        this.clients       = clients;
+        this.measurements   = measurements;
+        this.clients        = clients;
         this.nutritionistId = trainers[0]?.id ?? 1;
-        this.loading = false;
+        this.loading        = false;
       },
       error: () => { this.loading = false; }
     });
   }
 
   buildForm(): void {
-    const now = new Date();
-    const localIso = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-      .toISOString().slice(0, 16);
-
+    const now      = new Date();
+    const localIso = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
     this.form = this.fb.group({
-      clientId:   [null, Validators.required],
-      measuredAt: [localIso, Validators.required],
-      valueMgDl:  [null, [Validators.required, Validators.min(20), Validators.max(600)]],
-      context:    ['FASTING', Validators.required],
+      clientId:   [null,       Validators.required],
+      measuredAt: [localIso,   Validators.required],
+      valueMgDl:  [null,       [Validators.required, Validators.min(20), Validators.max(600)]],
+      context:    ['FASTING',  Validators.required],
       notes:      ['']
     });
   }
@@ -117,13 +112,10 @@ export class GlycemiaComponent implements OnInit {
       context:    value.context,
       notes:      value.notes || null
     };
-    const request$ = this.editingId
-      ? this.glycemiaService.update(this.editingId, body)
-      : this.glycemiaService.create(body);
-
-    request$.subscribe({
+    const req$ = this.editingId ? this.glycemiaService.update(this.editingId, body) : this.glycemiaService.create(body);
+    req$.subscribe({
       next: () => {
-        this.alertService.show(this.editingId ? 'Misurazione aggiornata' : 'Misurazione registrata');
+        this.alertSvc.show(this.editingId ? 'Misurazione aggiornata' : 'Misurazione registrata');
         this.closeModal();
         this.load();
       }
@@ -133,7 +125,7 @@ export class GlycemiaComponent implements OnInit {
   delete(id: number): void {
     if (!confirm('Eliminare questa misurazione?')) return;
     this.glycemiaService.delete(id).subscribe({
-      next: () => { this.alertService.show('Misurazione eliminata'); this.load(); }
+      next: () => { this.alertSvc.show('Misurazione eliminata'); this.load(); }
     });
   }
 
@@ -142,10 +134,13 @@ export class GlycemiaComponent implements OnInit {
   }
 
   classColor(classification: string): string {
+    const base = 'inline-block px-[0.65rem] py-[0.2rem] rounded-xl text-[0.75rem] font-bold uppercase tracking-[0.5px]';
     const map: Record<string, string> = {
-      NORMALE: 'badge-success', ATTENZIONE: 'badge-warning', ELEVATA: 'badge-danger'
+      NORMALE:    'bg-[#d4f0e0] text-[#1e7a48]',
+      ATTENZIONE: 'bg-[#fef3cd] text-[#856404]',
+      ELEVATA:    'bg-[#fde8e8] text-[#d95550]',
     };
-    return map[classification] ?? 'badge-secondary';
+    return `${base} ${map[classification] ?? 'bg-[#f0f0f0] text-[#555]'}`;
   }
 
   isInvalid(field: string): boolean {

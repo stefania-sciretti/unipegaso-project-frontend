@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 interface Faq {
@@ -9,17 +9,15 @@ interface Faq {
 }
 
 @Component({
-    selector: 'app-faq',
-    imports: [RouterModule],
-    templateUrl: './faq.component.html'
+  selector: 'app-faq',
+  imports: [RouterModule, NgClass],
+  templateUrl: './faq.component.html'
 })
-export class FaqComponent implements OnInit {
-
-  ngOnInit(): void {
+export class FaqComponent {
+  constructor() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // ...existing code...
   faqs: Faq[] = [
     {
       q: 'Come si prenotano le prestazioni?',

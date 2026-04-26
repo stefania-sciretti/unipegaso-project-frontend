@@ -1,34 +1,36 @@
-<main class="container">
-  <div class="hero">
-    <span class="material-icons hero-icon-mat">local_hospital</span>
+<main class="max-w-[1200px] mx-auto my-8 px-6">
+  <div class="bg-gradient-to-br from-[#112D4E] to-[#3F72AF] text-white rounded-[10px] px-8 py-10 mb-8 flex items-center gap-6">
+    <span class="material-icons text-[3rem] text-white/80">local_hospital</span>
     <div>
-      <h1>Apice Clinic</h1>
-      <p>Clinica privata di nutrizione clinica e medicina dello sport — valutazione, monitoraggio e performance</p>
+      <h1 class="text-[2rem] font-bold mb-[0.35rem]">Apice Clinic</h1>
+      <p class="text-[1rem] opacity-90">Clinica privata di nutrizione clinica e medicina dello sport — valutazione, monitoraggio e performance</p>
     </div>
   </div>
 
   <!-- ──────── BOOKING BANNER ──────── -->
-  <div class="booking-banner">
-    <h2 class="booking-title">Cosa vuoi prenotare?</h2>
+  <div class="bg-gradient-to-br from-[#112D4E] to-[#1B4A7A] rounded-xl p-8 mb-12 shadow-[0_4px_20px_rgba(17,45,78,0.15)] text-white">
+    <h2 class="text-[1.75rem] font-bold mb-8 text-white">Cosa vuoi prenotare?</h2>
 
-    <div class="booking-form">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr_auto] gap-6 items-end">
       <!-- Step 1: Select Area/Service -->
-      <div class="booking-step">
-        <label class="booking-label">1. Cosa vuoi prenotare? *</label>
+      <div class="flex flex-col gap-3">
+        <label class="text-[0.9rem] font-semibold text-white/90 tracking-wide">1. Cosa vuoi prenotare? *</label>
 
         <!-- Area Selector Dropdown -->
         @if (!selectedArea) {
-          <div class="booking-dropdown">
-            <div class="booking-dropdown-trigger" (click)="showAreaDropdown = !showAreaDropdown">
-              <span class="material-icons">calendar_today</span>
+          <div class="relative">
+            <div class="flex items-center gap-3 px-[1.125rem] py-[0.875rem] bg-white/15 border border-white/30 rounded-lg text-white cursor-pointer transition-all duration-200 text-[0.95rem] font-medium hover:bg-white/25 hover:border-white/50"
+                 (click)="showAreaDropdown = !showAreaDropdown">
+              <span class="material-icons text-[1.2rem]">calendar_today</span>
               <span>Seleziona servizio</span>
-              <span class="material-icons" style="margin-left:auto" [class.open]="showAreaDropdown">expand_more</span>
+              <span class="material-icons text-[1.2rem] ml-auto transition-transform duration-200"
+                    [class.rotate-180]="showAreaDropdown">expand_more</span>
             </div>
             @if (showAreaDropdown) {
-              <div class="booking-dropdown-menu">
+              <div class="absolute top-[calc(100%+0.5rem)] left-0 right-0 bg-white rounded-lg shadow-[0_8px_24px_rgba(0,0,0,0.2)] z-[1000] overflow-hidden min-w-full max-h-[400px] overflow-y-auto">
                 @for (area of serviceAreas; track area) {
                   <div
-                    class="booking-dropdown-item-text"
+                    class="px-[1.125rem] py-[0.875rem] text-[#112D4E] cursor-pointer border-b border-[rgba(17,45,78,0.1)] last:border-b-0 transition-colors duration-200 text-[0.95rem] hover:bg-[#f0f4f8]"
                     (click)="selectArea(area); showAreaDropdown = false">
                     {{ area.label }}
                   </div>
@@ -38,21 +40,24 @@
           </div>
         }
 
-        <!-- Service List (when area selected) - Text only -->
+        <!-- Service List (when area selected) -->
         @if (selectedArea) {
-          <div class="booking-service-selector">
-            <button class="booking-back-btn" (click)="backToAreas()">
-              <span class="material-icons">arrow_back</span> Torna alle aree
+          <div class="flex flex-col gap-3">
+            <button class="flex items-center gap-2 px-4 py-[0.6rem] bg-white/15 border border-white/30 rounded-md text-white cursor-pointer text-[0.9rem] font-medium transition-all duration-200 hover:bg-white/25"
+                    (click)="backToAreas()">
+              <span class="material-icons text-[1rem]">arrow_back</span> Torna alle aree
             </button>
-            <div class="booking-service-list">
+            <div class="flex flex-col gap-2 max-h-[300px] overflow-y-auto pr-2">
               @for (service of selectedArea.services; track service) {
                 <div
-                  class="booking-service-item-text"
-                  [class.active]="selectedService?.id === service.id"
+                  class="flex items-center justify-between px-[1.125rem] py-[0.875rem] border rounded-md text-white cursor-pointer transition-all duration-200 text-[0.95rem]"
+                  [ngClass]="selectedService?.id === service.id
+                    ? 'bg-[rgba(76,175,80,0.25)] border-[#4CAF50]'
+                    : 'bg-white/10 border-white/20 hover:bg-white/15 hover:border-white/40'"
                   (click)="selectService(service)">
                   {{ service.name }}
                   @if (selectedService?.id === service.id) {
-                    <span class="material-icons">check_circle</span>
+                    <span class="material-icons text-[1.2rem]">check_circle</span>
                   }
                 </div>
               }
@@ -62,10 +67,10 @@
 
         <!-- Selected Service Display -->
         @if (selectedService && !selectedArea) {
-          <div class="booking-selected-service">
-            <div class="selected-badge">
+          <div>
+            <div class="inline-flex items-center gap-2 px-5 py-3 bg-[rgba(76,175,80,0.15)] border border-[#4CAF50] rounded-[20px] text-white text-[0.95rem] font-medium">
               {{ selectedService.name }}
-              <span class="material-icons" style="font-size:1rem;cursor:pointer" (click)="backToAreas()">close</span>
+              <span class="material-icons text-[1rem] cursor-pointer hover:opacity-80" (click)="backToAreas()">close</span>
             </div>
           </div>
         }
@@ -73,31 +78,36 @@
 
       <!-- Step 2: Select Date with Calendar -->
       @if (selectedService) {
-        <div class="booking-step">
-          <label class="booking-label">2. Da quando sei disponibile? *</label>
-          <div class="booking-calendar-wrapper">
-            <div class="calendar-header">
-              <span class="material-icons" (click)="previousMonth()">chevron_left</span>
-              <h3>{{ currentMonth | date: 'MMMM yyyy' : 'it-IT' }}</h3>
-              <span class="material-icons" (click)="nextMonth()">chevron_right</span>
+        <div class="flex flex-col gap-3">
+          <label class="text-[0.9rem] font-semibold text-white/90 tracking-wide">2. Da quando sei disponibile? *</label>
+          <div class="bg-white rounded-lg p-6 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+            <div class="flex items-center justify-between mb-6">
+              <span class="material-icons cursor-pointer text-[#112D4E] transition-colors duration-200 hover:text-[#1B4A7A]"
+                    (click)="previousMonth()">chevron_left</span>
+              <h3 class="text-[1.1rem] font-semibold text-[#112D4E] m-0 capitalize">{{ currentMonth | date: 'MMMM yyyy' : 'it-IT' }}</h3>
+              <span class="material-icons cursor-pointer text-[#112D4E] transition-colors duration-200 hover:text-[#1B4A7A]"
+                    (click)="nextMonth()">chevron_right</span>
             </div>
-            <div class="calendar-grid">
+            <div class="grid grid-cols-7 gap-2">
               @for (day of ['L', 'M', 'M', 'G', 'V', 'S', 'D']; track day) {
-                <div class="day-header">{{ day }}</div>
+                <div class="text-center font-semibold text-[#112D4E] text-[0.85rem] p-2">{{ day }}</div>
               }
               @for (d of getCalendarDays(); track d) {
                 @if (d !== 0) {
                   <button
-                    class="calendar-day"
-                    [class.selected]="isDateSelected(d)"
-                    [class.disabled]="isDateDisabled(d)"
+                    class="aspect-square border rounded-md bg-white text-[#112D4E] cursor-pointer text-[0.9rem] font-medium transition-all duration-200"
+                    [ngClass]="isDateSelected(d)
+                      ? 'bg-[#112D4E] text-white border-[#112D4E] font-bold'
+                      : isDateDisabled(d)
+                        ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400 border-gray-200'
+                        : 'border-gray-200 hover:border-[#112D4E] hover:bg-[#f0f4f8]'"
                     [disabled]="isDateDisabled(d)"
                     (click)="selectCalendarDate(d)">
                     {{ d }}
                   </button>
                 }
                 @if (d === 0) {
-                  <div class="calendar-day disabled"></div>
+                  <div class="aspect-square opacity-50 cursor-not-allowed bg-gray-100 border border-gray-200 rounded-md"></div>
                 }
               }
             </div>
@@ -107,28 +117,30 @@
 
       <!-- Step 3: Doctor Availability -->
       @if (selectedService && selectedDate) {
-        <div class="booking-step">
-          <label class="booking-label">3. Seleziona orario *</label>
-          <div class="doctor-availability">
+        <div class="flex flex-col gap-3">
+          <label class="text-[0.9rem] font-semibold text-white/90 tracking-wide">3. Seleziona orario *</label>
+          <div class="bg-white rounded-lg overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
             <!-- Doctor Card -->
-            <div class="doctor-card">
-              <div class="doctor-header">
-                <span class="material-icons doctor-icon">{{ getSelectedDoctor()?.icon }}</span>
-                <div class="doctor-info">
-                  <h4>{{ getSelectedDoctor()?.name }}</h4>
-                  <p>{{ getSelectedDoctor()?.title }}</p>
+            <div>
+              <div class="flex items-center gap-6 p-6 bg-gradient-to-br from-[#f5f5f5] to-[#fafafa] border-b border-gray-200">
+                <span class="material-icons text-[3rem] text-[#112D4E] shrink-0">{{ getSelectedDoctor()?.icon }}</span>
+                <div class="flex-1">
+                  <h4 class="text-[1.1rem] font-semibold text-[#112D4E] m-0 mb-1">{{ getSelectedDoctor()?.name }}</h4>
+                  <p class="text-[0.9rem] text-gray-500 m-0">{{ getSelectedDoctor()?.title }}</p>
                 </div>
               </div>
               <!-- Time Slots -->
-              <div class="time-slots">
-                <div class="time-slot-header">
+              <div class="p-6">
+                <div class="text-[0.9rem] text-gray-500 font-medium mb-4">
                   {{ selectedDate | date: 'd MMMM yyyy' : 'it-IT' }}
                 </div>
-                <div class="time-slots-grid">
+                <div class="grid gap-3 grid-cols-[repeat(auto-fit,minmax(100px,1fr))]">
                   @for (slot of getAvailableSlots(); track slot) {
                     <button
-                      class="time-slot"
-                      [class.selected]="selectedTime === slot"
+                      class="px-4 py-3 border rounded-md text-[0.9rem] font-medium cursor-pointer transition-all duration-200"
+                      [ngClass]="selectedTime === slot
+                        ? 'bg-[#112D4E] text-white border-[#112D4E] font-semibold'
+                        : 'bg-white text-[#112D4E] border-gray-200 hover:border-[#112D4E] hover:bg-[#f0f4f8]'"
                       (click)="selectTime(slot)">
                       {{ slot }}
                     </button>
@@ -141,77 +153,112 @@
       }
 
       <!-- Booking Button -->
-      <button class="booking-btn"
+      <button
+        class="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-br from-[#112D4E] to-[#1B4A7A] border-none rounded-lg text-white text-[1.05rem] font-bold cursor-pointer transition-all duration-300 whitespace-nowrap shadow-[0_4px_15px_rgba(17,45,78,0.3)] tracking-wide uppercase disabled:opacity-50 disabled:cursor-not-allowed hover:[&:not(:disabled)]:from-[#1B4A7A] hover:[&:not(:disabled)]:to-[#2A5F9E] hover:[&:not(:disabled)]:-translate-y-0.5 hover:[&:not(:disabled)]:shadow-[0_6px_20px_rgba(17,45,78,0.4)]"
         [disabled]="!selectedService || !selectedDate || !selectedTime"
         (click)="bookAppointment()">
-        <span class="material-icons">check</span> Prenota
+        <span class="material-icons text-[1.3rem]">check</span> Prenota
       </button>
     </div>
   </div>
 
-  <div class="dashboard-section-title">
-    <h2>Cosa offriamo</h2>
-    <p>Un approccio integrato che unisce medicina, nutrizione e sport per il benessere completo del paziente.</p>
+  <!-- ──────── OFFER SECTION ──────── -->
+  <div class="mt-10 mb-5">
+    <h2 class="text-[1.3rem] font-bold text-[#112D4E] mb-1">Cosa offriamo</h2>
+    <p class="text-[0.9rem] text-[#3F72AF]">Un approccio integrato che unisce medicina, nutrizione e sport per il benessere completo del paziente.</p>
   </div>
 
-  <div class="dashboard-offer-grid">
+  <div class="grid gap-6 mb-8 grid-cols-[repeat(auto-fill,minmax(280px,1fr))]">
 
     <!-- Area Clinica -->
-    <div class="offer-card" (click)="navigate('/services')" style="cursor:pointer">
-      <div class="offer-header offer-header--clinico">
-        <span class="material-icons offer-icon">medical_services</span>
-        <span class="offer-title">Area Clinica</span>
+    <div class="group bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] overflow-hidden cursor-pointer flex flex-col transition-all duration-150 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(53,88,114,0.15)]"
+         (click)="navigate('/services')">
+      <div class="flex items-center gap-3 px-5 py-4 text-white bg-gradient-to-br from-[#112D4E] to-[#1B4A7A]">
+        <span class="material-icons text-[1.8rem]">medical_services</span>
+        <span class="text-[1.05rem] font-bold tracking-[0.2px]">Area Clinica</span>
       </div>
-      <div class="offer-card-img">
-        <img ngSrc="assets/images/visit.webp" alt="Area Clinica" height="2160" width="3840"/>
+      <div class="w-full h-40 overflow-hidden">
+        <img class="w-full h-full object-cover block transition-transform duration-[350ms] ease-in-out group-hover:scale-105"
+             ngSrc="assets/images/visit.webp" alt="Area Clinica" height="2160" width="3840"/>
       </div>
-      <ul class="offer-list">
-        <li><span class="material-icons offer-list-icon">medical_services</span> Visita Nutrizionistica</li>
-        <li><span class="material-icons offer-list-icon">event_available</span> Visita di Controllo</li>
-        <li><span class="material-icons offer-list-icon">directions_run</span> Visita Medico-Sportiva</li>
-        <li><span class="material-icons offer-list-icon">assignment</span> Referto Clinico</li>
+      <ul class="list-none p-0 px-5 py-4 flex-1">
+        <li class="flex items-center gap-[0.4rem] py-[0.35rem] text-[0.88rem] text-[#112D4E] border-b border-[#DBE2EF] last:border-b-0">
+          <span class="material-icons text-[1rem] text-[#3F72AF] shrink-0">medical_services</span> Visita Nutrizionistica
+        </li>
+        <li class="flex items-center gap-[0.4rem] py-[0.35rem] text-[0.88rem] text-[#112D4E] border-b border-[#DBE2EF] last:border-b-0">
+          <span class="material-icons text-[1rem] text-[#3F72AF] shrink-0">event_available</span> Visita di Controllo
+        </li>
+        <li class="flex items-center gap-[0.4rem] py-[0.35rem] text-[0.88rem] text-[#112D4E] border-b border-[#DBE2EF] last:border-b-0">
+          <span class="material-icons text-[1rem] text-[#3F72AF] shrink-0">directions_run</span> Visita Medico-Sportiva
+        </li>
+        <li class="flex items-center gap-[0.4rem] py-[0.35rem] text-[0.88rem] text-[#112D4E] border-b border-[#DBE2EF] last:border-b-0">
+          <span class="material-icons text-[1rem] text-[#3F72AF] shrink-0">assignment</span> Referto Clinico
+        </li>
       </ul>
-      <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); navigate('/services')">
+      <button class="px-[0.7rem] py-[0.3rem] border-0 rounded-[10px] text-[0.8rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#112D4E] text-white hover:bg-[#264560] mx-5 mb-5 self-start"
+              (click)="$event.stopPropagation(); navigate('/services')">
         Vedi tutte le prestazioni →
       </button>
     </div>
 
     <!-- Area Nutrizione -->
-    <div class="offer-card" (click)="navigate('/nutrition')">
-      <div class="offer-header offer-header--nutrizione">
-        <span class="material-icons offer-icon">restaurant_menu</span>
-        <span class="offer-title">Area Nutrizione</span>
+    <div class="group bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] overflow-hidden cursor-pointer flex flex-col transition-all duration-150 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(53,88,114,0.15)]"
+         (click)="navigate('/nutrition')">
+      <div class="flex items-center gap-3 px-5 py-4 text-white bg-gradient-to-br from-[#112D4E] to-[#1B4A7A]">
+        <span class="material-icons text-[1.8rem]">restaurant_menu</span>
+        <span class="text-[1.05rem] font-bold tracking-[0.2px]">Area Nutrizione</span>
       </div>
-      <div class="offer-card-img">
-        <img ngSrc="assets/images/nutrition.webp" alt="Area Nutrizione" height="3444" width="5166"/>
+      <div class="w-full h-40 overflow-hidden">
+        <img class="w-full h-full object-cover block transition-transform duration-[350ms] ease-in-out group-hover:scale-105"
+             ngSrc="assets/images/nutrition.webp" alt="Area Nutrizione" height="3444" width="5166"/>
       </div>
-      <ul class="offer-list">
-        <li><span class="material-icons offer-list-icon">restaurant_menu</span> Piano Nutrizionale Personalizzato</li>
-        <li><span class="material-icons offer-list-icon">accessibility_new</span> Analisi Composizione Corporea (BIA)</li>
-        <li><span class="material-icons offer-list-icon">colorize</span> Monitoraggio Glicemia (Pungidito)</li>
-        <li><span class="material-icons offer-list-icon">menu_book</span> Ricettario Fit Personalizzato</li>
+      <ul class="list-none p-0 px-5 py-4 flex-1">
+        <li class="flex items-center gap-[0.4rem] py-[0.35rem] text-[0.88rem] text-[#112D4E] border-b border-[#DBE2EF] last:border-b-0">
+          <span class="material-icons text-[1rem] text-[#3F72AF] shrink-0">restaurant_menu</span> Piano Nutrizionale Personalizzato
+        </li>
+        <li class="flex items-center gap-[0.4rem] py-[0.35rem] text-[0.88rem] text-[#112D4E] border-b border-[#DBE2EF] last:border-b-0">
+          <span class="material-icons text-[1rem] text-[#3F72AF] shrink-0">accessibility_new</span> Analisi Composizione Corporea (BIA)
+        </li>
+        <li class="flex items-center gap-[0.4rem] py-[0.35rem] text-[0.88rem] text-[#112D4E] border-b border-[#DBE2EF] last:border-b-0">
+          <span class="material-icons text-[1rem] text-[#3F72AF] shrink-0">colorize</span> Monitoraggio Glicemia (Pungidito)
+        </li>
+        <li class="flex items-center gap-[0.4rem] py-[0.35rem] text-[0.88rem] text-[#112D4E] border-b border-[#DBE2EF] last:border-b-0">
+          <span class="material-icons text-[1rem] text-[#3F72AF] shrink-0">menu_book</span> Ricettario Fit Personalizzato
+        </li>
       </ul>
-      <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); navigate('/nutrition')">
+      <button class="px-[0.7rem] py-[0.3rem] border-0 rounded-[10px] text-[0.8rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#112D4E] text-white hover:bg-[#264560] mx-5 mb-5 self-start"
+              (click)="$event.stopPropagation(); navigate('/nutrition')">
         Vedi piani nutrizionali →
       </button>
     </div>
 
     <!-- Area Sport -->
-    <div class="offer-card" (click)="navigate('/training')">
-      <div class="offer-header offer-header--sport">
-        <span class="material-icons offer-icon">fitness_center</span>
-        <span class="offer-title">Area Sport</span>
+    <div class="group bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] overflow-hidden cursor-pointer flex flex-col transition-all duration-150 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(53,88,114,0.15)]"
+         (click)="navigate('/training')">
+      <div class="flex items-center gap-3 px-5 py-4 text-white bg-gradient-to-br from-[#112D4E] to-[#1B4A7A]">
+        <span class="material-icons text-[1.8rem]">fitness_center</span>
+        <span class="text-[1.05rem] font-bold tracking-[0.2px]">Area Sport</span>
       </div>
-      <div class="offer-card-img">
-        <img ngSrc="assets/images/gym.webp" alt="Area Sport" height="3289" width="4933"/>
+      <div class="w-full h-40 overflow-hidden">
+        <img class="w-full h-full object-cover block transition-transform duration-[350ms] ease-in-out group-hover:scale-105"
+             ngSrc="assets/images/gym.webp" alt="Area Sport" height="3289" width="4933"/>
       </div>
-      <ul class="offer-list">
-        <li><span class="material-icons offer-list-icon">fitness_center</span> Scheda di Allenamento Personalizzata</li>
-        <li><span class="material-icons offer-list-icon">self_improvement</span> Personal Training</li>
-        <li><span class="material-icons offer-list-icon">healing</span> Riatletizzazione e Recupero Funzionale</li>
-        <li><span class="material-icons offer-list-icon">emoji_events</span> Preparazione Atletica Agonistica</li>
+      <ul class="list-none p-0 px-5 py-4 flex-1">
+        <li class="flex items-center gap-[0.4rem] py-[0.35rem] text-[0.88rem] text-[#112D4E] border-b border-[#DBE2EF] last:border-b-0">
+          <span class="material-icons text-[1rem] text-[#3F72AF] shrink-0">fitness_center</span> Scheda di Allenamento Personalizzata
+        </li>
+        <li class="flex items-center gap-[0.4rem] py-[0.35rem] text-[0.88rem] text-[#112D4E] border-b border-[#DBE2EF] last:border-b-0">
+          <span class="material-icons text-[1rem] text-[#3F72AF] shrink-0">self_improvement</span> Personal Training
+        </li>
+        <li class="flex items-center gap-[0.4rem] py-[0.35rem] text-[0.88rem] text-[#112D4E] border-b border-[#DBE2EF] last:border-b-0">
+          <span class="material-icons text-[1rem] text-[#3F72AF] shrink-0">healing</span> Riatletizzazione e Recupero Funzionale
+        </li>
+        <li class="flex items-center gap-[0.4rem] py-[0.35rem] text-[0.88rem] text-[#112D4E] border-b border-[#DBE2EF] last:border-b-0">
+          <span class="material-icons text-[1rem] text-[#3F72AF] shrink-0">emoji_events</span> Preparazione Atletica Agonistica
+        </li>
       </ul>
-      <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); navigate('/training')">
+      <button class="px-[0.7rem] py-[0.3rem] border-0 rounded-[10px] text-[0.8rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#112D4E] text-white hover:bg-[#264560] mx-5 mb-5 self-start"
+              (click)="$event.stopPropagation(); navigate('/training')">
         Vedi schede allenamento →
       </button>
     </div>

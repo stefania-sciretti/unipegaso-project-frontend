@@ -1,17 +1,17 @@
-<main class="container">
-  <div class="staff-detail-back">
-    <a routerLink="/doctors" class="back-link">&#8592; Torna allo Staff</a>
+<main class="max-w-[1200px] mx-auto my-8 px-6">
+  <div class="mb-6">
+    <a routerLink="/doctors" class="text-[#3F72AF] no-underline font-semibold text-[0.95rem] inline-flex items-center gap-1 transition-colors hover:text-[#112D4E]">&#8592; Torna allo Staff</a>
   </div>
 
-  <div class="staff-detail-hero">
-    <div class="staff-detail-avatar">
-      <img src="assets/icons/luca.webp" alt="Luca Siretta"/>
+  <div class="flex flex-col sm:flex-row gap-10 items-center sm:items-start text-center sm:text-left bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-8 mb-8">
+    <div class="shrink-0 w-[180px] h-[180px] rounded-full overflow-hidden bg-[#DBE2EF]">
+      <img src="assets/icons/luca.webp" alt="Luca Siretta" class="w-full h-full object-cover"/>
     </div>
-    <div class="staff-detail-intro">
-      <p class="staff-detail-title">Dott.</p>
-      <h1 class="staff-detail-name">Luca Siretta</h1>
-      <span class="staff-detail-badge">Personal Trainer ISSA</span>
-      <p class="staff-detail-bio">
+    <div class="flex-1">
+      <p class="text-[0.9rem] text-[#3F72AF] mb-[0.1rem]">Dott.</p>
+      <h1 class="text-[1.9rem] font-bold text-[#112D4E] mb-[0.6rem]">Luca Siretta</h1>
+      <span class="inline-block bg-[#DBE2EF] text-[#3F72AF] font-semibold text-[0.85rem] px-[0.9rem] py-[0.3rem] rounded-full mb-4">Personal Trainer ISSA</span>
+      <p class="text-[#112D4E] leading-[1.7] text-[0.97rem]">
         Luca Siretta è un Personal Trainer certificato ISSA con anni di esperienza nell'allenamento
         funzionale, nella preparazione atletica e nel fitness. La sua metodologia unisce
         scienza dell'esercizio fisico e motivazione personale per aiutare ogni cliente
@@ -20,38 +20,38 @@
     </div>
   </div>
 
-  <div class="staff-detail-services">
-    <h2 class="staff-detail-services-title">Servizi offerti</h2>
-    <div class="staff-services-grid">
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">fitness_center</span>
-        <h3>Personal Training</h3>
-        <p>Sessioni individuali di allenamento personalizzate in base agli obiettivi, al livello di fitness e alle condizioni fisiche del cliente.</p>
+  <div class="mb-8">
+    <h2 class="text-[1.3rem] font-bold text-[#112D4E] mb-5">Servizi offerti</h2>
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-5">
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">fitness_center</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Personal Training</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Sessioni individuali di allenamento personalizzate in base agli obiettivi, al livello di fitness e alle condizioni fisiche del cliente.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">directions_run</span>
-        <h3>Allenamento funzionale</h3>
-        <p>Programmi basati su movimenti naturali per migliorare forza, equilibrio, coordinazione e resistenza nella vita quotidiana.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">directions_run</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Allenamento funzionale</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Programmi basati su movimenti naturali per migliorare forza, equilibrio, coordinazione e resistenza nella vita quotidiana.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">sports</span>
-        <h3>Preparazione atletica</h3>
-        <p>Piani di allenamento specifici per atleti amatoriali e agonisti, con periodizzazione e peak performance.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">sports</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Preparazione atletica</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Piani di allenamento specifici per atleti amatoriali e agonisti, con periodizzazione e peak performance.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">self_improvement</span>
-        <h3>Programma dimagrimento</h3>
-        <p>Training ad alta intensità (HIIT) e circuiti mirati per la riduzione del grasso corporeo e il miglioramento della composizione corporea.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">self_improvement</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Programma dimagrimento</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Training ad alta intensità (HIIT) e circuiti mirati per la riduzione del grasso corporeo e il miglioramento della composizione corporea.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">accessibility_new</span>
-        <h3>Tonificazione muscolare</h3>
-        <p>Schede di allenamento progressive per la definizione e l'aumento della massa muscolare magra.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">accessibility_new</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Tonificazione muscolare</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Schede di allenamento progressive per la definizione e l'aumento della massa muscolare magra.</p>
       </div>
-      <div class="staff-service-card">
-        <span class="material-icons staff-service-icon">psychology</span>
-        <h3>Coaching motivazionale</h3>
-        <p>Supporto psicologico e motivazionale per mantenere la costanza nel percorso di allenamento e superare i momenti di stallo.</p>
+      <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(17,45,78,0.13)]">
+        <span class="material-icons text-[2rem] text-[#3F72AF] mb-[0.6rem] block">psychology</span>
+        <h3 class="text-base font-bold text-[#112D4E] mb-1">Coaching motivazionale</h3>
+        <p class="text-[0.875rem] text-[#3F72AF] leading-[1.6]">Supporto psicologico e motivazionale per mantenere la costanza nel percorso di allenamento e superare i momenti di stallo.</p>
       </div>
     </div>
   </div>
