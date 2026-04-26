@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
@@ -15,7 +14,7 @@ export interface StaffMember {
 }
 @Component({
     selector: 'app-doctors',
-    imports: [AsyncPipe, ReactiveFormsModule],
+    imports: [ ReactiveFormsModule],
     templateUrl: './doctors.component.html'
 })
 export class DoctorsComponent implements OnInit {
