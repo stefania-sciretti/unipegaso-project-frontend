@@ -7,8 +7,8 @@ import {AlertService, AlertState} from '../../services/alert.service';
 import {Client, ClientRequest} from '../../models/models';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
+import {MatLegacyFormFieldModule as MatFormFieldModule} from '@angular/material/legacy-form-field';
+import {MatLegacyInputModule as MatInputModule} from '@angular/material/legacy-input';
 
 @Component({
   selector: 'app-clients',
