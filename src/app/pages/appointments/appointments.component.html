@@ -6,135 +6,169 @@
     </div>
     <button class="btn btn-primary" (click)="openCreate()">+ Nuovo Appuntamento</button>
   </div>
-  <ng-container *ngIf="alert$ | async as alert">
+  @if (alert$ | async; as alert) {
     <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
-  </ng-container>
+  }
   <div class="card">
     <div class="toolbar">
       <label style="font-size:.88rem;font-weight:600;color:var(--text-muted)">Stato:</label>
       <select [value]="filterStatus" (change)="onStatusFilter($event)">
         <option value="">Tutti</option>
-        <option *ngFor="let s of statuses" [value]="s">{{ statusLabel(s) }}</option>
+        @for (s of statuses; track s) {
+          <option [value]="s">{{ statusLabel(s) }}</option>
+        }
       </select>
     </div>
-    <div *ngIf="loading" class="loading">Caricamento…</div>
-    <div class="table-wrapper" *ngIf="!loading">
-      <table>
-        <thead><tr>
-          <th>#</th><th>Data e Ora</th><th>Paziente</th>
-          <th>Specialista</th><th>Servizio</th><th>Stato</th><th class="th-actions">Azioni</th>
-        </tr></thead>
-        <tbody>
-          <tr *ngIf="appointments.length === 0"><td colspan="7" class="empty">Nessun appuntamento trovato.</td></tr>
-          <tr *ngFor="let a of appointments">
-            <td>{{ a.id }}</td>
-            <td>{{ a.scheduledAt | date:'dd MMM yyyy HH:mm' }}</td>
-            <td>{{ a.clientFullName }}</td>
-            <td>{{ a.trainerFullName }}<br/><small>{{ roleLabel(a.trainerRole) }}</small></td>
-            <td>{{ a.serviceType }}</td>
-            <td><span [class]="statusClass(a.status)">{{ statusLabel(a.status) }}</span></td>
-            <td class="td-actions">
-              <div class="td-actions-inner">
-                <button class="btn btn-warning btn-sm" (click)="openStatusModal(a)">Stato</button>
-                <button class="btn btn-danger btn-sm" *ngIf="canCancel(a)" (click)="cancel(a.id)">Annulla</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    @if (loading) {
+      <div class="loading">Caricamento…</div>
+    }
+    @if (!loading) {
+      <div class="table-wrapper">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Data e Ora</th><th>Paziente</th>
+            <th>Specialista</th><th>Servizio</th><th>Stato</th><th class="th-actions">Azioni</th>
+          </tr></thead>
+          <tbody>
+            @if (appointments.length === 0) {
+              <tr><td colspan="7" class="empty">Nessun appuntamento trovato.</td></tr>
+            }
+            @for (a of appointments; track a) {
+              <tr>
+                <td>{{ a.id }}</td>
+                <td>{{ a.scheduledAt | date:'dd MMM yyyy HH:mm' }}</td>
+                <td>{{ a.clientFullName }}</td>
+                <td>{{ a.trainerFullName }}<br/><small>{{ roleLabel(a.trainerRole) }}</small></td>
+                <td>{{ a.serviceType }}</td>
+                <td><span [class]="statusClass(a.status)">{{ statusLabel(a.status) }}</span></td>
+                <td class="td-actions">
+                  <div class="td-actions-inner">
+                    <button class="btn btn-warning btn-sm" (click)="openStatusModal(a)">Stato</button>
+                    @if (canCancel(a)) {
+                      <button class="btn btn-danger btn-sm" (click)="cancel(a.id)">Annulla</button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   </div>
 </main>
 
-<div class="modal-overlay" *ngIf="showApptModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>Nuovo Appuntamento</h3>
-      <button class="modal-close" (click)="showApptModal = false">&times;</button>
+@if (showApptModal) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Nuovo Appuntamento</h3>
+        <button class="modal-close" (click)="showApptModal = false">&times;</button>
+      </div>
+      <form [formGroup]="apptForm" (ngSubmit)="saveAppointment()">
+        <div class="form-group">
+          <label>Paziente *</label>
+          <div class="custom-dropdown" [class.open]="clientDropdownOpen">
+            <div class="custom-dropdown-trigger"
+              (click)="openClientDropdown()"
+              [class.placeholder]="!selectedClientLabel">
+              {{ selectedClientLabel || '– Seleziona paziente –' }}
+              <mat-icon class="dropdown-arrow">keyboard_arrow_down</mat-icon>
+            </div>
+            @if (clientDropdownOpen) {
+              <div class="custom-dropdown-panel">
+                <input class="custom-dropdown-search"
+                  type="text"
+                  placeholder="Cerca paziente…"
+                  [(ngModel)]="clientSearch"
+                  [ngModelOptions]="{standalone: true}"
+                  (click)="$event.stopPropagation()"
+                  autofocus/>
+                  <ul class="custom-dropdown-list">
+                    @for (c of filteredClients; track c) {
+                      <li
+                        (click)="selectClient(c)"
+                        [class.selected]="apptForm.get('clientId')?.value === c.id">
+                        {{ c.firstName }} {{ c.lastName }}
+                      </li>
+                    }
+                    @if (filteredClients.length === 0) {
+                      <li class="no-results">Nessun risultato</li>
+                    }
+                  </ul>
+                </div>
+              }
+            </div>
+            <!-- campo hidden per la validazione reactive form -->
+            <input type="hidden" formControlName="clientId"/>
+            @if (isInvalid(apptForm,'clientId')) {
+              <div class="field-error">Campo obbligatorio</div>
+            }
+          </div>
+          <div class="form-group">
+            <label>Specialista *</label>
+            <div class="select-wrapper">
+              <select formControlName="trainerId"
+                [class.placeholder-active]="!apptForm.get('trainerId')?.value">
+                <option value="" disabled selected hidden>– Seleziona specialista –</option>
+                @for (t of trainers; track t) {
+                  <option [value]="t.id">{{ t.firstName }} {{ t.lastName }} – {{ roleLabel(t.role) }}</option>
+                }
+              </select>
+              <mat-icon class="select-arrow">keyboard_arrow_down</mat-icon>
+            </div>
+            @if (isInvalid(apptForm,'trainerId')) {
+              <div class="field-error">Campo obbligatorio</div>
+            }
+          </div>
+          <div class="form-group">
+            <label>Data e Ora *</label>
+            <input type="datetime-local" formControlName="scheduledAt"/>
+            @if (isInvalid(apptForm,'scheduledAt')) {
+              <div class="field-error">Campo obbligatorio</div>
+            }
+          </div>
+          <div class="form-group">
+            <label>Tipo di Servizio *</label>
+            <input formControlName="serviceType" type="text" placeholder="es. Consulenza Nutrizionale"/>
+            @if (isInvalid(apptForm,'serviceType')) {
+              <div class="field-error">Campo obbligatorio</div>
+            }
+          </div>
+          <div class="form-group">
+            <label>Note</label>
+            <textarea formControlName="notes" placeholder="Note opzionali…"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-outline" (click)="showApptModal = false">Annulla</button>
+            <button type="submit" class="btn btn-primary">Prenota</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <form [formGroup]="apptForm" (ngSubmit)="saveAppointment()">
-      <div class="form-group">
-        <label>Paziente *</label>
-        <div class="custom-dropdown" [class.open]="clientDropdownOpen">
-          <div class="custom-dropdown-trigger"
-               (click)="openClientDropdown()"
-               [class.placeholder]="!selectedClientLabel">
-            {{ selectedClientLabel || '– Seleziona paziente –' }}
-            <mat-icon class="dropdown-arrow">keyboard_arrow_down</mat-icon>
-          </div>
-          <div class="custom-dropdown-panel" *ngIf="clientDropdownOpen">
-            <input class="custom-dropdown-search"
-                   type="text"
-                   placeholder="Cerca paziente…"
-                   [(ngModel)]="clientSearch"
-                   [ngModelOptions]="{standalone: true}"
-                   (click)="$event.stopPropagation()"
-                   autofocus/>
-            <ul class="custom-dropdown-list">
-              <li *ngFor="let c of filteredClients"
-                  (click)="selectClient(c)"
-                  [class.selected]="apptForm.get('clientId')?.value === c.id">
-                {{ c.firstName }} {{ c.lastName }}
-              </li>
-              <li *ngIf="filteredClients.length === 0" class="no-results">Nessun risultato</li>
-            </ul>
-          </div>
-        </div>
-        <!-- campo hidden per la validazione reactive form -->
-        <input type="hidden" formControlName="clientId"/>
-        <div class="field-error" *ngIf="isInvalid(apptForm,'clientId')">Campo obbligatorio</div>
-      </div>
-      <div class="form-group">
-        <label>Specialista *</label>
-        <div class="select-wrapper">
-          <select formControlName="trainerId"
-                  [class.placeholder-active]="!apptForm.get('trainerId')?.value">
-            <option value="" disabled selected hidden>– Seleziona specialista –</option>
-            <option *ngFor="let t of trainers" [value]="t.id">{{ t.firstName }} {{ t.lastName }} – {{ roleLabel(t.role) }}</option>
-          </select>
-          <mat-icon class="select-arrow">keyboard_arrow_down</mat-icon>
-        </div>
-        <div class="field-error" *ngIf="isInvalid(apptForm,'trainerId')">Campo obbligatorio</div>
-      </div>
-      <div class="form-group">
-        <label>Data e Ora *</label>
-        <input type="datetime-local" formControlName="scheduledAt"/>
-        <div class="field-error" *ngIf="isInvalid(apptForm,'scheduledAt')">Campo obbligatorio</div>
-      </div>
-      <div class="form-group">
-        <label>Tipo di Servizio *</label>
-        <input formControlName="serviceType" type="text" placeholder="es. Consulenza Nutrizionale"/>
-        <div class="field-error" *ngIf="isInvalid(apptForm,'serviceType')">Campo obbligatorio</div>
-      </div>
-      <div class="form-group">
-        <label>Note</label>
-        <textarea formControlName="notes" placeholder="Note opzionali…"></textarea>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn btn-outline" (click)="showApptModal = false">Annulla</button>
-        <button type="submit" class="btn btn-primary">Prenota</button>
-      </div>
-    </form>
-  </div>
-</div>
+  }
 
-<div class="modal-overlay" *ngIf="showStatusModal">
-  <div class="modal" style="max-width:360px">
-    <div class="modal-header">
-      <h3>Aggiorna Stato</h3>
-      <button class="modal-close" (click)="showStatusModal = false">&times;</button>
+  @if (showStatusModal) {
+    <div class="modal-overlay">
+      <div class="modal" style="max-width:360px">
+        <div class="modal-header">
+          <h3>Aggiorna Stato</h3>
+          <button class="modal-close" (click)="showStatusModal = false">&times;</button>
+        </div>
+        <form [formGroup]="statusForm" (ngSubmit)="saveStatus()">
+          <div class="form-group">
+            <label>Nuovo Stato *</label>
+            <select formControlName="status">
+              @for (s of statuses; track s) {
+                <option [value]="s">{{ statusLabel(s) }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-outline" (click)="showStatusModal = false">Annulla</button>
+            <button type="submit" class="btn btn-primary">Aggiorna</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <form [formGroup]="statusForm" (ngSubmit)="saveStatus()">
-      <div class="form-group">
-        <label>Nuovo Stato *</label>
-        <select formControlName="status">
-          <option *ngFor="let s of statuses" [value]="s">{{ statusLabel(s) }}</option>
-        </select>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn btn-outline" (click)="showStatusModal = false">Annulla</button>
-        <button type="submit" class="btn btn-primary">Aggiorna</button>
-      </div>
-    </form>
-  </div>
-</div>
+  }

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {CommonModule, UpperCasePipe} from '@angular/common';
+import { CommonModule, UpperCasePipe } from '@angular/common';
 
 interface ServiceItem {
   icon: string;  // Material Icon name

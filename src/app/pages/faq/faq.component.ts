@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 
 interface Faq {
@@ -10,7 +10,7 @@ interface Faq {
 
 @Component({
     selector: 'app-faq',
-    imports: [CommonModule, RouterModule],
+    imports: [RouterModule],
     templateUrl: './faq.component.html'
 })
 export class FaqComponent implements OnInit {

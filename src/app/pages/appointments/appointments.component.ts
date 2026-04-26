@@ -1,5 +1,5 @@
 import {Component, ElementRef, HostListener, OnInit} from '@angular/core';
-import {AsyncPipe, CommonModule} from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {forkJoin, Observable} from 'rxjs';

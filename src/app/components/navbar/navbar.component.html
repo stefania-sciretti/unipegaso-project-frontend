@@ -2,148 +2,160 @@
   <div style="max-width:1200px;margin:0 auto;padding:0 1.5rem;height:100%;display:flex;align-items:center;justify-content:space-between;">
     <button type="button" class="navbar-logo-btn" aria-label="Vai alla dashboard" (click)="go('/dashboard')" style="display:flex;align-items:center;cursor:pointer;background:transparent;border:0;padding:0;margin:0;">
       <img ngSrc="assets/logo/logo-full.svg" alt="Apice Clinic" style="height:36px;width:auto;display:block;filter:brightness(0) invert(1);"
-           height="230" width="672"/>
-    </button>
-    <ul class="navbar-links">
-
-      <!-- ── Solo admin ─────────────────────────────────────────── -->
-      <ng-container *ngIf="auth.isAdmin">
-        <li class="dropdown" [class.dropdown-open]="activeMenu==='clinico'">
-          <a class="dropdown-toggle" [class.active-link]="isSection(['/patients','/appointments','/reports','/services'])" (click)="toggle('clinico', $event)">
-            <span class="material-icons" style="font-size:1.1rem;line-height:1">medical_services</span> Clinico ▾
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/patients')"><span class="material-icons" style="font-size:1.1rem">people</span> Pazienti</a></li>
-            <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/appointments')"><span class="material-icons" style="font-size:1.1rem">calendar_today</span> Prenotazioni</a></li>
-            <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/reports')"><span class="material-icons" style="font-size:1.1rem">assignment</span> Referti</a></li>
-            <li style="border-top:1px solid rgba(255,255,255,0.15);margin:0.3rem 0;pointer-events:none"></li>
-            <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/services')"><span class="material-icons" style="font-size:1.1rem">list_alt</span> Elenco Prestazioni</a></li>
-          </ul>
-        </li>
-        <li class="dropdown" [class.dropdown-open]="activeMenu==='nutrizione'">
-          <a class="dropdown-toggle" [class.active-link]="isSection(['/clients','/nutrition','/recipes','/glycemia'])" (click)="toggle('nutrizione', $event)">
-            <span class="material-icons" style="font-size:1.1rem;line-height:1">restaurant_menu</span> Nutrizione ▾
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/clients')"><span class="material-icons" style="font-size:1.1rem">group</span> Clienti</a></li>
-            <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/nutrition')"><span class="material-icons" style="font-size:1.1rem">restaurant_menu</span> Piani Dieta</a></li>
-            <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/recipes')"><span class="material-icons" style="font-size:1.1rem">menu_book</span> Ricette</a></li>
-            <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/glycemia')"><span class="material-icons" style="font-size:1.1rem">colorize</span> Glicemia</a></li>
-          </ul>
-        </li>
-        <li>
-          <a class="nav-link" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;border-radius:6px;font-size:0.9rem;font-weight:500;cursor:pointer;"
-             [class.active-link]="isActive('/training')" (click)="go('/training')">
-            <span class="material-icons" style="font-size:1.1rem;line-height:1">fitness_center</span> Sport
-          </a>
-        </li>
-      </ng-container>
-
-      <!-- ── User loggato (non admin): prenota + referti ────────── -->
-      <ng-container *ngIf="auth.isLoggedIn && !auth.isAdmin">
-        <li>
-          <a class="nav-link" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;border-radius:6px;font-size:0.9rem;font-weight:500;cursor:pointer;"
-             [class.active-link]="isActive('/appointments')" (click)="go('/appointments')">
-            <span class="material-icons" style="font-size:1.1rem;line-height:1">calendar_today</span> Prenota
-          </a>
-        </li>
-        <li>
-          <a class="nav-link" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;border-radius:6px;font-size:0.9rem;font-weight:500;cursor:pointer;"
-             [class.active-link]="isActive('/reports')" (click)="go('/reports')">
-            <span class="material-icons" style="font-size:1.1rem;line-height:1">assignment</span> I miei referti
-          </a>
-        </li>
-      </ng-container>
-
-      <!-- ── Elenco Prestazioni visibile a tutti ───────────────────────── -->
-      <li>
-        <a class="nav-link" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;border-radius:6px;font-size:0.9rem;font-weight:500;cursor:pointer;"
-           [class.active-link]="isActive('/services')" (click)="go('/services')">
-          <span class="material-icons" style="font-size:1.1rem;line-height:1">list_alt</span> Prestazioni
-        </a>
-      </li>
-
-      <!-- ── Specialisti visibile a tutti ──────────────────────────────── -->
-      <li>
-        <a class="nav-link" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;border-radius:6px;font-size:0.9rem;font-weight:500;cursor:pointer;"
-           [class.active-link]="isSection(['/doctors','/staff'])" (click)="go('/doctors')">
-          <span class="material-icons" style="font-size:1.1rem;line-height:1">badge</span> Specialisti
-        </a>
-      </li>
-
-      <!-- ── Non loggato: pulsante Login ────────────────────────── -->
-      <li *ngIf="!auth.isLoggedIn">
-        <button (click)="openLogin()"
-          style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 1rem;border-radius:6px;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.35);font-size:0.9rem;font-weight:600;cursor:pointer;transition:background 0.2s;"
-          onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
-          <span class="material-icons" style="font-size:1.1rem">login</span> Login
-        </button>
-      </li>
-
-      <!-- ── Loggato: menu utente ────────────────────────────────── -->
-      <li *ngIf="auth.isLoggedIn" class="dropdown" [class.dropdown-open]="activeMenu==='user'">
-        <a class="dropdown-toggle" (click)="toggle('user', $event)" style="gap:0.4rem;">
-          <span class="material-icons" style="font-size:1.2rem">account_circle</span>
-          <span style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ auth.currentUser?.displayName }}</span>
-          <span style="font-size:0.72rem;background:rgba(255,255,255,0.2);padding:0.1rem 0.5rem;border-radius:999px;">
-            {{ auth.currentUser?.role === 'admin' ? 'Admin' : 'Utente' }}
-          </span> ▾
-        </a>
-        <ul class="dropdown-menu" style="right:0;left:auto;min-width:160px;">
-          <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;color:#f87171;" (click)="logout()">
-            <span class="material-icons" style="font-size:1.1rem">logout</span> Esci
-          </a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-</nav>
-
-<!-- Modal Login -->
-<div class="login-modal-overlay" *ngIf="showLoginModal" (click)="closeLogin()" (keydown.escape)="closeLogin()">
-  <dialog class="login-modal-box" open aria-label="Finestra di login" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
-    <button class="login-modal-close" (click)="closeLogin()">&times;</button>
-    <div class="login-modal-logo">
-      <img ngSrc="assets/logo/logomark.svg" alt="Apice Clinic" style="height:48px;width:auto;" height="227"
-           width="249"/>
-    </div>
-    <h2 class="login-modal-title">Accedi al portale</h2>
-    <p class="login-modal-sub">Inserisci le tue credenziali per accedere alle funzioni riservate</p>
-    <div class="login-error" *ngIf="loginError">
-      <span class="material-icons" style="font-size:1rem">error_outline</span> {{ loginError }}
-    </div>
-    <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" class="login-form">
-      <div class="login-field">
-        <!-- Associate label and input via for/id for accessibility -->
-        <label for="login-username">Username</label>
-        <div class="login-input-wrap">
-          <span class="material-icons login-input-icon">person</span>
-          <input id="login-username" formControlName="username" type="text" placeholder="es. mario.rossi" autocomplete="username" aria-describedby="username-error" />
-        </div>
-        <div class="login-field-error" *ngIf="isInvalid('username')" id="username-error">Campo obbligatorio</div>
-      </div>
-      <div class="login-field">
-        <!-- Associate label and input via for/id for accessibility -->
-        <label for="login-password">Password</label>
-        <div class="login-input-wrap">
-          <span class="material-icons login-input-icon">lock</span>
-          <input id="login-password" formControlName="password" type="password" placeholder="••••••••" autocomplete="current-password" aria-describedby="password-error" />
-        </div>
-        <div class="login-field-error" *ngIf="isInvalid('password')" id="password-error">Campo obbligatorio</div>
-      </div>
-      <button type="submit" class="login-btn" [disabled]="loginLoading">
-        {{ loginLoading ? 'Accesso in corso...' : 'Accedi' }}
+        height="230" width="672"/>
       </button>
-    </form>
-    <div class="login-roles">
-      <div class="login-role-box">
-        <span class="material-icons" style="color:var(--primary-mid);font-size:1.3rem">badge</span>
-        <div><strong>Medici / Staff</strong><p>Accesso completo alla gestione clinica</p></div>
-      </div>
-      <div class="login-role-box">
-        <span class="material-icons" style="color:var(--primary-mid);font-size:1.3rem">person</span>
-        <div><strong>Pazienti</strong><p>Prenota visite e visualizza i tuoi referti</p></div>
-      </div>
+      <ul class="navbar-links">
+
+        <!-- ── Solo admin ─────────────────────────────────────────── -->
+        @if (auth.isAdmin) {
+          <li class="dropdown" [class.dropdown-open]="activeMenu==='clinico'">
+            <a class="dropdown-toggle" [class.active-link]="isSection(['/patients','/appointments','/reports','/services'])" (click)="toggle('clinico', $event)">
+              <span class="material-icons" style="font-size:1.1rem;line-height:1">medical_services</span> Clinico ▾
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/patients')"><span class="material-icons" style="font-size:1.1rem">people</span> Pazienti</a></li>
+              <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/appointments')"><span class="material-icons" style="font-size:1.1rem">calendar_today</span> Prenotazioni</a></li>
+              <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/reports')"><span class="material-icons" style="font-size:1.1rem">assignment</span> Referti</a></li>
+              <li style="border-top:1px solid rgba(255,255,255,0.15);margin:0.3rem 0;pointer-events:none"></li>
+              <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/services')"><span class="material-icons" style="font-size:1.1rem">list_alt</span> Elenco Prestazioni</a></li>
+            </ul>
+          </li>
+          <li class="dropdown" [class.dropdown-open]="activeMenu==='nutrizione'">
+            <a class="dropdown-toggle" [class.active-link]="isSection(['/clients','/nutrition','/recipes','/glycemia'])" (click)="toggle('nutrizione', $event)">
+              <span class="material-icons" style="font-size:1.1rem;line-height:1">restaurant_menu</span> Nutrizione ▾
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/clients')"><span class="material-icons" style="font-size:1.1rem">group</span> Clienti</a></li>
+              <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/nutrition')"><span class="material-icons" style="font-size:1.1rem">restaurant_menu</span> Piani Dieta</a></li>
+              <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/recipes')"><span class="material-icons" style="font-size:1.1rem">menu_book</span> Ricette</a></li>
+              <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;" (click)="go('/glycemia')"><span class="material-icons" style="font-size:1.1rem">colorize</span> Glicemia</a></li>
+            </ul>
+          </li>
+          <li>
+            <a class="nav-link" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;border-radius:6px;font-size:0.9rem;font-weight:500;cursor:pointer;"
+              [class.active-link]="isActive('/training')" (click)="go('/training')">
+              <span class="material-icons" style="font-size:1.1rem;line-height:1">fitness_center</span> Sport
+            </a>
+          </li>
+        }
+
+        <!-- ── User loggato (non admin): prenota + referti ────────── -->
+        @if (auth.isLoggedIn && !auth.isAdmin) {
+          <li>
+            <a class="nav-link" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;border-radius:6px;font-size:0.9rem;font-weight:500;cursor:pointer;"
+              [class.active-link]="isActive('/appointments')" (click)="go('/appointments')">
+              <span class="material-icons" style="font-size:1.1rem;line-height:1">calendar_today</span> Prenota
+            </a>
+          </li>
+          <li>
+            <a class="nav-link" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;border-radius:6px;font-size:0.9rem;font-weight:500;cursor:pointer;"
+              [class.active-link]="isActive('/reports')" (click)="go('/reports')">
+              <span class="material-icons" style="font-size:1.1rem;line-height:1">assignment</span> I miei referti
+            </a>
+          </li>
+        }
+
+        <!-- ── Elenco Prestazioni visibile a tutti ───────────────────────── -->
+        <li>
+          <a class="nav-link" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;border-radius:6px;font-size:0.9rem;font-weight:500;cursor:pointer;"
+            [class.active-link]="isActive('/services')" (click)="go('/services')">
+            <span class="material-icons" style="font-size:1.1rem;line-height:1">list_alt</span> Prestazioni
+          </a>
+        </li>
+
+        <!-- ── Specialisti visibile a tutti ──────────────────────────────── -->
+        <li>
+          <a class="nav-link" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;border-radius:6px;font-size:0.9rem;font-weight:500;cursor:pointer;"
+            [class.active-link]="isSection(['/doctors','/staff'])" (click)="go('/doctors')">
+            <span class="material-icons" style="font-size:1.1rem;line-height:1">badge</span> Specialisti
+          </a>
+        </li>
+
+        <!-- ── Non loggato: pulsante Login ────────────────────────── -->
+        @if (!auth.isLoggedIn) {
+          <li>
+            <button (click)="openLogin()"
+              style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 1rem;border-radius:6px;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.35);font-size:0.9rem;font-weight:600;cursor:pointer;transition:background 0.2s;"
+              onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+              <span class="material-icons" style="font-size:1.1rem">login</span> Login
+            </button>
+          </li>
+        }
+
+        <!-- ── Loggato: menu utente ────────────────────────────────── -->
+        @if (auth.isLoggedIn) {
+          <li class="dropdown" [class.dropdown-open]="activeMenu==='user'">
+            <a class="dropdown-toggle" (click)="toggle('user', $event)" style="gap:0.4rem;">
+              <span class="material-icons" style="font-size:1.2rem">account_circle</span>
+              <span style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ auth.currentUser?.displayName }}</span>
+              <span style="font-size:0.72rem;background:rgba(255,255,255,0.2);padding:0.1rem 0.5rem;border-radius:999px;">
+                {{ auth.currentUser?.role === 'admin' ? 'Admin' : 'Utente' }}
+              </span> ▾
+            </a>
+            <ul class="dropdown-menu" style="right:0;left:auto;min-width:160px;">
+              <li><a class="nav-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;white-space:nowrap;font-size:0.9rem;cursor:pointer;color:#f87171;" (click)="logout()">
+                <span class="material-icons" style="font-size:1.1rem">logout</span> Esci
+              </a></li>
+            </ul>
+          </li>
+        }
+      </ul>
     </div>
-  </dialog>
-</div>
+  </nav>
+
+  <!-- Modal Login -->
+  @if (showLoginModal) {
+    <div class="login-modal-overlay" (click)="closeLogin()" (keydown.escape)="closeLogin()">
+      <dialog class="login-modal-box" open aria-label="Finestra di login" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+        <button class="login-modal-close" (click)="closeLogin()">&times;</button>
+        <div class="login-modal-logo">
+          <img ngSrc="assets/logo/logomark.svg" alt="Apice Clinic" style="height:48px;width:auto;" height="227"
+            width="249"/>
+          </div>
+          <h2 class="login-modal-title">Accedi al portale</h2>
+          <p class="login-modal-sub">Inserisci le tue credenziali per accedere alle funzioni riservate</p>
+          @if (loginError) {
+            <div class="login-error">
+              <span class="material-icons" style="font-size:1rem">error_outline</span> {{ loginError }}
+            </div>
+          }
+          <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" class="login-form">
+            <div class="login-field">
+              <!-- Associate label and input via for/id for accessibility -->
+              <label for="login-username">Username</label>
+              <div class="login-input-wrap">
+                <span class="material-icons login-input-icon">person</span>
+                <input id="login-username" formControlName="username" type="text" placeholder="es. mario.rossi" autocomplete="username" aria-describedby="username-error" />
+              </div>
+              @if (isInvalid('username')) {
+                <div class="login-field-error" id="username-error">Campo obbligatorio</div>
+              }
+            </div>
+            <div class="login-field">
+              <!-- Associate label and input via for/id for accessibility -->
+              <label for="login-password">Password</label>
+              <div class="login-input-wrap">
+                <span class="material-icons login-input-icon">lock</span>
+                <input id="login-password" formControlName="password" type="password" placeholder="••••••••" autocomplete="current-password" aria-describedby="password-error" />
+              </div>
+              @if (isInvalid('password')) {
+                <div class="login-field-error" id="password-error">Campo obbligatorio</div>
+              }
+            </div>
+            <button type="submit" class="login-btn" [disabled]="loginLoading">
+              {{ loginLoading ? 'Accesso in corso...' : 'Accedi' }}
+            </button>
+          </form>
+          <div class="login-roles">
+            <div class="login-role-box">
+              <span class="material-icons" style="color:var(--primary-mid);font-size:1.3rem">badge</span>
+              <div><strong>Medici / Staff</strong><p>Accesso completo alla gestione clinica</p></div>
+            </div>
+            <div class="login-role-box">
+              <span class="material-icons" style="color:var(--primary-mid);font-size:1.3rem">person</span>
+              <div><strong>Pazienti</strong><p>Prenota visite e visualizza i tuoi referti</p></div>
+            </div>
+          </div>
+        </dialog>
+      </div>
+    }

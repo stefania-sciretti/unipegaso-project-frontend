@@ -7,171 +7,189 @@
     <button class="btn btn-primary" (click)="openCreate()">+ Nuovo Referto</button>
   </div>
 
-  <ng-container *ngIf="alert$ | async as alert">
+  @if (alert$ | async; as alert) {
     <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">
       {{ alert.message }}
     </div>
-  </ng-container>
+  }
 
   <div class="card">
-    <div *ngIf="loading" class="loading">Caricamento in corso…</div>
-    <div class="table-wrapper" *ngIf="!loading">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Paziente</th>
-            <th>Medico</th>
-            <th>Tipo Visita</th>
-            <th>Data Emissione</th>
-            <th>Diagnosi (sintesi)</th>
-            <th class="th-actions">Azioni</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="reports.length === 0">
-            <td colspan="7" class="empty">Nessun referto trovato.</td>
-          </tr>
-          <tr *ngFor="let r of reports">
-            <td><strong>{{ r.id }}</strong></td>
-            <td>
-              <div class="patient-cell">
-                <span class="material-icons patient-icon">person</span>
-                {{ r.patientFullName }}
-              </div>
-            </td>
-            <td>{{ r.doctorFullName }}</td>
-            <td>
-              <span class="badge" [ngClass]="getVisitTypeBadgeClass(r.visitType)">
-                {{ r.visitType }}
-              </span>
-            </td>
-            <td>{{ r.issuedDate | date:'dd MMM yyyy' }}</td>
-            <td class="diagnosis-preview">{{ r.diagnosis | slice:0:60 }}{{ r.diagnosis.length > 60 ? '…' : '' }}</td>
-            <td class="td-actions">
-              <div class="td-actions-inner">
-                <button class="btn btn-primary btn-sm" (click)="openDetail(r)">
-                  <span class="material-icons" style="font-size:15px;vertical-align:middle">visibility</span> Dettaglio
-                </button>
-                <button class="btn btn-warning btn-sm" (click)="openEdit(r)">
-                  <span class="material-icons" style="font-size:15px;vertical-align:middle">edit</span> Modifica
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    @if (loading) {
+      <div class="loading">Caricamento in corso…</div>
+    }
+    @if (!loading) {
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Paziente</th>
+              <th>Medico</th>
+              <th>Tipo Visita</th>
+              <th>Data Emissione</th>
+              <th>Diagnosi (sintesi)</th>
+              <th class="th-actions">Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (reports.length === 0) {
+              <tr>
+                <td colspan="7" class="empty">Nessun referto trovato.</td>
+              </tr>
+            }
+            @for (r of reports; track r) {
+              <tr>
+                <td><strong>{{ r.id }}</strong></td>
+                <td>
+                  <div class="patient-cell">
+                    <span class="material-icons patient-icon">person</span>
+                    {{ r.patientFullName }}
+                  </div>
+                </td>
+                <td>{{ r.doctorFullName }}</td>
+                <td>
+                  <span class="badge" [ngClass]="getVisitTypeBadgeClass(r.visitType)">
+                    {{ r.visitType }}
+                  </span>
+                </td>
+                <td>{{ r.issuedDate | date:'dd MMM yyyy' }}</td>
+                <td class="diagnosis-preview">{{ r.diagnosis | slice:0:60 }}{{ r.diagnosis.length > 60 ? '…' : '' }}</td>
+                <td class="td-actions">
+                  <div class="td-actions-inner">
+                    <button class="btn btn-primary btn-sm" (click)="openDetail(r)">
+                      <span class="material-icons" style="font-size:15px;vertical-align:middle">visibility</span> Dettaglio
+                    </button>
+                    <button class="btn btn-warning btn-sm" (click)="openEdit(r)">
+                      <span class="material-icons" style="font-size:15px;vertical-align:middle">edit</span> Modifica
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   </div>
 </main>
 
 <!-- Modale: Crea / Modifica Referto -->
-<div class="modal-overlay" *ngIf="showFormModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>{{ editingId ? 'Modifica Referto' : 'Nuovo Referto' }}</h3>
-      <button class="modal-close" (click)="closeFormModal()">&times;</button>
+@if (showFormModal) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>{{ editingId ? 'Modifica Referto' : 'Nuovo Referto' }}</h3>
+        <button class="modal-close" (click)="closeFormModal()">&times;</button>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <!-- In creazione: selezione appuntamento completato -->
+        @if (!editingId) {
+          <div class="form-group">
+            <label>Appuntamento *</label>
+            <select formControlName="appointmentId">
+              <option [ngValue]="null" disabled>— Seleziona un appuntamento completato —</option>
+              @for (a of completedAppointments; track a) {
+                <option [ngValue]="a.id">
+                  #{{ a.id }} – {{ a.patientFullName }} con {{ a.doctorFullName }} ({{ a.scheduledAt | date:'dd/MM/yyyy' }}) – {{ a.visitType }}
+                </option>
+              }
+            </select>
+            @if (isInvalid('appointmentId')) {
+              <div class="field-error">Seleziona un appuntamento</div>
+            }
+            @if (completedAppointments.length === 0) {
+              <small class="text-muted">
+                Nessun appuntamento completato disponibile senza referto.
+              </small>
+            }
+          </div>
+        }
+        <!-- In modifica: campo readonly -->
+        @if (editingId) {
+          <div class="form-group">
+            <label>Appuntamento</label>
+            <input type="text" [value]="'Appuntamento #' + form.get('appointmentId')?.value + ' – ' + selectedReport?.patientFullName + ' / ' + selectedReport?.visitType" disabled/>
+          </div>
+        }
+        <div class="form-group">
+          <label>Diagnosi *</label>
+          <textarea formControlName="diagnosis" rows="3" placeholder="Diagnosi clinica…"></textarea>
+          @if (isInvalid('diagnosis')) {
+            <div class="field-error">Campo obbligatorio</div>
+          }
+        </div>
+        <div class="form-group">
+          <label>Prescrizione</label>
+          <textarea formControlName="prescription" rows="2" placeholder="Farmaci prescritti, terapie…"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Note del Medico</label>
+          <textarea formControlName="doctorNotes" rows="2" placeholder="Note interne del medico…"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" (click)="closeFormModal()">Annulla</button>
+          <button type="submit" class="btn btn-primary">Salva Referto</button>
+        </div>
+      </form>
     </div>
-    <form [formGroup]="form" (ngSubmit)="save()">
+  </div>
+}
 
-      <!-- In creazione: selezione appuntamento completato -->
-      <div class="form-group" *ngIf="!editingId">
-        <label>Appuntamento *</label>
-        <select formControlName="appointmentId">
-          <option [ngValue]="null" disabled>— Seleziona un appuntamento completato —</option>
-          <option *ngFor="let a of completedAppointments" [ngValue]="a.id">
-            #{{ a.id }} – {{ a.patientFullName }} con {{ a.doctorFullName }} ({{ a.scheduledAt | date:'dd/MM/yyyy' }}) – {{ a.visitType }}
-          </option>
-        </select>
-        <div class="field-error" *ngIf="isInvalid('appointmentId')">Seleziona un appuntamento</div>
-        <small *ngIf="completedAppointments.length === 0" class="text-muted">
-          Nessun appuntamento completato disponibile senza referto.
-        </small>
+<!-- Modale: Dettaglio Referto -->
+@if (showDetailModal && selectedReport) {
+  <div class="modal-overlay">
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <h3>
+          <span class="material-icons" style="vertical-align:middle;margin-right:6px">assignment</span>
+          Referto #{{ selectedReport.id }}
+        </h3>
+        <button class="modal-close" (click)="showDetailModal = false">&times;</button>
       </div>
-
-      <!-- In modifica: campo readonly -->
-      <div class="form-group" *ngIf="editingId">
-        <label>Appuntamento</label>
-        <input type="text" [value]="'Appuntamento #' + form.get('appointmentId')?.value + ' – ' + selectedReport?.patientFullName + ' / ' + selectedReport?.visitType" disabled/>
+      <div class="detail-grid">
+        <div class="form-group">
+          <label>Paziente</label>
+          <p><strong>{{ selectedReport.patientFullName }}</strong></p>
+        </div>
+        <div class="form-group">
+          <label>Medico</label>
+          <p>{{ selectedReport.doctorFullName }}</p>
+        </div>
+        <div class="form-group">
+          <label>Tipo Visita</label>
+          <p>
+            <span class="badge" [ngClass]="getVisitTypeBadgeClass(selectedReport.visitType)">
+              {{ selectedReport.visitType }}
+            </span>
+          </p>
+        </div>
+        <div class="form-group">
+          <label>Data Appuntamento</label>
+          <p>{{ selectedReport.scheduledAt | date:'dd MMM yyyy – HH:mm' }}</p>
+        </div>
+        <div class="form-group">
+          <label>Data Emissione Referto</label>
+          <p>{{ selectedReport.issuedDate | date:'dd MMM yyyy' }}</p>
+        </div>
       </div>
-
       <div class="form-group">
-        <label>Diagnosi *</label>
-        <textarea formControlName="diagnosis" rows="3" placeholder="Diagnosi clinica…"></textarea>
-        <div class="field-error" *ngIf="isInvalid('diagnosis')">Campo obbligatorio</div>
+        <label>Diagnosi</label>
+        <div class="detail-box">{{ selectedReport.diagnosis }}</div>
       </div>
       <div class="form-group">
         <label>Prescrizione</label>
-        <textarea formControlName="prescription" rows="2" placeholder="Farmaci prescritti, terapie…"></textarea>
+        <div class="detail-box">{{ selectedReport.prescription || '–' }}</div>
       </div>
       <div class="form-group">
         <label>Note del Medico</label>
-        <textarea formControlName="doctorNotes" rows="2" placeholder="Note interne del medico…"></textarea>
+        <div class="detail-box">{{ selectedReport.doctorNotes || '–' }}</div>
       </div>
       <div class="form-actions">
-        <button type="button" class="btn btn-outline" (click)="closeFormModal()">Annulla</button>
-        <button type="submit" class="btn btn-primary">Salva Referto</button>
+        <button class="btn btn-outline" (click)="showDetailModal = false">Chiudi</button>
+        <button class="btn btn-warning" (click)="openEdit(selectedReport!); showDetailModal = false">
+          <span class="material-icons" style="font-size:15px;vertical-align:middle">edit</span> Modifica
+        </button>
       </div>
-    </form>
-  </div>
-</div>
-
-<!-- Modale: Dettaglio Referto -->
-<div class="modal-overlay" *ngIf="showDetailModal && selectedReport">
-  <div class="modal modal-wide">
-    <div class="modal-header">
-      <h3>
-        <span class="material-icons" style="vertical-align:middle;margin-right:6px">assignment</span>
-        Referto #{{ selectedReport.id }}
-      </h3>
-      <button class="modal-close" (click)="showDetailModal = false">&times;</button>
-    </div>
-
-    <div class="detail-grid">
-      <div class="form-group">
-        <label>Paziente</label>
-        <p><strong>{{ selectedReport.patientFullName }}</strong></p>
-      </div>
-      <div class="form-group">
-        <label>Medico</label>
-        <p>{{ selectedReport.doctorFullName }}</p>
-      </div>
-      <div class="form-group">
-        <label>Tipo Visita</label>
-        <p>
-          <span class="badge" [ngClass]="getVisitTypeBadgeClass(selectedReport.visitType)">
-            {{ selectedReport.visitType }}
-          </span>
-        </p>
-      </div>
-      <div class="form-group">
-        <label>Data Appuntamento</label>
-        <p>{{ selectedReport.scheduledAt | date:'dd MMM yyyy – HH:mm' }}</p>
-      </div>
-      <div class="form-group">
-        <label>Data Emissione Referto</label>
-        <p>{{ selectedReport.issuedDate | date:'dd MMM yyyy' }}</p>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label>Diagnosi</label>
-      <div class="detail-box">{{ selectedReport.diagnosis }}</div>
-    </div>
-    <div class="form-group">
-      <label>Prescrizione</label>
-      <div class="detail-box">{{ selectedReport.prescription || '–' }}</div>
-    </div>
-    <div class="form-group">
-      <label>Note del Medico</label>
-      <div class="detail-box">{{ selectedReport.doctorNotes || '–' }}</div>
-    </div>
-
-    <div class="form-actions">
-      <button class="btn btn-outline" (click)="showDetailModal = false">Chiudi</button>
-      <button class="btn btn-warning" (click)="openEdit(selectedReport!); showDetailModal = false">
-        <span class="material-icons" style="font-size:15px;vertical-align:middle">edit</span> Modifica
-      </button>
     </div>
   </div>
-</div>
+}

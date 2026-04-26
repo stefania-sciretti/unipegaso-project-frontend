@@ -6,17 +6,19 @@
     </div>
   </div>
   <div class="staff-grid">
-    <div class="staff-card" *ngFor="let member of staff">
-      <div class="staff-avatar-wrap staff-avatar-clickable" (click)="navigateTo(member.route)">
-        <img class="staff-avatar" [src]="member.image" [alt]="member.firstName + ' ' + member.lastName"/>
+    @for (member of staff; track member) {
+      <div class="staff-card">
+        <div class="staff-avatar-wrap staff-avatar-clickable" (click)="navigateTo(member.route)">
+          <img class="staff-avatar" [src]="member.image" [alt]="member.firstName + ' ' + member.lastName"/>
+        </div>
+        <div class="staff-info">
+          <p class="staff-name">
+            {{ member.gender === 'female' ? 'Dott.ssa' : 'Dott.' }}
+            {{ member.firstName }} {{ member.lastName }}
+          </p>
+          <p class="staff-role">{{ member.role }}</p>
+        </div>
       </div>
-      <div class="staff-info">
-        <p class="staff-name">
-          {{ member.gender === 'female' ? 'Dott.ssa' : 'Dott.' }}
-          {{ member.firstName }} {{ member.lastName }}
-        </p>
-        <p class="staff-role">{{ member.role }}</p>
-      </div>
-    </div>
+    }
   </div>
 </main>

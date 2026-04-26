@@ -1,13 +1,13 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-navbar',
-    imports: [CommonModule, ReactiveFormsModule, NgOptimizedImage],
+    imports: [ReactiveFormsModule, NgOptimizedImage],
     templateUrl: './navbar.component.html',
     styles: [`
     .nav-link { color: rgba(255,255,255,0.82); transition: background 0.15s, color 0.15s; cursor: pointer; }

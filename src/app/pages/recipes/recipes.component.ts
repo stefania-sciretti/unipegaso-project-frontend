@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RecipeService} from '../../services/recipe.service';
 import {Recipe, RecipeRequest} from '../../models/models';
 
 @Component({
     selector: 'app-recipes',
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [ReactiveFormsModule],
     templateUrl: './recipes.component.html'
 })
 export class RecipesComponent implements OnInit {

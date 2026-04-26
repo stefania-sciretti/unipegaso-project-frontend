@@ -17,108 +17,133 @@
         <label class="booking-label">1. Cosa vuoi prenotare? *</label>
 
         <!-- Area Selector Dropdown -->
-        <div class="booking-dropdown" *ngIf="!selectedArea">
-          <div class="booking-dropdown-trigger" (click)="showAreaDropdown = !showAreaDropdown">
-            <span class="material-icons">calendar_today</span>
-            <span>Seleziona servizio</span>
-            <span class="material-icons" style="margin-left:auto" [class.open]="showAreaDropdown">expand_more</span>
-          </div>
-          <div class="booking-dropdown-menu" *ngIf="showAreaDropdown">
-            <div *ngFor="let area of serviceAreas"
-                 class="booking-dropdown-item-text"
-                 (click)="selectArea(area); showAreaDropdown = false">
-              {{ area.label }}
+        @if (!selectedArea) {
+          <div class="booking-dropdown">
+            <div class="booking-dropdown-trigger" (click)="showAreaDropdown = !showAreaDropdown">
+              <span class="material-icons">calendar_today</span>
+              <span>Seleziona servizio</span>
+              <span class="material-icons" style="margin-left:auto" [class.open]="showAreaDropdown">expand_more</span>
             </div>
+            @if (showAreaDropdown) {
+              <div class="booking-dropdown-menu">
+                @for (area of serviceAreas; track area) {
+                  <div
+                    class="booking-dropdown-item-text"
+                    (click)="selectArea(area); showAreaDropdown = false">
+                    {{ area.label }}
+                  </div>
+                }
+              </div>
+            }
           </div>
-        </div>
+        }
 
         <!-- Service List (when area selected) - Text only -->
-        <div class="booking-service-selector" *ngIf="selectedArea">
-          <button class="booking-back-btn" (click)="backToAreas()">
-            <span class="material-icons">arrow_back</span> Torna alle aree
-          </button>
-          <div class="booking-service-list">
-            <div *ngFor="let service of selectedArea.services"
-                 class="booking-service-item-text"
-                 [class.active]="selectedService?.id === service.id"
-                 (click)="selectService(service)">
-              {{ service.name }}
-              <span class="material-icons" *ngIf="selectedService?.id === service.id">check_circle</span>
+        @if (selectedArea) {
+          <div class="booking-service-selector">
+            <button class="booking-back-btn" (click)="backToAreas()">
+              <span class="material-icons">arrow_back</span> Torna alle aree
+            </button>
+            <div class="booking-service-list">
+              @for (service of selectedArea.services; track service) {
+                <div
+                  class="booking-service-item-text"
+                  [class.active]="selectedService?.id === service.id"
+                  (click)="selectService(service)">
+                  {{ service.name }}
+                  @if (selectedService?.id === service.id) {
+                    <span class="material-icons">check_circle</span>
+                  }
+                </div>
+              }
             </div>
           </div>
-        </div>
+        }
 
         <!-- Selected Service Display -->
-        <div class="booking-selected-service" *ngIf="selectedService && !selectedArea">
-          <div class="selected-badge">
-            {{ selectedService.name }}
-            <span class="material-icons" style="font-size:1rem;cursor:pointer" (click)="backToAreas()">close</span>
+        @if (selectedService && !selectedArea) {
+          <div class="booking-selected-service">
+            <div class="selected-badge">
+              {{ selectedService.name }}
+              <span class="material-icons" style="font-size:1rem;cursor:pointer" (click)="backToAreas()">close</span>
+            </div>
           </div>
-        </div>
+        }
       </div>
 
       <!-- Step 2: Select Date with Calendar -->
-      <div class="booking-step" *ngIf="selectedService">
-        <label class="booking-label">2. Da quando sei disponibile? *</label>
-        <div class="booking-calendar-wrapper">
-          <div class="calendar-header">
-            <span class="material-icons" (click)="previousMonth()">chevron_left</span>
-            <h3>{{ currentMonth | date: 'MMMM yyyy' : 'it-IT' }}</h3>
-            <span class="material-icons" (click)="nextMonth()">chevron_right</span>
-          </div>
-          <div class="calendar-grid">
-            <div class="day-header" *ngFor="let day of ['L', 'M', 'M', 'G', 'V', 'S', 'D']">{{ day }}</div>
-            <ng-container *ngFor="let d of getCalendarDays()">
-              <button *ngIf="d !== 0"
-                      class="calendar-day"
-                      [class.selected]="isDateSelected(d)"
-                      [class.disabled]="isDateDisabled(d)"
-                      [disabled]="isDateDisabled(d)"
-                      (click)="selectCalendarDate(d)">
-                {{ d }}
-              </button>
-              <div *ngIf="d === 0" class="calendar-day disabled"></div>
-            </ng-container>
+      @if (selectedService) {
+        <div class="booking-step">
+          <label class="booking-label">2. Da quando sei disponibile? *</label>
+          <div class="booking-calendar-wrapper">
+            <div class="calendar-header">
+              <span class="material-icons" (click)="previousMonth()">chevron_left</span>
+              <h3>{{ currentMonth | date: 'MMMM yyyy' : 'it-IT' }}</h3>
+              <span class="material-icons" (click)="nextMonth()">chevron_right</span>
+            </div>
+            <div class="calendar-grid">
+              @for (day of ['L', 'M', 'M', 'G', 'V', 'S', 'D']; track day) {
+                <div class="day-header">{{ day }}</div>
+              }
+              @for (d of getCalendarDays(); track d) {
+                @if (d !== 0) {
+                  <button
+                    class="calendar-day"
+                    [class.selected]="isDateSelected(d)"
+                    [class.disabled]="isDateDisabled(d)"
+                    [disabled]="isDateDisabled(d)"
+                    (click)="selectCalendarDate(d)">
+                    {{ d }}
+                  </button>
+                }
+                @if (d === 0) {
+                  <div class="calendar-day disabled"></div>
+                }
+              }
+            </div>
           </div>
         </div>
-      </div>
+      }
 
       <!-- Step 3: Doctor Availability -->
-      <div class="booking-step" *ngIf="selectedService && selectedDate">
-        <label class="booking-label">3. Seleziona orario *</label>
-        <div class="doctor-availability">
-          <!-- Doctor Card -->
-          <div class="doctor-card">
-            <div class="doctor-header">
-              <span class="material-icons doctor-icon">{{ getSelectedDoctor()?.icon }}</span>
-              <div class="doctor-info">
-                <h4>{{ getSelectedDoctor()?.name }}</h4>
-                <p>{{ getSelectedDoctor()?.title }}</p>
+      @if (selectedService && selectedDate) {
+        <div class="booking-step">
+          <label class="booking-label">3. Seleziona orario *</label>
+          <div class="doctor-availability">
+            <!-- Doctor Card -->
+            <div class="doctor-card">
+              <div class="doctor-header">
+                <span class="material-icons doctor-icon">{{ getSelectedDoctor()?.icon }}</span>
+                <div class="doctor-info">
+                  <h4>{{ getSelectedDoctor()?.name }}</h4>
+                  <p>{{ getSelectedDoctor()?.title }}</p>
+                </div>
               </div>
-            </div>
-
-            <!-- Time Slots -->
-            <div class="time-slots">
-              <div class="time-slot-header">
-                {{ selectedDate | date: 'd MMMM yyyy' : 'it-IT' }}
-              </div>
-              <div class="time-slots-grid">
-                <button *ngFor="let slot of getAvailableSlots()"
-                        class="time-slot"
-                        [class.selected]="selectedTime === slot"
-                        (click)="selectTime(slot)">
-                  {{ slot }}
-                </button>
+              <!-- Time Slots -->
+              <div class="time-slots">
+                <div class="time-slot-header">
+                  {{ selectedDate | date: 'd MMMM yyyy' : 'it-IT' }}
+                </div>
+                <div class="time-slots-grid">
+                  @for (slot of getAvailableSlots(); track slot) {
+                    <button
+                      class="time-slot"
+                      [class.selected]="selectedTime === slot"
+                      (click)="selectTime(slot)">
+                      {{ slot }}
+                    </button>
+                  }
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      }
 
       <!-- Booking Button -->
       <button class="booking-btn"
-              [disabled]="!selectedService || !selectedDate || !selectedTime"
-              (click)="bookAppointment()">
+        [disabled]="!selectedService || !selectedDate || !selectedTime"
+        (click)="bookAppointment()">
         <span class="material-icons">check</span> Prenota
       </button>
     </div>

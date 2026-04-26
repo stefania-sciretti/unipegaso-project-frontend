@@ -9,17 +9,23 @@
   </div>
 
   <div class="faq-list">
-    <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.faq-open]="faq.open">
-      <div class="faq-question" (click)="toggle(faq)" role="button" tabindex="0"
-           (keydown.enter)="toggle(faq)" (keydown.space)="toggle(faq)">
-        <span class="faq-number">{{ i + 1 }}</span>
-        <span class="faq-q-text">{{ faq.q }}</span>
-        <span class="material-icons faq-chevron">{{ faq.open ? 'expand_less' : 'expand_more' }}</span>
+    @for (faq of faqs; track faq; let i = $index) {
+      <div class="faq-item" [class.faq-open]="faq.open">
+        <div class="faq-question" (click)="toggle(faq)" role="button" tabindex="0"
+          (keydown.enter)="toggle(faq)" (keydown.space)="toggle(faq)">
+          <span class="faq-number">{{ i + 1 }}</span>
+          <span class="faq-q-text">{{ faq.q }}</span>
+          <span class="material-icons faq-chevron">{{ faq.open ? 'expand_less' : 'expand_more' }}</span>
+        </div>
+        @if (faq.open) {
+          <div class="faq-answer">
+            @for (line of faq.a.split('\n'); track line) {
+              <p [class.faq-line-bullet]="line.startsWith('•')">{{ line }}</p>
+            }
+          </div>
+        }
       </div>
-      <div class="faq-answer" *ngIf="faq.open">
-        <p *ngFor="let line of faq.a.split('\n')" [class.faq-line-bullet]="line.startsWith('•')">{{ line }}</p>
-      </div>
-    </div>
+    }
   </div>
 
   <div class="faq-contact-box">

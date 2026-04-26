@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {AppointmentService} from '../../services/appointment.service';

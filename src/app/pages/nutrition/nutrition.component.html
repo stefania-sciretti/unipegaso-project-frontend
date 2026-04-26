@@ -21,9 +21,9 @@
     </div>
   </div>
 
-  <ng-container *ngIf="alert$ | async as alert">
+  @if (alert$ | async; as alert) {
     <div class="alert" [class.alert-success]="alert.type==='success'" [class.alert-error]="alert.type==='error'">{{ alert.message }}</div>
-  </ng-container>
+  }
 
   <div class="card">
     <div class="section-header">
@@ -37,76 +37,92 @@
         </select>
       </div>
     </div>
-    <div *ngIf="loading" class="loading">Caricamento…</div>
-    <div class="table-wrapper" *ngIf="!loading">
-      <table>
-        <thead><tr>
-          <th>#</th><th>Cliente</th><th>Titolo</th>
-          <th>Calorie</th><th>Durata</th><th>Stato</th><th>Azioni</th>
-        </tr></thead>
-        <tbody>
-          <tr *ngIf="filtered.length === 0"><td colspan="7" class="empty">Nessun piano dieta trovato.</td></tr>
-          <tr *ngFor="let p of filtered">
-            <td>{{ p.id }}</td>
-            <td><strong>{{ p.clientFullName }}</strong></td>
-            <td>{{ p.title }}</td>
-            <td>{{ p.calories ? p.calories + ' kcal' : '–' }}</td>
-            <td>{{ p.durationWeeks ? p.durationWeeks + ' sett.' : '–' }}</td>
-            <td><span class="badge" [class.badge-active]="p.active" [class.badge-inactive]="!p.active">{{ p.active ? 'Attivo' : 'Non attivo' }}</span></td>
-            <td class="actions">
-              <button class="btn btn-secondary btn-sm" (click)="openEdit(p)">Modifica</button>
-              <button class="btn btn-danger btn-sm" (click)="delete(p.id)">Elimina</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    @if (loading) {
+      <div class="loading">Caricamento…</div>
+    }
+    @if (!loading) {
+      <div class="table-wrapper">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Cliente</th><th>Titolo</th>
+            <th>Calorie</th><th>Durata</th><th>Stato</th><th>Azioni</th>
+          </tr></thead>
+          <tbody>
+            @if (filtered.length === 0) {
+              <tr><td colspan="7" class="empty">Nessun piano dieta trovato.</td></tr>
+            }
+            @for (p of filtered; track p) {
+              <tr>
+                <td>{{ p.id }}</td>
+                <td><strong>{{ p.clientFullName }}</strong></td>
+                <td>{{ p.title }}</td>
+                <td>{{ p.calories ? p.calories + ' kcal' : '–' }}</td>
+                <td>{{ p.durationWeeks ? p.durationWeeks + ' sett.' : '–' }}</td>
+                <td><span class="badge" [class.badge-active]="p.active" [class.badge-inactive]="!p.active">{{ p.active ? 'Attivo' : 'Non attivo' }}</span></td>
+                <td class="actions">
+                  <button class="btn btn-secondary btn-sm" (click)="openEdit(p)">Modifica</button>
+                  <button class="btn btn-danger btn-sm" (click)="delete(p.id)">Elimina</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   </div>
 </main>
 
-<div class="modal-overlay" *ngIf="showModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>{{ editingId ? '✏️ Modifica Piano Dieta' : '🥗 Nuovo Piano Dieta' }}</h3>
-      <button class="modal-close" (click)="showModal = false">&times;</button>
+@if (showModal) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>{{ editingId ? '✏️ Modifica Piano Dieta' : '🥗 Nuovo Piano Dieta' }}</h3>
+        <button class="modal-close" (click)="showModal = false">&times;</button>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-group">
+          <label>Cliente *</label>
+          <select formControlName="clientId">
+            <option value="">– Seleziona cliente –</option>
+            @for (c of clients; track c) {
+              <option [value]="c.id">{{ c.firstName }} {{ c.lastName }}</option>
+            }
+          </select>
+          @if (isInvalid('clientId')) {
+            <div class="field-error">Campo obbligatorio</div>
+          }
+        </div>
+        <div class="form-group">
+          <label>Titolo Piano *</label>
+          <input formControlName="title" type="text" placeholder="es. Piano Dimagrante Estivo"/>
+          @if (isInvalid('title')) {
+            <div class="field-error">Campo obbligatorio</div>
+          }
+        </div>
+        <div class="form-group">
+          <label>Descrizione</label>
+          <textarea formControlName="description" placeholder="Descrivi gli obiettivi e l'approccio del piano…"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Calorie Giornaliere (kcal)</label>
+            <input formControlName="calories" type="number" placeholder="1800"/>
+          </div>
+          <div class="form-group">
+            <label>Durata (settimane)</label>
+            <input formControlName="durationWeeks" type="number" placeholder="8"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
+            <input type="checkbox" formControlName="active" style="width:auto"/> Piano attivo
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" (click)="showModal = false">Annulla</button>
+          <button type="submit" class="btn btn-success">Salva Piano</button>
+        </div>
+      </form>
     </div>
-    <form [formGroup]="form" (ngSubmit)="save()">
-      <div class="form-group">
-        <label>Cliente *</label>
-        <select formControlName="clientId">
-          <option value="">– Seleziona cliente –</option>
-          <option *ngFor="let c of clients" [value]="c.id">{{ c.firstName }} {{ c.lastName }}</option>
-        </select>
-        <div class="field-error" *ngIf="isInvalid('clientId')">Campo obbligatorio</div>
-      </div>
-      <div class="form-group">
-        <label>Titolo Piano *</label>
-        <input formControlName="title" type="text" placeholder="es. Piano Dimagrante Estivo"/>
-        <div class="field-error" *ngIf="isInvalid('title')">Campo obbligatorio</div>
-      </div>
-      <div class="form-group">
-        <label>Descrizione</label>
-        <textarea formControlName="description" placeholder="Descrivi gli obiettivi e l'approccio del piano…"></textarea>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Calorie Giornaliere (kcal)</label>
-          <input formControlName="calories" type="number" placeholder="1800"/>
-        </div>
-        <div class="form-group">
-          <label>Durata (settimane)</label>
-          <input formControlName="durationWeeks" type="number" placeholder="8"/>
-        </div>
-      </div>
-      <div class="form-group">
-        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
-          <input type="checkbox" formControlName="active" style="width:auto"/> Piano attivo
-        </label>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn btn-outline" (click)="showModal = false">Annulla</button>
-        <button type="submit" class="btn btn-success">Salva Piano</button>
-      </div>
-    </form>
   </div>
-</div>
+}
