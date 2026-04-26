@@ -19,11 +19,11 @@ import {NavbarComponent} from './components/navbar/navbar.component';
         <div class="footer-contacts">
           <a href="mailto:prenotazioni@apiceclinic.com" class="footer-link">
             <span class="material-icons" style="font-size:1rem">mail_outline</span>
-            prenotazioni@apiceclinic.com
+            prenotazioni&#64;apiceclinic.com
           </a>
           <a href="mailto:informazioni@apiceclinic.com" class="footer-link">
             <span class="material-icons" style="font-size:1rem">mail_outline</span>
-            informazioni@apiceclinic.com
+            informazioni&#64;apiceclinic.com
           </a>
           <a href="tel:+393480000000" class="footer-link">
             <span class="material-icons" style="font-size:1rem">phone</span>

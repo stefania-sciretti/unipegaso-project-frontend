@@ -50,8 +50,12 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": {"browserTarget": "centrofitness-frontend:build:production"},
-            "development": {"browserTarget": "centrofitness-frontend:build:development"}
+            "production": {
+              "buildTarget": "centrofitness-frontend:build:production"
+            },
+            "development": {
+              "buildTarget": "centrofitness-frontend:build:development"
+            }
           },
           "defaultConfiguration": "development"
         },
