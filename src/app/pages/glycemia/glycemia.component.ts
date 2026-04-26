@@ -13,13 +13,12 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 
 @Component({
-  selector: 'app-glycemia',
-  standalone: true,
-  imports: [
-    CommonModule, AsyncPipe, FormsModule, ReactiveFormsModule,
-    MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, MatInputModule
-  ],
-  templateUrl: './glycemia.component.html'
+    selector: 'app-glycemia',
+    imports: [
+        CommonModule, AsyncPipe, FormsModule, ReactiveFormsModule,
+        MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, MatInputModule
+    ],
+    templateUrl: './glycemia.component.html'
 })
 export class GlycemiaComponent implements OnInit {
   measurements: GlycemiaMeasurement[] = [];

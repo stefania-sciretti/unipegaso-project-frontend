@@ -6,10 +6,9 @@ import {Patient, PatientRequest, PatientService} from '../../services/patient.se
 import {AlertService, AlertState} from '../../services/alert.service';
 
 @Component({
-  selector: 'app-patients',
-  standalone: true,
-  imports: [CommonModule, AsyncPipe, ReactiveFormsModule],
-  templateUrl: './patients.component.html'
+    selector: 'app-patients',
+    imports: [CommonModule, AsyncPipe, ReactiveFormsModule],
+    templateUrl: './patients.component.html'
 })
 export class PatientsComponent implements OnInit {
   patients: Patient[] = [];

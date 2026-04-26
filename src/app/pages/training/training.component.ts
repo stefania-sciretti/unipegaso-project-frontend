@@ -9,10 +9,9 @@ import {AlertService, AlertState} from '../../services/alert.service';
 import {Client, TrainingPlan, TrainingPlanRequest} from '../../models/models';
 
 @Component({
-  selector: 'app-training',
-  standalone: true,
-  imports: [CommonModule, AsyncPipe, FormsModule, ReactiveFormsModule],
-  templateUrl: './training.component.html'
+    selector: 'app-training',
+    imports: [CommonModule, AsyncPipe, FormsModule, ReactiveFormsModule],
+    templateUrl: './training.component.html'
 })
 export class TrainingComponent implements OnInit {
   plans: TrainingPlan[] = [];

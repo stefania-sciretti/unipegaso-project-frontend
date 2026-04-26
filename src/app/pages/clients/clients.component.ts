@@ -11,10 +11,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 
 @Component({
-  selector: 'app-clients',
-  standalone: true,
-  imports: [CommonModule, AsyncPipe, ReactiveFormsModule, MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './clients.component.html'
+    selector: 'app-clients',
+    imports: [CommonModule, AsyncPipe, ReactiveFormsModule, MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, MatInputModule],
+    templateUrl: './clients.component.html'
 })
 export class ClientsComponent implements OnInit {
   clients: Client[] = [];

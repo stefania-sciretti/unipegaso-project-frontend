@@ -29,11 +29,10 @@ interface Doctor {
 }
 
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [CommonModule, NgOptimizedImage, FormsModule],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+    selector: 'app-dashboard',
+    imports: [CommonModule, NgOptimizedImage, FormsModule],
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
   selectedArea: ServiceArea | null = null;

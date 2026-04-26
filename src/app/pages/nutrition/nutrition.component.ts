@@ -9,10 +9,9 @@ import {AlertService, AlertState} from '../../services/alert.service';
 import {Client, DietPlan, DietPlanRequest} from '../../models/models';
 
 @Component({
-  selector: 'app-nutrition',
-  standalone: true,
-  imports: [CommonModule, AsyncPipe, FormsModule, ReactiveFormsModule],
-  templateUrl: './nutrition.component.html'
+    selector: 'app-nutrition',
+    imports: [CommonModule, AsyncPipe, FormsModule, ReactiveFormsModule],
+    templateUrl: './nutrition.component.html'
 })
 export class NutritionComponent implements OnInit {
   plans: DietPlan[] = [];

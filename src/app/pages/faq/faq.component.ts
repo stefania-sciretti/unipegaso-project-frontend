@@ -9,10 +9,9 @@ interface Faq {
 }
 
 @Component({
-  selector: 'app-faq',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './faq.component.html'
+    selector: 'app-faq',
+    imports: [CommonModule, RouterModule],
+    templateUrl: './faq.component.html'
 })
 export class FaqComponent implements OnInit {
 

@@ -14,10 +14,9 @@ export interface StaffMember {
   route: string;
 }
 @Component({
-  selector: 'app-doctors',
-  standalone: true,
-  imports: [CommonModule, AsyncPipe, ReactiveFormsModule],
-  templateUrl: './doctors.component.html'
+    selector: 'app-doctors',
+    imports: [CommonModule, AsyncPipe, ReactiveFormsModule],
+    templateUrl: './doctors.component.html'
 })
 export class DoctorsComponent implements OnInit {
   doctors: Doctor[] = [];

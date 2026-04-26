@@ -6,11 +6,10 @@ import {AuthService} from '../../services/auth.service';
 import {Subscription} from 'rxjs';
 
 @Component({
-  selector: 'app-navbar',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgOptimizedImage],
-  templateUrl: './navbar.component.html',
-  styles: [`
+    selector: 'app-navbar',
+    imports: [CommonModule, ReactiveFormsModule, NgOptimizedImage],
+    templateUrl: './navbar.component.html',
+    styles: [`
     .nav-link { color: rgba(255,255,255,0.82); transition: background 0.15s, color 0.15s; cursor: pointer; }
     .nav-link:hover { background: rgba(255,255,255,0.15); color: #fff; }
     .active-link { background: rgba(255,255,255,0.15); color: #fff; }

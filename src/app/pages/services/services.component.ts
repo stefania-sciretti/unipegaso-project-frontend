@@ -18,10 +18,9 @@ interface ServiceCategory {
 }
 
 @Component({
-  selector: 'app-services',
-  standalone: true,
-  imports: [CommonModule, UpperCasePipe],
-  templateUrl: './services.component.html'
+    selector: 'app-services',
+    imports: [CommonModule, UpperCasePipe],
+    templateUrl: './services.component.html'
 })
 export class ServicesComponent {
   categories: ServiceCategory[] = [

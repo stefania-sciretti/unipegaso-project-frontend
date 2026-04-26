@@ -3,9 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-luca',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './luca.component.html'
+    selector: 'app-luca',
+    imports: [CommonModule, RouterModule],
+    templateUrl: './luca.component.html'
 })
 export class LucaComponent {}

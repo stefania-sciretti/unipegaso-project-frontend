@@ -90,10 +90,9 @@ const MOCK_REPORTS: Report[] = [
 ];
 
 @Component({
-  selector: 'app-reports',
-  standalone: true,
-  imports: [CommonModule, AsyncPipe, ReactiveFormsModule, DatePipe],
-  templateUrl: './reports.component.html'
+    selector: 'app-reports',
+    imports: [CommonModule, AsyncPipe, ReactiveFormsModule, DatePipe],
+    templateUrl: './reports.component.html'
 })
 export class ReportsComponent implements OnInit {
   reports: Report[] = [];

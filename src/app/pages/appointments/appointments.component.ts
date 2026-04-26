@@ -11,12 +11,11 @@ import {AlertService, AlertState} from '../../services/alert.service';
 import {AppointmentStatus, Client, FitnessAppointment, FitnessAppointmentRequest, Staff} from '../../models/models';
 
 @Component({
-  selector: 'app-appointments',
-  standalone: true,
-  imports: [
-    CommonModule, AsyncPipe, ReactiveFormsModule, FormsModule, MatIconModule
-  ],
-  templateUrl: './appointments.component.html'
+    selector: 'app-appointments',
+    imports: [
+        CommonModule, AsyncPipe, ReactiveFormsModule, FormsModule, MatIconModule
+    ],
+    templateUrl: './appointments.component.html'
 })
 export class AppointmentsComponent implements OnInit {
   appointments: FitnessAppointment[] = [];

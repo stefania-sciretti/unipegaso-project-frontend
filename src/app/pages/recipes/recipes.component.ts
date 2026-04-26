@@ -5,10 +5,9 @@ import {RecipeService} from '../../services/recipe.service';
 import {Recipe, RecipeRequest} from '../../models/models';
 
 @Component({
-  selector: 'app-recipes',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './recipes.component.html'
+    selector: 'app-recipes',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './recipes.component.html'
 })
 export class RecipesComponent implements OnInit {
   recipes: Recipe[] = [];
