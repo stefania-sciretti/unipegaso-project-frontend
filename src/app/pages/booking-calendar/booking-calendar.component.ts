@@ -18,7 +18,6 @@ interface BookingEvent {
 @Component({
   selector: 'app-booking-calendar',
   imports: [DatePipe, NgClass],
-  providers: [DatePipe],
   templateUrl: './booking-calendar.component.html'
 })
 export class BookingCalendarComponent implements OnInit {

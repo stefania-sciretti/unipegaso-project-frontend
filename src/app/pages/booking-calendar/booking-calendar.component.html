@@ -81,9 +81,9 @@
     <div class="bg-white rounded-xl shadow-[0_2px_14px_rgba(17,45,78,0.10)] overflow-hidden">
       <!-- Intestazione giorni -->
       <div class="grid grid-cols-7 border-b border-[#DBE2EF]">
-        @for (d of dayLabels; track $index; let i = $index) {
+        @for (d of dayLabels; track $index) {
           <div class="py-3 text-center text-sm font-semibold text-[#3F72AF]"
-               [ngClass]="i >= 5 ? 'text-[#d95550]' : ''">
+               [ngClass]="$index >= 5 ? 'text-[#d95550]' : ''">
             {{ d }}
           </div>
         }
@@ -123,14 +123,14 @@
   @if (!loading && !loadError && viewMode === 'week') {
     <div class="bg-white rounded-xl shadow-[0_2px_14px_rgba(17,45,78,0.10)] overflow-hidden overflow-x-auto">
       <div class="grid grid-cols-7 min-w-[700px]">
-        @for (date of weekDays; track date.getTime(); let i = $index) {
+        @for (date of weekDays; track date.getTime()) {
           <div class="border-r border-[#DBE2EF] last:border-r-0">
             <!-- Intestazione giorno -->
             <div class="py-3 text-center border-b border-[#DBE2EF]"
                  [ngClass]="isWeekDayToday(date) ? 'bg-[#eef4f9]' : ''">
               <div class="text-xs font-semibold"
-                   [ngClass]="i >= 5 ? 'text-[#d95550]' : 'text-[#3F72AF]'">
-                {{ dayLabelsLong[i] }}
+                   [ngClass]="$index >= 5 ? 'text-[#d95550]' : 'text-[#3F72AF]'">
+                {{ dayLabelsLong[$index] }}
               </div>
               <div class="text-lg font-bold flex items-center justify-center mx-auto w-9 h-9 rounded-full mt-0.5"
                    [ngClass]="isWeekDayToday(date) ? 'bg-[#112D4E] text-white' : 'text-[#112D4E]'">
