@@ -17,7 +17,7 @@
         <!-- Clinico dropdown -->
         <li class="relative self-stretch flex items-center">
           <a class="flex items-center gap-[0.35rem] cursor-pointer h-full px-[0.85rem] select-none text-sm font-medium transition-colors duration-[180ms] rounded-md hover:bg-white/15 hover:text-white"
-            [ngClass]="(activeMenu==='clinico' || isSection(['/patients','/appointments','/reports','/services'])) ? 'bg-white/15 text-white' : 'text-white/[.82]'"
+            [ngClass]="(activeMenu==='clinico' || isSection(['/patients','/appointments','/reports','/services','/booking-calendar'])) ? 'bg-white/15 text-white' : 'text-white/[.82]'"
             [class.rounded-b-none]="activeMenu==='clinico'"
             (click)="toggle('clinico', $event)">
             <span class="material-icons text-[1.1rem] leading-none">medical_services</span> Clinico ▾
@@ -27,6 +27,7 @@
               <li class="list-none"><a class="flex items-center gap-2 px-5 py-[0.6rem] whitespace-nowrap text-sm cursor-pointer text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150" (click)="go('/patients')"><span class="material-icons text-[1.1rem]">people</span> Pazienti</a></li>
               <li class="list-none"><a class="flex items-center gap-2 px-5 py-[0.6rem] whitespace-nowrap text-sm cursor-pointer text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150" (click)="go('/appointments')"><span class="material-icons text-[1.1rem]">calendar_today</span> Prenotazioni</a></li>
               <li class="list-none"><a class="flex items-center gap-2 px-5 py-[0.6rem] whitespace-nowrap text-sm cursor-pointer text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150" (click)="go('/reports')"><span class="material-icons text-[1.1rem]">assignment</span> Referti</a></li>
+              <li class="list-none"><a class="flex items-center gap-2 px-5 py-[0.6rem] whitespace-nowrap text-sm cursor-pointer text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150" (click)="go('/booking-calendar')"><span class="material-icons text-[1.1rem]">calendar_view_month</span> Calendario prenotazioni</a></li>
             </ul>
           }
         </li>
@@ -148,7 +149,7 @@
         <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/patients')"><span class="material-icons text-[1.1rem]">people</span> Pazienti</button>
         <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/appointments')"><span class="material-icons text-[1.1rem]">calendar_today</span> Prenotazioni</button>
         <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/reports')"><span class="material-icons text-[1.1rem]">assignment</span> Referti</button>
-        <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/services')"><span class="material-icons text-[1.1rem]">list_alt</span> Elenco Prestazioni</button>
+        <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/booking-calendar')"><span class="material-icons text-[1.1rem]">calendar_view_month</span> Calendario prenotazioni</button>
         <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/clients')"><span class="material-icons text-[1.1rem]">group</span> Clienti</button>
         <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/nutrition')"><span class="material-icons text-[1.1rem]">restaurant_menu</span> Piani Dieta</button>
         <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/recipes')"><span class="material-icons text-[1.1rem]">menu_book</span> Ricette</button>

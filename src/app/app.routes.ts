@@ -81,6 +81,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/glycemia/glycemia.component').then(m => m.GlycemiaComponent),
     canActivate: [adminGuard]
   },
+  {
+    path: 'booking-calendar',
+    loadComponent: () => import('./pages/booking-calendar/booking-calendar.component').then(m => m.BookingCalendarComponent),
+    canActivate: [adminGuard]
+  },
 
   { path: '**', redirectTo: 'dashboard' }
 ];
