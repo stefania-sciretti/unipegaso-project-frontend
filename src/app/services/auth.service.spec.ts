@@ -344,7 +344,7 @@ describe('AuthService', () => {
     });
   });
 
-
+  describe('initialisation from localStorage', () => {
     it('should restore user from localStorage on construction', () => {
       const stored: AuthUser = { id: 1, username: 'testuser', role: 'user', displayName: 'Test User' };
       localStorage.setItem('apice_auth_user', JSON.stringify(stored));
