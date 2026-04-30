@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { PatientService } from './patient.service';
-import { Patient } from '../models/models';
+import { PatientService, Patient } from './patient.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PatientService', () => {
@@ -18,9 +17,8 @@ describe('PatientService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [],
-    providers: [PatientService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+      providers: [PatientService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    });
     service = TestBed.inject(PatientService);
     httpMock = TestBed.inject(HttpTestingController);
   });
@@ -41,8 +39,18 @@ describe('PatientService', () => {
     req.flush(mockPatients);
   });
 
-  it('getAll() with search should include query param', () => {
-    service.getAll('John').subscribe();
+  it('getById(1) should call GET /api/patients/1', () => {
+    service.getById(1).subscribe(p => {
+      expect(p).toEqual(mockPatients[0]);
+      expect(p.firstName).toBe('John');
+    });
+    const req = httpMock.expectOne('/api/patients/1');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockPatients[0]);
+  });
+
+  it('search() with query should include query param', () => {
+    service.search('John').subscribe();
     const req = httpMock.expectOne(r => r.url === '/api/patients' && r.params.has('search'));
     expect(req.request.params.get('search')).toBe('John');
     req.flush([]);

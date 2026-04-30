@@ -65,7 +65,7 @@
           "builder": "@angular/build:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.spec.json",
             "assets": ["src/favicon.ico"],
             "styles": [

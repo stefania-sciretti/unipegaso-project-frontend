@@ -1,7 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export type UserRole = 'admin' | 'user';
@@ -68,7 +68,7 @@ export class AuthService {
     };
     return this.http.post<LoginResponse>(`${API_URL}/login`, request).pipe(
       map(response => {
-        if (response && response.accessToken) {
+        if (response?.accessToken) {
           localStorage.setItem(TOKEN_STORAGE_KEY, response.accessToken);
           const role: UserRole = response.role === 'ROLE_ADMIN' ? 'admin' : 'user';
           const user: AuthUser = {
@@ -99,7 +99,7 @@ export class AuthService {
 
   validateToken(): Observable<any> {
     const token = this.getToken();
-    if (!token) throw new Error('No token found');
+    if (!token) return throwError(() => new Error('No token found'));
     return this.http.get(`${API_URL}/validate`, {
       headers: { Authorization: `Bearer ${token}` }
     });
