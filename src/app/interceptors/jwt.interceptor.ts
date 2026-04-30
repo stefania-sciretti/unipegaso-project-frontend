@@ -16,9 +16,10 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
+      if (error.status === 401 && auth.getToken() !== null) {
         auth.logout();
-        router.navigate(['/login']).catch(err => console.error('Navigation error to /login', err));
+        auth.openLoginModal();
+        router.navigate(['/dashboard']).catch(err => console.error('Navigation error to /dashboard', err));
       }
       return throwError(() => error);
     })

@@ -17,7 +17,9 @@ interface BookingEvent {
 
 @Component({
   selector: 'app-booking-calendar',
+  standalone: true,
   imports: [DatePipe, NgClass],
+  providers: [DatePipe],
   templateUrl: './booking-calendar.component.html'
 })
 export class BookingCalendarComponent implements OnInit {
@@ -32,6 +34,8 @@ export class BookingCalendarComponent implements OnInit {
   loading = true;
   loadError = false;
   selectedEvent: BookingEvent | null = null;
+  fitnessError = false;
+  clinicalError = false;
 
   private readonly statusLabels: Record<string, string> = {
     BOOKED: 'Prenotato', CONFIRMED: 'Confermato',
@@ -49,10 +53,26 @@ export class BookingCalendarComponent implements OnInit {
   load(): void {
     this.loading = true;
     this.loadError = false;
+    this.fitnessError = false;
+    this.clinicalError = false;
+
+    const fitness$ = this.appointmentSvc.getAll().pipe(
+      catchError(() => {
+        this.fitnessError = true;
+        return of([]);
+      })
+    );
+
+    const clinical$ = this.clinicalSvc.getAll().pipe(
+      catchError(() => {
+        this.clinicalError = true;
+        return of([]);
+      })
+    );
 
     forkJoin({
-      fitness:  this.appointmentSvc.getAll().pipe(catchError(() => { this.loadError = true; return of([]); })),
-      clinical: this.clinicalSvc.getAll().pipe(catchError(() => { this.loadError = true; return of([]); }))
+      fitness: fitness$,
+      clinical: clinical$
     }).subscribe({
       next: ({ fitness, clinical }) => {
         const fitnessEvents: BookingEvent[] = fitness.map(a => ({
@@ -79,6 +99,9 @@ export class BookingCalendarComponent implements OnInit {
 
         this.events = [...fitnessEvents, ...clinicalEvents]
           .sort((a, b) => a.start.getTime() - b.start.getTime());
+        
+        // Only set loadError if BOTH APIs failed
+        this.loadError = this.fitnessError && this.clinicalError;
         this.loading = false;
       },
       error: () => {
@@ -141,11 +164,10 @@ export class BookingCalendarComponent implements OnInit {
   }
 
   isWeekDayToday(date: Date): boolean {
-    const now = new Date();
     return (
-      date.getFullYear() === now.getFullYear() &&
-      date.getMonth()    === now.getMonth()    &&
-      date.getDate()     === now.getDate()
+      date.getFullYear() === this.today.getFullYear() &&
+      date.getMonth()    === this.today.getMonth()    &&
+      date.getDate()     === this.today.getDate()
     );
   }
 
