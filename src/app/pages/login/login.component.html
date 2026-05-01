@@ -19,11 +19,11 @@
     <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4">
 
       <div class="flex flex-col gap-1">
-        <label class="text-[0.85rem] font-semibold text-[#112D4E]">Username</label>
+        <label for="loginUsername" class="text-[0.85rem] font-semibold text-[#112D4E]">Username</label>
         <div class="flex items-center border-[1.5px] rounded-lg overflow-hidden focus-within:border-[#3F72AF]"
           [ngClass]="isInvalid('username') ? 'border-[#d95550]' : 'border-[#DBE2EF]'">
           <span class="material-icons text-[#3F72AF] px-3 text-[1.2rem]">person</span>
-          <input formControlName="username" type="text" placeholder="es. mario.rossi" autocomplete="username"
+          <input id="loginUsername" formControlName="username" type="text" placeholder="es. mario.rossi" autocomplete="username"
             class="flex-1 py-[0.6rem] pr-3 outline-none text-[0.9rem] text-[#112D4E] bg-transparent"/>
         </div>
         @if (isInvalid('username')) {
@@ -33,11 +33,11 @@
 
       @if (isRegistering) {
         <div class="flex flex-col gap-1">
-          <label class="text-[0.85rem] font-semibold text-[#112D4E]">Nome Completo</label>
+          <label for="loginDisplayName" class="text-[0.85rem] font-semibold text-[#112D4E]">Nome Completo</label>
           <div class="flex items-center border-[1.5px] rounded-lg overflow-hidden focus-within:border-[#3F72AF]"
             [ngClass]="isInvalid('displayName') ? 'border-[#d95550]' : 'border-[#DBE2EF]'">
             <span class="material-icons text-[#3F72AF] px-3 text-[1.2rem]">badge</span>
-            <input formControlName="displayName" type="text" placeholder="es. Mario Rossi" autocomplete="off"
+            <input id="loginDisplayName" formControlName="displayName" type="text" placeholder="es. Mario Rossi" autocomplete="off"
               class="flex-1 py-[0.6rem] pr-3 outline-none text-[0.9rem] text-[#112D4E] bg-transparent"/>
           </div>
           @if (isInvalid('displayName')) {
@@ -47,11 +47,11 @@
       }
 
       <div class="flex flex-col gap-1">
-        <label class="text-[0.85rem] font-semibold text-[#112D4E]">Password</label>
+        <label for="loginPassword" class="text-[0.85rem] font-semibold text-[#112D4E]">Password</label>
         <div class="flex items-center border-[1.5px] rounded-lg overflow-hidden focus-within:border-[#3F72AF]"
           [ngClass]="isInvalid('password') ? 'border-[#d95550]' : 'border-[#DBE2EF]'">
           <span class="material-icons text-[#3F72AF] px-3 text-[1.2rem]">lock</span>
-          <input formControlName="password" type="password" placeholder="••••••••"
+          <input id="loginPassword" formControlName="password" type="password" placeholder="••••••••"
             [attr.autocomplete]="isRegistering ? 'new-password' : 'current-password'"
             class="flex-1 py-[0.6rem] pr-3 outline-none text-[0.9rem] text-[#112D4E] bg-transparent"/>
         </div>
@@ -81,7 +81,7 @@
         <div class="flex items-center gap-3 p-3 rounded-xl bg-[#f8f9fb] border border-[#DBE2EF]">
           <span class="material-icons text-[#3F72AF]">badge</span>
           <div>
-            <strong class="text-[0.85rem] text-[#112D4E] block">Medici / Staff</strong>
+            <strong class="text-[0.85rem] text-[#112D4E] block">Medici / Specialisti</strong>
             <p class="text-[0.78rem] text-[#3F72AF] m-0">Accesso completo alla gestione clinica</p>
           </div>
         </div>

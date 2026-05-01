@@ -1,40 +1,40 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DatePipe, NgClass } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { TrainingPlanService } from '../../services/training-plan.service';
-import { ClientService } from '../../services/client.service';
-import { StaffService } from '../../services/trainer.service';
+import { PatientService } from '../../services/patient.service';
+import { SpecialistService } from '../../services/specialist.service';
 import { AlertService } from '../../services/alert.service';
-import { Client, TrainingPlan, TrainingPlanRequest } from '../../models/models';
+import { Patient, TrainingPlan, TrainingPlanRequest } from '../../models/models';
 
 @Component({
   selector: 'app-training',
   imports: [FormsModule, ReactiveFormsModule, DatePipe, NgClass],
   templateUrl: './training.component.html'
 })
-export class TrainingComponent {
+export class TrainingComponent implements OnInit {
   private readonly trainingPlanService = inject(TrainingPlanService);
-  private readonly clientService       = inject(ClientService);
-  private readonly trainerService      = inject(StaffService);
+  private readonly patientService      = inject(PatientService);
+  private readonly specialistService   = inject(SpecialistService);
   private readonly alertSvc            = inject(AlertService);
   private readonly fb                  = inject(FormBuilder);
 
   protected readonly alertSignal = this.alertSvc.alert;
 
   plans: TrainingPlan[] = [];
-  clients: Client[] = [];
+  patients: Patient[] = [];
   personalTrainerId = 0;
   loading        = false;
   showModal      = false;
   showDetail     = false;
   editingId: number | null      = null;
   selected: TrainingPlan | null = null;
-  filterActive   = '';
-  filterClientId = '';
+  filterActive    = '';
+  filterPatientId = '';
 
   readonly form: FormGroup = this.fb.group({
-    clientId:        [null, Validators.required],
+    patientId:       [null, Validators.required],
     title:           ['',   Validators.required],
     description:     [''],
     weeks:           [null],
@@ -42,15 +42,17 @@ export class TrainingComponent {
     active:          [true]
   });
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit(): void {
     forkJoin({
-      plans:    this.trainingPlanService.getAll(),
-      clients:  this.clientService.getAll(),
-      trainers: this.trainerService.getAll('PERSONAL_TRAINER')
-    }).subscribe(({ plans, clients, trainers }) => {
+      plans:       this.trainingPlanService.getAll(),
+      patients:    this.patientService.getAll(),
+      specialists: this.specialistService.getAll('PERSONAL_TRAINER')
+    }).subscribe(({ plans, patients, specialists }) => {
       this.plans             = plans;
-      this.clients           = clients;
-      this.personalTrainerId = trainers[0]?.id ?? 2;
+      this.patients          = patients;
+      this.personalTrainerId = specialists[0]?.id ?? 2;
     });
   }
 
@@ -58,7 +60,7 @@ export class TrainingComponent {
     let list = this.plans;
     if (this.filterActive === 'true')  list = list.filter(p => p.active);
     if (this.filterActive === 'false') list = list.filter(p => !p.active);
-    if (this.filterClientId) list = list.filter(p => p.clientId === +this.filterClientId);
+    if (this.filterPatientId) list = list.filter(p => p.patientId === +this.filterPatientId);
     return list;
   }
 
@@ -81,7 +83,7 @@ export class TrainingComponent {
   openEdit(plan: TrainingPlan): void {
     this.editingId = plan.id;
     this.form.patchValue({
-      clientId:        plan.clientId,
+      patientId:       plan.patientId,
       title:           plan.title,
       description:     plan.description ?? '',
       weeks:           plan.weeks,
@@ -95,8 +97,8 @@ export class TrainingComponent {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     const value = this.form.value;
     const body: TrainingPlanRequest = {
-      clientId:        +value.clientId,
-      trainerId:       this.personalTrainerId,
+      patientId:       +value.patientId,
+      specialistId:    this.personalTrainerId,
       title:           value.title,
       description:     value.description || null,
       weeks:           value.weeks || null,

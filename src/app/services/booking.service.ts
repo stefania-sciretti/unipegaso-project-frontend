@@ -2,8 +2,8 @@ import { Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 
 export interface PendingBooking {
-  clientId?: number;
-  trainerId: number;
+  patientId?: number;
+  specialistId: number;
   scheduledAt: string;
   serviceType: string;
   visitType?: string;

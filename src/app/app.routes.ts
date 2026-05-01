@@ -33,25 +33,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/faq/faq.component').then(m => m.FaqComponent)
   },
   {
-    path: 'staff/simona',
-    loadComponent: () => import('./pages/staff/simona/simona.component').then(m => m.SimonaComponent)
+    path: 'specialist/:slug',
+    loadComponent: () => import('./pages/specialist/specialist-detail/specialist-detail.component').then(m => m.SpecialistDetailComponent)
   },
-  {
-    path: 'staff/luca',
-    loadComponent: () => import('./pages/staff/luca/luca.component').then(m => m.LucaComponent)
-  },
-  {
-    path: 'staff/sandro',
-    loadComponent: () => import('./pages/staff/sandro/sandro.component').then(m => m.SandroComponent)
-  },
-  {
-    path: 'staff/mihai',
-    loadComponent: () => import('./pages/staff/mihai/mihai.component').then(m => m.MihaiComponent)
-  },
-  {
-    path: 'staff/cristiana',
-    loadComponent: () => import('./pages/staff/cristiana/cristiana.component').then(m => m.CristianaComponent)
-  },
+  { path: 'staff/:slug', redirectTo: '/specialist/:slug' },
 
   // ── Richiede login (admin o user) ─────────────────────────────────────
   {
@@ -71,11 +56,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/patients/patients.component').then(m => m.PatientsComponent),
     canActivate: [adminGuard]
   },
-  {
-    path: 'clients',
-    loadComponent: () => import('./pages/clients/clients.component').then(m => m.ClientsComponent),
-    canActivate: [adminGuard]
-  },
+  { path: 'clients', redirectTo: '/patients', pathMatch: 'full' },
   {
     path: 'glycemia',
     loadComponent: () => import('./pages/glycemia/glycemia.component').then(m => m.GlycemiaComponent),

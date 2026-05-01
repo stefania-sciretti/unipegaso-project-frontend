@@ -5,7 +5,7 @@ describe('BookingService', () => {
   let service: BookingService;
 
   const booking: PendingBooking = {
-    trainerId: 5,
+    specialistId: 5,
     scheduledAt: '2024-01-15T10:00:00',
     serviceType: 'personal-training',
     appointmentType: 'fitness'

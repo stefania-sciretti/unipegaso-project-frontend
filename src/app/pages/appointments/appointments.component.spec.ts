@@ -3,8 +3,8 @@ import {of} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AppointmentsComponent} from './appointments.component';
 import {AppointmentService} from '../../services/appointment.service';
-import {ClientService} from '../../services/client.service';
-import {StaffService} from '../../services/trainer.service';
+import {PatientService} from '../../services/patient.service';
+import {SpecialistService} from '../../services/specialist.service';
 import {AlertService} from '../../services/alert.service';
 
 describe('AppointmentsComponent', () => {
@@ -13,25 +13,25 @@ describe('AppointmentsComponent', () => {
 
   const mockAppointmentService = jasmine.createSpyObj('AppointmentService',
     ['getAll', 'create', 'updateStatus', 'delete']);
-  const mockClientService  = jasmine.createSpyObj('ClientService', ['getAll']);
-  const mockTrainerService = jasmine.createSpyObj('StaffService', ['getAll']);
+  const mockPatientService    = jasmine.createSpyObj('PatientService', ['getAll']);
+  const mockSpecialistService = jasmine.createSpyObj('SpecialistService', ['getAll']);
   const mockAlertService   = jasmine.createSpyObj('AlertService', ['show'], { alert: () => null });
 
   beforeEach(async () => {
     mockAppointmentService.getAll.calls.reset();
-    mockClientService.getAll.calls.reset();
-    mockTrainerService.getAll.calls.reset();
+    mockPatientService.getAll.calls.reset();
+    mockSpecialistService.getAll.calls.reset();
 
     mockAppointmentService.getAll.and.returnValue(of([]));
-    mockClientService.getAll.and.returnValue(of([]));
-    mockTrainerService.getAll.and.returnValue(of([]));
+    mockPatientService.getAll.and.returnValue(of([]));
+    mockSpecialistService.getAll.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [AppointmentsComponent],
       providers: [
         { provide: AppointmentService, useValue: mockAppointmentService },
-        { provide: ClientService,      useValue: mockClientService },
-        { provide: StaffService,       useValue: mockTrainerService },
+        { provide: PatientService,    useValue: mockPatientService },
+        { provide: SpecialistService, useValue: mockSpecialistService },
         { provide: AlertService,       useValue: mockAlertService },
         { provide: ActivatedRoute,     useValue: { queryParams: of({}) } },
         { provide: Router,             useValue: { navigate: jasmine.createSpy('navigate') } }
@@ -49,9 +49,9 @@ describe('AppointmentsComponent', () => {
     expect(mockAppointmentService.getAll).toHaveBeenCalled();
   });
 
-  it('should load clients and trainers on init', () => {
-    expect(mockClientService.getAll).toHaveBeenCalled();
-    expect(mockTrainerService.getAll).toHaveBeenCalled();
+  it('should load patients and specialists on init', () => {
+    expect(mockPatientService.getAll).toHaveBeenCalled();
+    expect(mockSpecialistService.getAll).toHaveBeenCalled();
   });
 
   it('appointments array starts empty', () => {

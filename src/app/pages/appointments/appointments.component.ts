@@ -1,45 +1,39 @@
-import { Component, ElementRef, HostListener, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DatePipe, NgClass } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { AppointmentService } from '../../services/appointment.service';
-import { ClientService } from '../../services/client.service';
-import { StaffService } from '../../services/trainer.service';
+import { PatientService } from '../../services/patient.service';
+import { SpecialistService } from '../../services/specialist.service';
 import { AlertService } from '../../services/alert.service';
-import { AppointmentStatus, Client, FitnessAppointment, FitnessAppointmentRequest, Staff } from '../../models/models';
+import { AppointmentStatus, Patient, FitnessAppointment, FitnessAppointmentRequest, Specialist } from '../../models/models';
 
 @Component({
   selector: 'app-appointments',
-  imports: [ReactiveFormsModule, FormsModule, DatePipe, NgClass, MatIconModule],
+  imports: [ReactiveFormsModule, DatePipe, NgClass, MatIconModule],
   templateUrl: './appointments.component.html'
 })
-export class AppointmentsComponent {
+export class AppointmentsComponent implements OnInit {
   private readonly appointmentService = inject(AppointmentService);
-  private readonly clientService      = inject(ClientService);
-  private readonly trainerService     = inject(StaffService);
+  private readonly patientService     = inject(PatientService);
+  private readonly specialistService  = inject(SpecialistService);
   private readonly alertSvc           = inject(AlertService);
   private readonly fb                 = inject(FormBuilder);
   private readonly route              = inject(ActivatedRoute);
   private readonly router             = inject(Router);
-  private readonly el                 = inject(ElementRef);
 
   protected readonly alertSignal = this.alertSvc.alert;
 
   appointments: FitnessAppointment[] = [];
-  clients: Client[]  = [];
-  trainers: Staff[]  = [];
+  patients: Patient[]    = [];
+  specialists: Specialist[] = [];
   loading            = false;
   filterStatus       = '';
   showApptModal      = false;
   showStatusModal    = false;
   statusEditingId: number | null = null;
-
-  clientDropdownOpen     = false;
-  clientSearch           = '';
-  selectedClientLabel    = '';
-  selectedSpecialistLabel = '';
 
   readonly statuses: AppointmentStatus[] = ['BOOKED', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
 
@@ -49,44 +43,24 @@ export class AppointmentsComponent {
   };
 
   readonly apptForm: FormGroup   = this.fb.group({
-    clientId:    [null, Validators.required],
-    trainerId:   ['',   Validators.required],
+    patientId:   [null, Validators.required],
+    specialistId: ['',  Validators.required],
     scheduledAt: ['',   Validators.required],
     serviceType: ['',   Validators.required],
     notes:       ['']
   });
   readonly statusForm: FormGroup = this.fb.group({ status: ['', Validators.required] });
 
-  get filteredClients(): Client[] {
-    const q = this.clientSearch.toLowerCase();
-    return this.clients.filter(c => `${c.firstName} ${c.lastName}`.toLowerCase().includes(q));
-  }
+  constructor() {}
 
-  constructor() {
+  ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.filterStatus = params['status'] ?? '';
       this.load();
     });
-    forkJoin({ clients: this.clientService.getAll(), trainers: this.trainerService.getAll() })
-      .subscribe(({ clients, trainers }) => { this.clients = clients; this.trainers = trainers; });
+    forkJoin({ patients: this.patientService.getAll(), specialists: this.specialistService.getAll() })
+      .subscribe(({ patients, specialists }) => { this.patients = patients; this.specialists = specialists; });
   }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    if (this.clientDropdownOpen && !this.el.nativeElement.querySelector('.custom-dropdown')?.contains(event.target)) {
-      this.clientDropdownOpen = false;
-      this.clientSearch = '';
-    }
-  }
-
-  selectClient(c: Client): void {
-    this.apptForm.patchValue({ clientId: c.id });
-    this.selectedClientLabel = `${c.firstName} ${c.lastName}`;
-    this.clientDropdownOpen  = false;
-    this.clientSearch        = '';
-  }
-
-  openClientDropdown(): void { this.clientDropdownOpen = true; this.clientSearch = ''; }
 
   load(): void {
     this.loading = true;
@@ -108,9 +82,7 @@ export class AppointmentsComponent {
 
   openCreate(): void {
     this.apptForm.reset();
-    this.selectedClientLabel = '';
-    this.clientDropdownOpen  = false;
-    this.showApptModal       = true;
+    this.showApptModal = true;
   }
 
   saveAppointment(): void {
@@ -118,8 +90,8 @@ export class AppointmentsComponent {
     const value = this.apptForm.value;
     const scheduledAt = value.scheduledAt?.length === 16 ? value.scheduledAt + ':00' : value.scheduledAt;
     const body: FitnessAppointmentRequest = {
-      clientId:    +value.clientId,
-      trainerId:   +value.trainerId,
+      patientId:    +value.patientId,
+      specialistId: +value.specialistId,
       scheduledAt,
       serviceType: value.serviceType,
       notes:       value.notes || null
@@ -156,7 +128,7 @@ export class AppointmentsComponent {
   private readonly roleLabels: Record<string, string> = {
     NUTRITIONIST:        'Biologa Nutrizionista',
     PERSONAL_TRAINER:    'Personal Trainer',
-    SPORTS_DOCTOR:       'Medico dello Sport',
+    SPORT_DOCTOR:        'Medico dello Sport',
     OSTEOPATH:           'Osteopata',
     SPORTS_NUTRITIONIST: 'Nutrizionista Sportiva'
   };

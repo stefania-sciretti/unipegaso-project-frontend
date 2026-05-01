@@ -1,17 +1,18 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { BookingService } from '../../services/booking.service';
+import { BookingService, PendingBooking } from '../../services/booking.service';
 import { AppointmentService } from '../../services/appointment.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule, NgClass],
   templateUrl: './login.component.html'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private readonly fb             = inject(FormBuilder);
   private readonly auth           = inject(AuthService);
   private readonly router         = inject(Router);
@@ -25,10 +26,12 @@ export class LoginComponent {
   readonly form: FormGroup = this.fb.group({
     username:    ['', Validators.required],
     password:    ['', Validators.required],
-    displayName: ['', Validators.required]
+    displayName: ['']   // required only when registering; validator added dynamically
   });
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit(): void {
     if (this.auth.isLoggedIn) {
       this.router.navigate(['/dashboard']);
     }
@@ -38,6 +41,13 @@ export class LoginComponent {
     this.isRegistering = !this.isRegistering;
     this.error = '';
     this.form.reset();
+    const ctrl = this.form.get('displayName')!;
+    if (this.isRegistering) {
+      ctrl.addValidators(Validators.required);
+    } else {
+      ctrl.removeValidators(Validators.required);
+    }
+    ctrl.updateValueAndValidity();
   }
 
   submit(): void {
@@ -90,10 +100,10 @@ export class LoginComponent {
     });
   }
 
-  private completePendingBooking(pending: any): void {
+  private completePendingBooking(pending: PendingBooking): void {
     const bookingRequest = {
-      clientId:    this.auth.currentUser!.id,
-      trainerId:   pending.trainerId,
+      patientId:    this.auth.currentUser!.id,
+      specialistId: pending.specialistId,
       scheduledAt: pending.scheduledAt,
       serviceType: pending.serviceType
     };
@@ -109,8 +119,8 @@ export class LoginComponent {
           this.bookingSvc.clearPendingBooking();
           this.router.navigate(['/dashboard']);
         },
-        error: (err: any) => {
-          alert('Errore nel completamento della prenotazione: ' + (err.error?.message || 'Riprova più tardi'));
+        error: (err: HttpErrorResponse) => {
+          alert('Errore nel completamento della prenotazione: ' + (err.error?.message ?? 'Riprova più tardi'));
           this.router.navigate(['/dashboard']);
         }
       });

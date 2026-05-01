@@ -8,8 +8,8 @@ export class GlycemiaService {
   private readonly base = '/api/glycemia-measurements';
   private readonly http = inject(HttpClient);
 
-  getAll(clientId?: number): Observable<GlycemiaMeasurement[]> {
-    const params = clientId ? new HttpParams().set('clientId', clientId) : undefined;
+  getAll(patientId?: number): Observable<GlycemiaMeasurement[]> {
+    const params = patientId ? new HttpParams().set('patientId', patientId) : undefined;
     return this.http.get<GlycemiaMeasurement[]>(this.base, { params });
   }
 

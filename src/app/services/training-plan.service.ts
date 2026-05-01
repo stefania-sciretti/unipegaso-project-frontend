@@ -8,8 +8,8 @@ export class TrainingPlanService {
   private readonly base = '/api/training-plans';
   private readonly http = inject(HttpClient);
 
-  getAll(clientId?: number): Observable<TrainingPlan[]> {
-    const params = clientId ? new HttpParams().set('clientId', clientId) : undefined;
+  getAll(patientId?: number): Observable<TrainingPlan[]> {
+    const params = patientId ? new HttpParams().set('patientId', patientId) : undefined;
     return this.http.get<TrainingPlan[]>(this.base, { params });
   }
 

@@ -35,10 +35,10 @@
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-[1.1rem] font-bold text-[#112D4E]">Schede di Allenamento</h2>
       <div class="flex items-center gap-3">
-        <select [(ngModel)]="filterClientId" [ngModelOptions]="{standalone:true}"
+        <select [(ngModel)]="filterPatientId" [ngModelOptions]="{standalone:true}"
                 class="px-3 py-2 border-[1.5px] border-[#DBE2EF] rounded-[10px] text-[0.9rem] outline-none transition-[border-color] duration-200 focus:border-[#3F72AF] bg-white">
-          <option value="">Tutti i clienti</option>
-          @for (c of clients; track c) {
+          <option value="">Tutti i pazienti</option>
+          @for (c of patients; track c) {
             <option [value]="c.id">{{ c.firstName }} {{ c.lastName }}</option>
           }
         </select>
@@ -58,7 +58,7 @@
         <table class="w-full border-collapse text-[0.9rem]">
           <thead><tr>
             <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">#</th>
-            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Cliente</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Paziente</th>
             <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Titolo</th>
             <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Durata</th>
             <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Sessioni/Sett.</th>
@@ -72,7 +72,7 @@
             @for (p of filtered; track p) {
               <tr class="hover:[&>td]:bg-[#f0f7ff]">
                 <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ p.id }}</td>
-                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle"><strong>{{ p.clientFullName }}</strong></td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle"><strong>{{ p.patientFullName }}</strong></td>
                 <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">
                   <a class="text-[#112D4E] cursor-pointer font-semibold hover:underline" (click)="openDetail(p)">{{ p.title }}</a>
                 </td>
@@ -109,31 +109,31 @@
                 (click)="showDetail = false">&times;</button>
       </div>
       <div class="flex gap-3 mb-4 flex-wrap">
-        <span class="inline-block bg-[#DBE2EF] text-[#112D4E] px-[0.55rem] py-[0.15rem] rounded-lg text-[0.78rem] font-semibold">{{ selected.clientFullName }}</span>
+        <span class="inline-block bg-[#DBE2EF] text-[#112D4E] px-[0.55rem] py-[0.15rem] rounded-lg text-[0.78rem] font-semibold">{{ selected.patientFullName }}</span>
         <span class="badge" [class.badge-active]="selected.active" [class.badge-inactive]="!selected.active">{{ selected.active ? 'Attiva' : 'Non attiva' }}</span>
       </div>
       @if (selected.description) {
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Descrizione</label>
+          <p class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Descrizione</p>
           <p class="text-[#3F72AF] whitespace-pre-line">{{ selected.description }}</p>
         </div>
       }
       <div class="grid grid-cols-2 gap-4">
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Durata</label>
+          <p class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Durata</p>
           <p>{{ selected.weeks ? selected.weeks + ' settimane' : '–' }}</p>
         </div>
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Sessioni / Settimana</label>
+          <p class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Sessioni / Settimana</p>
           <p>{{ selected.sessionsPerWeek ? selected.sessionsPerWeek + 'x' : '–' }}</p>
         </div>
       </div>
       <div class="mb-4">
-        <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Trainer</label>
-        <p>{{ selected.trainerFullName }}</p>
+        <p class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Specialista</p>
+        <p>{{ selected.specialistFullName }}</p>
       </div>
       <div class="mb-4">
-        <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Creata il</label>
+        <p class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Creata il</p>
         <p>{{ selected.createdAt | date:'dd MMM yyyy' }}</p>
       </div>
       <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-[#DBE2EF]">
@@ -156,40 +156,40 @@
       </div>
       <form [formGroup]="form" (ngSubmit)="save()">
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Cliente *</label>
-          <select formControlName="clientId"
+          <label for="trainingPatientId" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Paziente *</label>
+          <select id="trainingPatientId" formControlName="patientId"
                   class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] bg-white">
-            <option value="">– Seleziona cliente –</option>
-            @for (c of clients; track c) {
+            <option value="">– Seleziona paziente –</option>
+            @for (c of patients; track c) {
               <option [value]="c.id">{{ c.firstName }} {{ c.lastName }}</option>
             }
           </select>
-          @if (isInvalid('clientId')) {
+          @if (isInvalid('patientId')) {
             <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
           }
         </div>
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Titolo Scheda *</label>
-          <input formControlName="title" type="text" placeholder="es. Full Body Forza – Fase 1"
+          <label for="trainingTitle" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Titolo Scheda *</label>
+          <input id="trainingTitle" formControlName="title" type="text" placeholder="es. Full Body Forza – Fase 1"
                  class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
           @if (isInvalid('title')) {
             <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
           }
         </div>
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Descrizione / Esercizi</label>
-          <textarea formControlName="description" placeholder="Descrivi esercizi, serie, ripetizioni…"
+          <label for="trainingDescription" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Descrizione / Esercizi</label>
+          <textarea id="trainingDescription" formControlName="description" placeholder="Descrivi esercizi, serie, ripetizioni…"
                     class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] resize-vertical min-h-[110px]"></textarea>
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div class="mb-4">
-            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Durata (settimane)</label>
-            <input formControlName="weeks" type="number" placeholder="8"
+            <label for="trainingWeeks" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Durata (settimane)</label>
+            <input id="trainingWeeks" formControlName="weeks" type="number" placeholder="8"
                    class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
           </div>
           <div class="mb-4">
-            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Sessioni / Settimana</label>
-            <input formControlName="sessionsPerWeek" type="number" placeholder="3"
+            <label for="trainingSessions" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Sessioni / Settimana</label>
+            <input id="trainingSessions" formControlName="sessionsPerWeek" type="number" placeholder="3"
                    class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
           </div>
         </div>

@@ -33,9 +33,8 @@
         @if (recipes.length === 0) {
           <div class="col-span-full text-[#3F72AF] text-center py-10 text-[0.95rem]">Nessuna ricetta trovata.</div>
         }
-        @for (r of recipes; track r) {
-          <div class="bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 border-l-4 border-[#DBE2EF] transition-[transform,box-shadow] duration-150 cursor-pointer hover:-translate-y-[3px] hover:shadow-[0_6px_18px_rgba(53,88,114,0.13)]"
-               (click)="openDetail(r)">
+        @for (r of recipes; track r.id) {
+          <div class="relative bg-white rounded-[10px] shadow-[0_2px_14px_rgba(17,45,78,0.10)] p-6 border-l-4 border-[#DBE2EF] transition-[transform,box-shadow] duration-150 hover:-translate-y-[3px] hover:shadow-[0_6px_18px_rgba(53,88,114,0.13)]">
             <div class="text-[0.75rem] font-bold uppercase tracking-[0.5px] text-[#3F72AF] mb-2">{{ r.category ?? 'Generale' }}</div>
             <div class="text-[1.1rem] font-bold text-[#112D4E] mb-[0.4rem]">{{ r.title }}</div>
             <div class="text-[0.875rem] text-[#3F72AF] mb-3 leading-[1.5]">{{ r.description }}</div>
@@ -44,12 +43,15 @@
                 <span>🔥 {{ r.calories }} kcal</span>
               }
             </div>
-            <div class="flex gap-2 mt-4" (click)="$event.stopPropagation()">
+            <div class="relative z-10 flex gap-2 mt-4">
               <button class="px-[0.7rem] py-[0.3rem] border-0 rounded-[10px] text-[0.8rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#3F72AF] text-white hover:bg-[#5e96be]"
                       (click)="openEdit(r)">Modifica</button>
               <button class="px-[0.7rem] py-[0.3rem] border-0 rounded-[10px] text-[0.8rem] cursor-pointer font-semibold transition-colors duration-[180ms] bg-[#d95550] text-white hover:bg-[#b84140]"
                       (click)="delete(r.id)">Elimina</button>
             </div>
+            <button class="absolute inset-0 z-0 rounded-[10px] cursor-pointer focus:outline-2 focus:outline-offset-2 focus:outline-[#3F72AF]"
+                    [attr.aria-label]="'Apri dettaglio: ' + r.title"
+                    (click)="openDetail(r)"></button>
           </div>
         }
       </div>
@@ -75,19 +77,19 @@
       }
       @if (selected.description) {
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Descrizione</label>
+          <p class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Descrizione</p>
           <p class="text-[#3F72AF]">{{ selected.description }}</p>
         </div>
       }
       @if (selected.ingredients) {
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Ingredienti</label>
+          <p class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Ingredienti</p>
           <p class="whitespace-pre-line">{{ selected.ingredients }}</p>
         </div>
       }
       @if (selected.instructions) {
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Preparazione</label>
+          <p class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Preparazione</p>
           <p class="whitespace-pre-line">{{ selected.instructions }}</p>
         </div>
       }
@@ -109,8 +111,8 @@
       </div>
       <form [formGroup]="form" (ngSubmit)="save()">
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Titolo *</label>
-          <input formControlName="title" type="text" placeholder="es. Smoothie Proteico Verde"
+          <label for="recipeTitle" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Titolo *</label>
+          <input id="recipeTitle" formControlName="title" type="text" placeholder="es. Smoothie Proteico Verde"
                  class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
           @if (isInvalid('title')) {
             <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
@@ -118,8 +120,8 @@
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div class="mb-4">
-            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Categoria</label>
-            <select formControlName="category"
+            <label for="recipeCategory" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Categoria</label>
+            <select id="recipeCategory" formControlName="category"
                     class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] bg-white">
               <option value="">– Nessuna –</option>
               @for (cat of categories; track cat) {
@@ -128,24 +130,24 @@
             </select>
           </div>
           <div class="mb-4">
-            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Calorie (kcal)</label>
-            <input formControlName="calories" type="number" placeholder="320"
+            <label for="recipeCalories" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Calorie (kcal)</label>
+            <input id="recipeCalories" formControlName="calories" type="number" placeholder="320"
                    class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
           </div>
         </div>
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Descrizione breve</label>
-          <input formControlName="description" type="text" placeholder="Breve descrizione…"
+          <label for="recipeDescription" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Descrizione breve</label>
+          <input id="recipeDescription" formControlName="description" type="text" placeholder="Breve descrizione…"
                  class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
         </div>
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Ingredienti</label>
-          <textarea formControlName="ingredients" placeholder="Elenca gli ingredienti, uno per riga…"
+          <label for="recipeIngredients" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Ingredienti</label>
+          <textarea id="recipeIngredients" formControlName="ingredients" placeholder="Elenca gli ingredienti, uno per riga…"
                     class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] resize-vertical min-h-[100px]"></textarea>
         </div>
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Preparazione</label>
-          <textarea formControlName="instructions" placeholder="Preparazione passo dopo passo…"
+          <label for="recipeInstructions" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Preparazione</label>
+          <textarea id="recipeInstructions" formControlName="instructions" placeholder="Preparazione passo dopo passo…"
                     class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] resize-vertical min-h-[100px]"></textarea>
         </div>
         <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-[#DBE2EF]">
