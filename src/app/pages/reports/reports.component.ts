@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DatePipe, NgClass, SlicePipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { of } from 'rxjs';
@@ -70,7 +70,7 @@ const MOCK_REPORTS: Report[] = [
   imports: [ReactiveFormsModule, DatePipe, NgClass, SlicePipe],
   templateUrl: './reports.component.html'
 })
-export class ReportsComponent {
+export class ReportsComponent implements OnInit {
   private readonly reportService              = inject(ReportService);
   private readonly clinicalAppointmentService = inject(ClinicalAppointmentService);
   private readonly alertSvc                   = inject(AlertService);
@@ -93,7 +93,9 @@ export class ReportsComponent {
     doctorNotes:   ['']
   });
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit(): void {
     this.load();
   }
 

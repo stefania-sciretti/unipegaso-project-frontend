@@ -35,14 +35,13 @@
         <!-- Nutrizione dropdown -->
         <li class="relative self-stretch flex items-center">
           <a class="flex items-center gap-[0.35rem] cursor-pointer h-full px-[0.85rem] select-none text-sm font-medium transition-colors duration-[180ms] rounded-md hover:bg-white/15 hover:text-white"
-            [ngClass]="(activeMenu==='nutrizione' || isSection(['/clients','/nutrition','/recipes','/glycemia'])) ? 'bg-white/15 text-white' : 'text-white/[.82]'"
+            [ngClass]="(activeMenu==='nutrizione' || isSection(['/nutrition','/recipes','/glycemia'])) ? 'bg-white/15 text-white' : 'text-white/[.82]'"
             [class.rounded-b-none]="activeMenu==='nutrizione'"
             (click)="toggle('nutrizione', $event)">
             <span class="material-icons text-[1.1rem] leading-none">restaurant_menu</span> Nutrizione ▾
           </a>
           @if (activeMenu === 'nutrizione') {
             <ul class="absolute top-full left-0 bg-[#112D4E] rounded-[0_8px_8px_8px] shadow-[0_8px_24px_rgba(0,0,0,0.30)] min-w-[210px] list-none py-[0.35rem] z-[10000] border border-white/[.12] border-t-0 p-0">
-              <li class="list-none"><a class="flex items-center gap-2 px-5 py-[0.6rem] whitespace-nowrap text-sm cursor-pointer text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150" (click)="go('/clients')"><span class="material-icons text-[1.1rem]">group</span> Clienti</a></li>
               <li class="list-none"><a class="flex items-center gap-2 px-5 py-[0.6rem] whitespace-nowrap text-sm cursor-pointer text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150" (click)="go('/nutrition')"><span class="material-icons text-[1.1rem]">restaurant_menu</span> Piani Dieta</a></li>
               <li class="list-none"><a class="flex items-center gap-2 px-5 py-[0.6rem] whitespace-nowrap text-sm cursor-pointer text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150" (click)="go('/recipes')"><span class="material-icons text-[1.1rem]">menu_book</span> Ricette</a></li>
               <li class="list-none"><a class="flex items-center gap-2 px-5 py-[0.6rem] whitespace-nowrap text-sm cursor-pointer text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150" (click)="go('/glycemia')"><span class="material-icons text-[1.1rem]">colorize</span> Glicemia</a></li>
@@ -90,7 +89,7 @@
       <!-- ── Specialisti (tutti) ────────────────────────────────── -->
       <li class="flex items-center">
         <a class="flex items-center gap-[0.35rem] px-[0.85rem] py-[0.4rem] rounded-md text-sm font-medium cursor-pointer transition-colors duration-150 hover:bg-white/15 hover:text-white"
-          [ngClass]="isSection(['/doctors','/staff']) ? 'bg-white/15 text-white' : 'text-white/[.82]'"
+          [ngClass]="isSection(['/doctors','/specialist']) ? 'bg-white/15 text-white' : 'text-white/[.82]'"
           (click)="go('/doctors')">
           <span class="material-icons text-[1.1rem] leading-none">badge</span> Specialisti
         </a>
@@ -150,7 +149,6 @@
         <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/appointments')"><span class="material-icons text-[1.1rem]">calendar_today</span> Prenotazioni</button>
         <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/reports')"><span class="material-icons text-[1.1rem]">assignment</span> Referti</button>
         <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/booking-calendar')"><span class="material-icons text-[1.1rem]">calendar_view_month</span> Calendario prenotazioni</button>
-        <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/clients')"><span class="material-icons text-[1.1rem]">group</span> Clienti</button>
         <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/nutrition')"><span class="material-icons text-[1.1rem]">restaurant_menu</span> Piani Dieta</button>
         <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/recipes')"><span class="material-icons text-[1.1rem]">menu_book</span> Ricette</button>
         <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/glycemia')"><span class="material-icons text-[1.1rem]">colorize</span> Glicemia</button>

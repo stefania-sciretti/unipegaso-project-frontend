@@ -8,8 +8,8 @@ export class DietPlanService {
   private readonly base = '/api/diet-plans';
   private readonly http = inject(HttpClient);
 
-  getAll(clientId?: number): Observable<DietPlan[]> {
-    const params = clientId ? new HttpParams().set('clientId', clientId) : undefined;
+  getAll(patientId?: number): Observable<DietPlan[]> {
+    const params = patientId ? new HttpParams().set('patientId', patientId) : undefined;
     return this.http.get<DietPlan[]>(this.base, { params });
   }
 

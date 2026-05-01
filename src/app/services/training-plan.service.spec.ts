@@ -9,14 +9,14 @@ describe('TrainingPlanService', () => {
   let httpMock: HttpTestingController;
 
   const mockPlan: TrainingPlan = {
-    id: 1, clientId: 1, clientFullName: 'Anna Rossi',
-    trainerId: 2, trainerFullName: 'Luca Siretta',
+    id: 1, patientId: 1, patientFullName: 'Anna Rossi',
+    specialistId: 2, specialistFullName: 'Luca Siretta',
     title: 'Forza 8 settimane', weeks: 8,
     sessionsPerWeek: 3, active: true,
     createdAt: '2024-01-01T00:00:00'
   };
   const mockRequest: TrainingPlanRequest = {
-    clientId: 1, trainerId: 2,
+    patientId: 1, specialistId: 2,
     title: 'Forza 8 settimane', weeks: 8,
     sessionsPerWeek: 3, active: true
   };
@@ -41,10 +41,10 @@ describe('TrainingPlanService', () => {
     req.flush([mockPlan]);
   });
 
-  it('getAll(1) with clientId should include ?clientId=1 query param', () => {
+  it('getAll(1) with patientId should include ?patientId=1 query param', () => {
     service.getAll(1).subscribe();
-    const req = httpMock.expectOne(r => r.params.has('clientId'));
-    expect(req.request.params.get('clientId')).toBe('1');
+    const req = httpMock.expectOne(r => r.params.has('patientId'));
+    expect(req.request.params.get('patientId')).toBe('1');
     expect(req.request.method).toBe('GET');
     req.flush([]);
   });

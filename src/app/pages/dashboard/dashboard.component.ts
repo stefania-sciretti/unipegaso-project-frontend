@@ -1,9 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { AppointmentService } from '../../services/appointment.service';
-import { ClinicalAppointmentService } from '../../services/clinical-appointment.service';
 import { AuthService } from '../../services/auth.service';
 import { BookingService, PendingBooking } from '../../services/booking.service';
 
@@ -30,13 +29,12 @@ interface Doctor {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, NgOptimizedImage, FormsModule],
+  imports: [CommonModule, NgOptimizedImage],
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
   private readonly router              = inject(Router);
   private readonly appointmentSvc     = inject(AppointmentService);
-  private readonly clinicalAppointmentSvc = inject(ClinicalAppointmentService);
   protected readonly auth             = inject(AuthService);
   private readonly bookingSvc         = inject(BookingService);
 
@@ -172,11 +170,16 @@ export class DashboardComponent {
 
   getSelectedDoctor(): Doctor | null {
     if (!this.selectedArea) return null;
-    const key = this.selectedArea.id === 'nutrizione'
-      ? (Math.random() > 0.5 ? 'simona' : 'cristiana')
-      : this.selectedArea.id === 'osteopatia' ? 'mihai'
-      : this.selectedArea.id === 'sport' ? 'luca'
-      : 'sandro';
+    let key: string;
+    if (this.selectedArea.id === 'nutrizione') {
+      key = Math.random() > 0.5 ? 'simona' : 'cristiana';
+    } else if (this.selectedArea.id === 'osteopatia') {
+      key = 'mihai';
+    } else if (this.selectedArea.id === 'sport') {
+      key = 'luca';
+    } else {
+      key = 'sandro';
+    }
     return this.doctors[key] ?? null;
   }
 
@@ -204,12 +207,12 @@ export class DashboardComponent {
       return;
     }
 
-    const trainerId = this.resolveTrainerId();
+    const specialistId = this.resolveSpecialistId();
     const appointmentDateTime = `${this.selectedDate}T${this.selectedTime}:00`;
 
     if (!this.auth.currentUser) {
       const pendingBooking: PendingBooking = {
-        trainerId,
+        specialistId,
         scheduledAt: appointmentDateTime,
         serviceType: this.selectedService.name,
         appointmentType: this.selectedService.appointmentType as 'fitness' | 'clinical',
@@ -228,8 +231,8 @@ export class DashboardComponent {
       this.resetForm();
     } else {
       this.appointmentSvc.create({
-        clientId:    this.auth.currentUser.id,
-        trainerId,
+        patientId:    this.auth.currentUser.id,
+        specialistId: specialistId,
         scheduledAt: appointmentDateTime,
         serviceType: this.selectedService.name
       }).subscribe({
@@ -238,15 +241,15 @@ export class DashboardComponent {
           alert(`Prenotazione confermata per ${this.selectedService?.name} il ${this.formatDateDisplay(this.selectedDate)} alle ${this.selectedTime}`);
           this.resetForm();
         },
-        error: (err: any) => {
+        error: (err: HttpErrorResponse) => {
           this.bookingLoading = false;
-          alert('Errore nella prenotazione: ' + (err.error?.message || 'Riprova più tardi'));
+          alert('Errore nella prenotazione: ' + (err.error?.message ?? 'Riprova più tardi'));
         }
       });
     }
   }
 
-  private resolveTrainerId(): number {
+  private resolveSpecialistId(): number {
     if (this.selectedArea?.id === 'nutrizione')  return Math.random() > 0.5 ? this.staffMapping['simona'] : this.staffMapping['cristiana'];
     if (this.selectedArea?.id === 'osteopatia')  return this.staffMapping['mihai'];
     if (this.selectedArea?.id === 'sport')       return this.staffMapping['luca'];

@@ -76,7 +76,7 @@ describe('BookingCalendarComponent', () => {
   describe('forkJoin partial failure', () => {
     const fitnessData = [{
       id: 1, serviceType: 'Personal Training', scheduledAt: new Date(),
-      trainerFullName: 'John Trainer', clientFullName: 'Jane Client', status: 'CONFIRMED'
+      specialistFullName: 'John Specialist', patientFullName: 'Jane Patient', status: 'CONFIRMED'
     }];
     const clinicalData = [{
       id: 2, visitType: 'Consultation', scheduledAt: new Date(),

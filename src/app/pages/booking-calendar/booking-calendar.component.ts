@@ -80,8 +80,8 @@ export class BookingCalendarComponent implements OnInit {
           type: 'fitness' as const,
           title: `${a.serviceType}`,
           start: new Date(a.scheduledAt),
-          specialistName: a.trainerFullName,
-          patientName: a.clientFullName,
+          specialistName: a.specialistFullName,
+          patientName: a.patientFullName,
           serviceType: a.serviceType,
           status: a.status
         }));

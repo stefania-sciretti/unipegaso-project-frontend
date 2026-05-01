@@ -9,8 +9,8 @@ describe('AppointmentService', () => {
   let httpMock: HttpTestingController;
 
   const mockAppointment: FitnessAppointment = {
-    id: 1, clientId: 1, clientFullName: 'John Doe',
-    trainerId: 1, trainerFullName: 'Laura Smith', trainerRole: 'TRAINER',
+    id: 1, patientId: 1, patientFullName: 'John Doe',
+    specialistId: 1, specialistFullName: 'Laura Smith', specialistRole: 'TRAINER',
     scheduledAt: '2025-06-01T10:00:00', serviceType: 'Personal Training',
     status: 'BOOKED', createdAt: '2024-01-01T00:00:00'
   };
@@ -43,7 +43,7 @@ describe('AppointmentService', () => {
 
   it('create() should POST to /api/fitness-appointments', () => {
     const body = {
-      clientId: 1, trainerId: 1,
+      patientId: 1, specialistId: 1,
       scheduledAt: '2025-06-01T10:00:00',
       serviceType: 'Personal Training'
     };

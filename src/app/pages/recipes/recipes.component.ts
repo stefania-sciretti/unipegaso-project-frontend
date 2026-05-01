@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RecipeService } from '../../services/recipe.service';
@@ -10,7 +10,7 @@ import { Recipe, RecipeRequest } from '../../models/models';
   imports: [ReactiveFormsModule, NgClass],
   templateUrl: './recipes.component.html'
 })
-export class RecipesComponent {
+export class RecipesComponent implements OnInit {
   private readonly svc        = inject(RecipeService);
   private readonly alertSvc   = inject(AlertService);
   private readonly fb         = inject(FormBuilder);
@@ -37,7 +37,9 @@ export class RecipesComponent {
     category:     ['']
   });
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit(): void {
     this.load();
   }
 

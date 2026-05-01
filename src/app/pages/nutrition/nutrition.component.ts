@@ -1,29 +1,29 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { DietPlanService } from '../../services/diet-plan.service';
-import { ClientService } from '../../services/client.service';
-import { StaffService } from '../../services/trainer.service';
+import { PatientService } from '../../services/patient.service';
+import { SpecialistService } from '../../services/specialist.service';
 import { AlertService } from '../../services/alert.service';
-import { Client, DietPlan, DietPlanRequest } from '../../models/models';
+import { Patient, DietPlan, DietPlanRequest } from '../../models/models';
 
 @Component({
   selector: 'app-nutrition',
   imports: [FormsModule, ReactiveFormsModule, NgClass],
   templateUrl: './nutrition.component.html'
 })
-export class NutritionComponent {
+export class NutritionComponent implements OnInit {
   private readonly dietPlanService = inject(DietPlanService);
-  private readonly clientService   = inject(ClientService);
-  private readonly trainerService  = inject(StaffService);
+  private readonly patientService  = inject(PatientService);
+  private readonly specialistService = inject(SpecialistService);
   private readonly alertSvc        = inject(AlertService);
   private readonly fb              = inject(FormBuilder);
 
   protected readonly alertSignal = this.alertSvc.alert;
 
   plans: DietPlan[] = [];
-  clients: Client[] = [];
+  patients: Patient[] = [];
   nutritionistId = 0;
   loading        = false;
   showModal      = false;
@@ -31,7 +31,7 @@ export class NutritionComponent {
   filterActive   = '';
 
   readonly form: FormGroup = this.fb.group({
-    clientId:      [null, Validators.required],
+    patientId:     [null, Validators.required],
     title:         ['',   Validators.required],
     description:   [''],
     calories:      [null],
@@ -39,15 +39,17 @@ export class NutritionComponent {
     active:        [true]
   });
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit(): void {
     forkJoin({
-      plans:    this.dietPlanService.getAll(),
-      clients:  this.clientService.getAll(),
-      trainers: this.trainerService.getAll('NUTRITIONIST')
-    }).subscribe(({ plans, clients, trainers }) => {
+      plans:       this.dietPlanService.getAll(),
+      patients:    this.patientService.getAll(),
+      specialists: this.specialistService.getAll('NUTRITIONIST')
+    }).subscribe(({ plans, patients, specialists }) => {
       this.plans          = plans;
-      this.clients        = clients;
-      this.nutritionistId = trainers[0]?.id ?? 1;
+      this.patients       = patients;
+      this.nutritionistId = specialists[0]?.id ?? 1;
     });
   }
 
@@ -74,7 +76,7 @@ export class NutritionComponent {
   openEdit(plan: DietPlan): void {
     this.editingId = plan.id;
     this.form.patchValue({
-      clientId:      plan.clientId,
+      patientId:     plan.patientId,
       title:         plan.title,
       description:   plan.description ?? '',
       calories:      plan.calories,
@@ -88,8 +90,8 @@ export class NutritionComponent {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     const value = this.form.value;
     const body: DietPlanRequest = {
-      clientId:      +value.clientId,
-      trainerId:     this.nutritionistId,
+      patientId:     +value.patientId,
+      specialistId:  this.nutritionistId,
       title:         value.title,
       description:   value.description || null,
       calories:      value.calories || null,

@@ -35,8 +35,8 @@
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-[1.1rem] font-bold text-[#112D4E]">Piani Dieta</h2>
       <div class="flex items-center gap-3">
-        <label class="text-[0.88rem] font-semibold text-[#3F72AF]">Filtro:</label>
-        <select [(ngModel)]="filterActive" [ngModelOptions]="{standalone:true}"
+        <label for="nutritionFilter" class="text-[0.88rem] font-semibold text-[#3F72AF]">Filtro:</label>
+        <select id="nutritionFilter" [(ngModel)]="filterActive" [ngModelOptions]="{standalone:true}"
                 class="px-3 py-2 border-[1.5px] border-[#DBE2EF] rounded-[10px] text-[0.9rem] outline-none transition-[border-color] duration-200 focus:border-[#3F72AF] bg-white">
           <option value="">Tutti</option>
           <option value="true">Attivi</option>
@@ -52,7 +52,7 @@
         <table class="w-full border-collapse text-[0.9rem]">
           <thead><tr>
             <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">#</th>
-            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Cliente</th>
+            <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Paziente</th>
             <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Titolo</th>
             <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Calorie</th>
             <th class="bg-[#eef4f9] px-4 py-3 text-left font-semibold text-[#112D4E] border-b-2 border-[#DBE2EF] whitespace-nowrap">Durata</th>
@@ -66,7 +66,7 @@
             @for (p of filtered; track p) {
               <tr class="hover:[&>td]:bg-[#f0f7ff]">
                 <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ p.id }}</td>
-                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle"><strong>{{ p.clientFullName }}</strong></td>
+                <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle"><strong>{{ p.patientFirstName }} {{ p.patientLastName }}</strong></td>
                 <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ p.title }}</td>
                 <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ p.calories ? p.calories + ' kcal' : '–' }}</td>
                 <td class="px-4 py-3 border-b border-[#DBE2EF] align-middle">{{ p.durationWeeks ? p.durationWeeks + ' sett.' : '–' }}</td>
@@ -100,40 +100,40 @@
       </div>
       <form [formGroup]="form" (ngSubmit)="save()">
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Cliente *</label>
-          <select formControlName="clientId"
+          <label for="nutritionPatientId" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Paziente *</label>
+          <select id="nutritionPatientId" formControlName="patientId"
                   class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] bg-white">
-            <option value="">– Seleziona cliente –</option>
-            @for (c of clients; track c) {
+            <option value="">– Seleziona paziente –</option>
+            @for (c of patients; track c) {
               <option [value]="c.id">{{ c.firstName }} {{ c.lastName }}</option>
             }
           </select>
-          @if (isInvalid('clientId')) {
+          @if (isInvalid('patientId')) {
             <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
           }
         </div>
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Titolo Piano *</label>
-          <input formControlName="title" type="text" placeholder="es. Piano Dimagrante Estivo"
+          <label for="nutritionTitle" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Titolo Piano *</label>
+          <input id="nutritionTitle" formControlName="title" type="text" placeholder="es. Piano Dimagrante Estivo"
                  class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
           @if (isInvalid('title')) {
             <div class="text-[#d95550] text-[0.8rem] mt-1">Campo obbligatorio</div>
           }
         </div>
         <div class="mb-4">
-          <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Descrizione</label>
-          <textarea formControlName="description" placeholder="Descrivi gli obiettivi e l'approccio del piano…"
+          <label for="nutritionDesc" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Descrizione</label>
+          <textarea id="nutritionDesc" formControlName="description" placeholder="Descrivi gli obiettivi e l'approccio del piano…"
                     class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)] resize-vertical min-h-[85px]"></textarea>
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div class="mb-4">
-            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Calorie Giornaliere (kcal)</label>
-            <input formControlName="calories" type="number" placeholder="1800"
+            <label for="nutritionCalories" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Calorie Giornaliere (kcal)</label>
+            <input id="nutritionCalories" formControlName="calories" type="number" placeholder="1800"
                    class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
           </div>
           <div class="mb-4">
-            <label class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Durata (settimane)</label>
-            <input formControlName="durationWeeks" type="number" placeholder="8"
+            <label for="nutritionDuration" class="block text-[0.85rem] font-semibold mb-[0.35rem] text-[#3F72AF] uppercase tracking-[0.3px]">Durata (settimane)</label>
+            <input id="nutritionDuration" formControlName="durationWeeks" type="number" placeholder="8"
                    class="w-full px-[0.8rem] py-[0.55rem] border-[1.5px] border-[#DBE2EF] rounded-lg text-[0.9rem] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#3F72AF] focus:shadow-[0_0_0_3px_rgba(122,170,206,0.2)]"/>
           </div>
         </div>

@@ -10,10 +10,10 @@ describe('DietPlanService', () => {
 
   const mockPlan: DietPlan = {
     id: 1,
-    clientId: 1,
-    clientFullName: 'John Doe',
-    trainerId: 2,
-    trainerFullName: 'Jane Smith',
+    patientId: 1,
+    patientFullName: 'John Doe',
+    specialistId: 2,
+    specialistFullName: 'Jane Smith',
     title: 'Weight Loss Plan',
     description: 'A balanced diet for weight loss',
     calories: 2000,
@@ -23,8 +23,8 @@ describe('DietPlanService', () => {
   };
 
   const mockRequest: DietPlanRequest = {
-    clientId: 1,
-    trainerId: 2,
+    patientId: 1,
+    specialistId: 2,
     title: 'Weight Loss Plan',
     description: 'A balanced diet for weight loss',
     calories: 2000,
@@ -61,15 +61,15 @@ describe('DietPlanService', () => {
       req.flush(mockPlans);
     });
 
-    it('should include clientId query param when provided', () => {
+    it('should include patientId query param when provided', () => {
       const mockPlans: DietPlan[] = [mockPlan];
 
       service.getAll(1).subscribe(plans => {
         expect(plans).toEqual(mockPlans);
       });
 
-      const req = httpMock.expectOne(r => r.url === '/api/diet-plans' && r.params.has('clientId'));
-      expect(req.request.params.get('clientId')).toBe('1');
+      const req = httpMock.expectOne(r => r.url === '/api/diet-plans' && r.params.has('patientId'));
+      expect(req.request.params.get('patientId')).toBe('1');
       expect(req.request.method).toBe('GET');
       req.flush(mockPlans);
     });
@@ -104,8 +104,8 @@ describe('DietPlanService', () => {
     it('should call PUT /api/diet-plans/:id with request body', () => {
       const id = 1;
       const requestBody: DietPlanRequest = {
-        clientId: 1,
-        trainerId: 2,
+        patientId: 1,
+        specialistId: 2,
         title: 'Updated Weight Loss Plan',
         description: 'An improved balanced diet',
         calories: 1800,

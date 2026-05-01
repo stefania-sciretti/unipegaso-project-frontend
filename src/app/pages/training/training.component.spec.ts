@@ -2,30 +2,30 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {of} from 'rxjs';
 import {TrainingComponent} from './training.component';
 import {TrainingPlanService} from '../../services/training-plan.service';
-import {ClientService} from '../../services/client.service';
-import {StaffService} from '../../services/trainer.service';
+import {PatientService} from '../../services/patient.service';
+import {SpecialistService} from '../../services/specialist.service';
 import {AlertService} from '../../services/alert.service';
 
 describe('TrainingComponent', () => {
   let fixture: ComponentFixture<TrainingComponent>;
-  const mockTrainingService = jasmine.createSpyObj('TrainingPlanService', ['getAll']);
-  const mockClientService = jasmine.createSpyObj('ClientService', ['getAll']);
-  const mockStaffService = jasmine.createSpyObj('StaffService', ['getAll']);
+  const mockTrainingService   = jasmine.createSpyObj('TrainingPlanService', ['getAll']);
+  const mockPatientService    = jasmine.createSpyObj('PatientService', ['getAll']);
+  const mockSpecialistService = jasmine.createSpyObj('SpecialistService', ['getAll']);
   const mockAlertService = jasmine.createSpyObj('AlertService', ['show'], { alert: () => null });
 
   beforeEach(async () => {
     mockTrainingService.getAll.calls.reset();
     mockTrainingService.getAll.and.returnValue(of([]));
-    mockClientService.getAll.calls.reset();
-    mockClientService.getAll.and.returnValue(of([]));
-    mockStaffService.getAll.calls.reset();
-    mockStaffService.getAll.and.returnValue(of([]));
+    mockPatientService.getAll.calls.reset();
+    mockPatientService.getAll.and.returnValue(of([]));
+    mockSpecialistService.getAll.calls.reset();
+    mockSpecialistService.getAll.and.returnValue(of([]));
     await TestBed.configureTestingModule({
       imports: [TrainingComponent],
       providers: [
         { provide: TrainingPlanService, useValue: mockTrainingService },
-        { provide: ClientService, useValue: mockClientService },
-        { provide: StaffService, useValue: mockStaffService },
+        { provide: PatientService,    useValue: mockPatientService },
+        { provide: SpecialistService, useValue: mockSpecialistService },
         { provide: AlertService, useValue: mockAlertService }
       ]
     }).compileComponents();

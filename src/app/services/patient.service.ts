@@ -1,34 +1,22 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Patient {
-  id: number;
-  firstName: string;
-  lastName: string;
-  fiscalCode: string;
-  birthDate: string;
-  email: string;
-  phone?: string;
-  createdAt: string;
-}
-
-export interface PatientRequest {
-  firstName: string;
-  lastName: string;
-  fiscalCode: string;
-  birthDate: string;
-  email: string;
-  phone?: string | null;
-}
+import { Patient, PatientRequest } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class PatientService {
   private readonly base = '/api/patients';
   private readonly http = inject(HttpClient);
 
-  getAll(): Observable<Patient[]>                                    { return this.http.get<Patient[]>(this.base); }
-  search(query: string): Observable<Patient[]>                       { return this.http.get<Patient[]>(this.base, { params: { search: query } }); }
+  getAll(search?: string): Observable<Patient[]> {
+    const params = search ? new HttpParams().set('search', search) : undefined;
+    return this.http.get<Patient[]>(this.base, { params });
+  }
+
+  search(query: string): Observable<Patient[]> {
+    return this.getAll(query);
+  }
+
   getById(id: number): Observable<Patient>                           { return this.http.get<Patient>(`${this.base}/${id}`); }
   create(body: PatientRequest): Observable<Patient>                  { return this.http.post<Patient>(this.base, body); }
   update(id: number, body: PatientRequest): Observable<Patient>      { return this.http.put<Patient>(`${this.base}/${id}`, body); }

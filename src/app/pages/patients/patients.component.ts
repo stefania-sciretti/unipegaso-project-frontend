@@ -1,25 +1,29 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { DatePipe, NgClass } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Patient, PatientRequest, PatientService } from '../../services/patient.service';
+import { Patient, PatientRequest } from '../../models/models';
+import { PatientService } from '../../services/patient.service';
 import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-patients',
+  standalone: true,
   imports: [ReactiveFormsModule, NgClass, DatePipe],
   templateUrl: './patients.component.html'
 })
-export class PatientsComponent {
+export class PatientsComponent implements OnInit {
   private readonly patientService = inject(PatientService);
   private readonly alertSvc       = inject(AlertService);
   private readonly fb             = inject(FormBuilder);
 
   protected readonly alertSignal = this.alertSvc.alert;
 
-  patients: Patient[] = [];
-  loading             = false;
-  showModal           = false;
-  editingId: number | null = null;
+  protected readonly patients   = signal<Patient[]>([]);
+  protected readonly loading    = signal(false);
+  protected readonly hasError   = signal(false);
+  protected readonly showModal  = signal(false);
+  protected readonly editingId  = signal<number | null>(null);
+  private   readonly searchQuery = signal('');
 
   readonly form: FormGroup = this.fb.group({
     firstName:  ['', Validators.required],
@@ -30,22 +34,25 @@ export class PatientsComponent {
     phone:      ['']
   });
 
-  constructor() {
-    this.load();
-  }
+  constructor() {}
 
-  load(): void {
-    this.loading = true;
-    this.patientService.getAll().subscribe({
-      next: data => { this.patients = data; this.loading = false; },
-      error: ()  => { this.loading = false; }
+  ngOnInit(): void { this.load(); }
+
+  private load(): void {
+    this.loading.set(true);
+    this.hasError.set(false);
+    const query = this.searchQuery();
+    const req$ = query ? this.patientService.search(query) : this.patientService.getAll();
+    req$.subscribe({
+      next:  (data) => { this.patients.set(data); this.loading.set(false); },
+      error: ()     => { this.loading.set(false); this.hasError.set(true); }
     });
   }
 
-  openCreate(): void { this.editingId = null; this.form.reset(); this.showModal = true; }
+  openCreate(): void { this.editingId.set(null); this.form.reset(); this.showModal.set(true); }
 
   openEdit(patient: Patient): void {
-    this.editingId = patient.id;
+    this.editingId.set(patient.id);
     this.form.patchValue({
       firstName:  patient.firstName,
       lastName:   patient.lastName,
@@ -54,10 +61,10 @@ export class PatientsComponent {
       email:      patient.email,
       phone:      patient.phone ?? ''
     });
-    this.showModal = true;
+    this.showModal.set(true);
   }
 
-  closeModal(): void { this.showModal = false; }
+  closeModal(): void { this.showModal.set(false); }
 
   save(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
@@ -70,10 +77,11 @@ export class PatientsComponent {
       email:      value.email,
       phone:      value.phone || null
     };
-    const req$ = this.editingId ? this.patientService.update(this.editingId, body) : this.patientService.create(body);
+    const id = this.editingId();
+    const req$ = id ? this.patientService.update(id, body) : this.patientService.create(body);
     req$.subscribe({
       next: () => {
-        this.alertSvc.show(this.editingId ? 'Paziente aggiornato' : 'Paziente creato');
+        this.alertSvc.show(id ? 'Paziente aggiornato' : 'Paziente creato');
         this.closeModal();
         this.load();
       }
@@ -88,13 +96,8 @@ export class PatientsComponent {
   }
 
   onSearch(e: Event): void {
-    const query = (e.target as HTMLInputElement).value.trim();
-    if (!query) { this.load(); return; }
-    this.loading = true;
-    this.patientService.search(query).subscribe({
-      next: (data: Patient[]) => { this.patients = data; this.loading = false; },
-      error: ()               => { this.loading = false; }
-    });
+    this.searchQuery.set((e.target as HTMLInputElement).value.trim());
+    this.load();
   }
 
   isInvalid(field: string): boolean {

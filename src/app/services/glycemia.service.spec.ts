@@ -10,10 +10,10 @@ describe('GlycemiaService', () => {
 
   const mockMeasurement: GlycemiaMeasurement = {
     id: 1,
-    clientId: 1,
-    clientFullName: 'John Doe',
-    trainerId: 1,
-    trainerFullName: 'Jane Smith',
+    patientId: 1,
+    patientFullName: 'John Doe',
+    specialistId: 1,
+    specialistFullName: 'Jane Smith',
     measuredAt: '2024-01-10T08:00:00Z',
     valueMgDl: 120,
     context: 'FASTING',
@@ -46,14 +46,14 @@ describe('GlycemiaService', () => {
     req.flush([mockMeasurement]);
   });
 
-  it('getAll(1) with clientId should include ?clientId=1 query param', () => {
+  it('getAll(1) with patientId should include ?patientId=1 query param', () => {
     service.getAll(1).subscribe(result => {
       expect(result).toEqual([mockMeasurement]);
     });
 
-    const req = httpMock.expectOne(r => r.params.has('clientId'));
+    const req = httpMock.expectOne(r => r.params.has('patientId'));
     expect(req.request.method).toBe('GET');
-    expect(req.request.params.get('clientId')).toBe('1');
+    expect(req.request.params.get('patientId')).toBe('1');
     req.flush([mockMeasurement]);
   });
 
@@ -69,8 +69,8 @@ describe('GlycemiaService', () => {
 
   it('create(request) should POST /api/glycemia-measurements with body', () => {
     const createRequest: GlycemiaMeasurementRequest = {
-      clientId: 1,
-      trainerId: 1,
+      patientId: 1,
+      specialistId: 1,
       measuredAt: '2024-01-10T08:00:00Z',
       valueMgDl: 120,
       context: 'FASTING',
@@ -89,8 +89,8 @@ describe('GlycemiaService', () => {
 
   it('update(1, request) should PUT /api/glycemia-measurements/1 with body', () => {
     const updateRequest: GlycemiaMeasurementRequest = {
-      clientId: 1,
-      trainerId: 1,
+      patientId: 1,
+      specialistId: 1,
       measuredAt: '2024-01-10T08:00:00Z',
       valueMgDl: 130,
       context: 'POST_MEAL_1H',
