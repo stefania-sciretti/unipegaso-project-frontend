@@ -14,10 +14,11 @@ export class NavbarComponent {
   private readonly router  = inject(Router);
   private readonly fb      = inject(FormBuilder);
 
-  activeMenu: string | null = null;
-  mobileOpen   = false;
-  loginError   = '';
-  loginLoading = false;
+  activeMenu    : string | null = null;
+  mobileOpen    = false;
+  loginError    = '';
+  loginLoading  = false;
+  showPassword  = false;
 
   readonly loginForm: FormGroup = this.fb.group({
     username: ['', Validators.required],

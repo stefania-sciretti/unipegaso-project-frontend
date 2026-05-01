@@ -56,7 +56,7 @@ export class DashboardComponent {
     sandro:    { id: 1, name: 'Dott. Sandro Scrigoni',     title: 'Medico dello Sport',      icon: 'medical_services' },
     simona:    { id: 2, name: 'Dott.ssa Simona Ruberti',   title: 'Biologa Nutrizionista',   icon: 'restaurant_menu'  },
     cristiana: { id: 3, name: 'Dott.ssa Cristiana Maratti',title: 'Nutrizionista Sportiva',  icon: 'restaurant_menu'  },
-    mihai:     { id: 4, name: 'Dott. Mihai Lavretti',      title: 'Osteopata',               icon: 'back_hand'        },
+    mihai:     { id: 4, name: 'Dott. Mihai Lavretti',      title: 'Fisioterapista',          icon: 'back_hand'        },
     luca:      { id: 5, name: 'Dott. Luca Siretta',        title: 'Personal Trainer ISSA',   icon: 'fitness_center'   }
   };
 
@@ -84,14 +84,14 @@ export class DashboardComponent {
       ]
     },
     {
-      id: 'osteopatia', label: 'Area Osteopatia', icon: 'back_hand',
+      id: 'fisioterapia', label: 'Area Fisioterapia', icon: 'back_hand',
       services: [
-        { id: 'osteo-1', name: 'Manipolazione Osteopatica',           icon: 'back_hand',               appointmentType: 'fitness' },
-        { id: 'osteo-2', name: 'Trattamento del Mal di Schiena',      icon: 'airline_seat_flat',       appointmentType: 'fitness' },
-        { id: 'osteo-3', name: 'Osteopatia in Gravidanza',            icon: 'pregnant_woman',          appointmentType: 'fitness' },
-        { id: 'osteo-4', name: 'Osteopatia Pediatrica',               icon: 'child_care',              appointmentType: 'fitness' },
-        { id: 'osteo-5', name: 'Osteopatia Sportiva',                 icon: 'sports_handball',         appointmentType: 'fitness' },
-        { id: 'osteo-6', name: 'Trattamento Cefalee ed Emicranie',    icon: 'sentiment_very_satisfied',appointmentType: 'fitness' },
+        { id: 'fisio-1', name: 'Fisioterapia Muscoloscheletrica',   icon: 'back_hand',               appointmentType: 'fitness' },
+        { id: 'fisio-2', name: 'Riabilitazione Post-Chirurgica',    icon: 'airline_seat_flat',       appointmentType: 'fitness' },
+        { id: 'fisio-3', name: 'Terapia Manuale',                   icon: 'accessibility_new',       appointmentType: 'fitness' },
+        { id: 'fisio-4', name: 'Fisioterapia Sportiva',             icon: 'sports_handball',         appointmentType: 'fitness' },
+        { id: 'fisio-5', name: 'Rieducazione Posturale',            icon: 'self_improvement',        appointmentType: 'fitness' },
+        { id: 'fisio-6', name: 'Fisioterapia Neurologica',          icon: 'psychology',              appointmentType: 'fitness' },
       ]
     },
     {
@@ -173,7 +173,7 @@ export class DashboardComponent {
     let key: string;
     if (this.selectedArea.id === 'nutrizione') {
       key = Math.random() > 0.5 ? 'simona' : 'cristiana';
-    } else if (this.selectedArea.id === 'osteopatia') {
+    } else if (this.selectedArea.id === 'fisioterapia') {
       key = 'mihai';
     } else if (this.selectedArea.id === 'sport') {
       key = 'luca';
@@ -251,7 +251,7 @@ export class DashboardComponent {
 
   private resolveSpecialistId(): number {
     if (this.selectedArea?.id === 'nutrizione')  return Math.random() > 0.5 ? this.staffMapping['simona'] : this.staffMapping['cristiana'];
-    if (this.selectedArea?.id === 'osteopatia')  return this.staffMapping['mihai'];
+    if (this.selectedArea?.id === 'fisioterapia')  return this.staffMapping['mihai'];
     if (this.selectedArea?.id === 'sport')       return this.staffMapping['luca'];
     return this.staffMapping['sandro'];
   }

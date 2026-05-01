@@ -51,9 +51,14 @@
         <div class="flex items-center border-[1.5px] rounded-lg overflow-hidden focus-within:border-[#3F72AF]"
           [ngClass]="isInvalid('password') ? 'border-[#d95550]' : 'border-[#DBE2EF]'">
           <span class="material-icons text-[#3F72AF] px-3 text-[1.2rem]">lock</span>
-          <input id="loginPassword" formControlName="password" type="password" placeholder="••••••••"
+          <input id="loginPassword" formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="••••••••"
             [attr.autocomplete]="isRegistering ? 'new-password' : 'current-password'"
-            class="flex-1 py-[0.6rem] pr-3 outline-none text-[0.9rem] text-[#112D4E] bg-transparent"/>
+            class="flex-1 py-[0.6rem] outline-none text-[0.9rem] text-[#112D4E] bg-transparent"/>
+          <button type="button" (click)="showPassword = !showPassword"
+            class="px-3 text-[#3F72AF] hover:text-[#112D4E] focus:outline-none"
+            [attr.aria-label]="showPassword ? 'Nascondi password' : 'Mostra password'">
+            <span class="material-icons text-[1.2rem]">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+          </button>
         </div>
         @if (isInvalid('password')) {
           <span class="text-[#d95550] text-[0.78rem]">Campo obbligatorio</span>

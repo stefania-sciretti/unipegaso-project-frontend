@@ -19,9 +19,10 @@ export class LoginComponent implements OnInit {
   private readonly bookingSvc     = inject(BookingService);
   private readonly appointmentSvc = inject(AppointmentService);
 
-  error         = '';
-  loading       = false;
-  isRegistering = false;
+  error           = '';
+  loading         = false;
+  isRegistering   = false;
+  showPassword    = false;
 
   readonly form: FormGroup = this.fb.group({
     username:    ['', Validators.required],

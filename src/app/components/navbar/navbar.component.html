@@ -89,8 +89,8 @@
       <!-- ── Specialisti (tutti) ────────────────────────────────── -->
       <li class="flex items-center">
         <a class="flex items-center gap-[0.35rem] px-[0.85rem] py-[0.4rem] rounded-md text-sm font-medium cursor-pointer transition-colors duration-150 hover:bg-white/15 hover:text-white"
-          [ngClass]="isSection(['/doctors','/specialist']) ? 'bg-white/15 text-white' : 'text-white/[.82]'"
-          (click)="go('/doctors')">
+          [ngClass]="isSection(['/specialists','/specialist']) ? 'bg-white/15 text-white' : 'text-white/[.82]'"
+          (click)="go('/specialists')">
           <span class="material-icons text-[1.1rem] leading-none">badge</span> Specialisti
         </a>
       </li>
@@ -161,7 +161,7 @@
       }
 
       <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/services')"><span class="material-icons text-[1.1rem]">list_alt</span> Prestazioni</button>
-      <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/doctors')"><span class="material-icons text-[1.1rem]">badge</span> Specialisti</button>
+      <button class="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white/[.82] hover:bg-white/15 hover:text-white transition-colors duration-150 text-left w-full bg-transparent border-0 cursor-pointer" (click)="go('/specialists')"><span class="material-icons text-[1.1rem]">badge</span> Specialisti</button>
 
       <div class="border-t border-white/[.15] my-1 mx-4"></div>
 
@@ -220,9 +220,14 @@
           <label for="login-password" class="block text-sm font-semibold text-[var(--primary)] mb-[0.35rem]">Password</label>
           <div class="relative flex items-center">
             <span class="material-icons absolute left-3 text-[var(--text-muted)] text-[1.1rem] pointer-events-none">lock</span>
-            <input id="login-password" formControlName="password" type="password" placeholder="••••••••"
+            <input id="login-password" formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="••••••••"
               autocomplete="current-password" aria-describedby="password-error"
-              class="w-full pl-10 pr-3 py-[0.65rem] border-[1.5px] border-[var(--border)] rounded-[var(--radius)] text-[0.95rem] text-[var(--text)] bg-[var(--bg)] outline-none transition-colors duration-200 focus:border-[var(--primary-mid)] focus:bg-white"/>
+              class="w-full pl-10 pr-10 py-[0.65rem] border-[1.5px] border-[var(--border)] rounded-[var(--radius)] text-[0.95rem] text-[var(--text)] bg-[var(--bg)] outline-none transition-colors duration-200 focus:border-[var(--primary-mid)] focus:bg-white"/>
+            <button type="button" (click)="showPassword = !showPassword"
+              class="absolute right-3 border-0 bg-transparent p-0 text-[var(--text-muted)] hover:text-[var(--primary)] focus:outline-none cursor-pointer"
+              [attr.aria-label]="showPassword ? 'Nascondi password' : 'Mostra password'">
+              <span class="material-icons text-[1.1rem]">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+            </button>
           </div>
           @if (isInvalid('password')) {
             <div class="text-[0.78rem] text-[var(--danger)] mt-1" id="password-error">Campo obbligatorio</div>
