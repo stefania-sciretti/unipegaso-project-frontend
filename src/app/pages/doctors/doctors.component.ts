@@ -1,5 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, resource } from '@angular/core';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { SpecialistService } from '../../services/specialist.service';
 import { Specialist } from '../../models/models';
 
@@ -27,20 +28,19 @@ const SPECIALIST_ENRICHMENT: Record<string, { gender: 'male' | 'female'; image: 
   imports: [],
   templateUrl: './doctors.component.html'
 })
-export class DoctorsComponent implements OnInit {
+export class DoctorsComponent {
   private readonly specialistService = inject(SpecialistService);
   private readonly router            = inject(Router);
 
-  specialists: SpecialistCard[] = [];
-  loading = false;
+  private readonly allSpecialists = resource({
+    loader: () => firstValueFrom(this.specialistService.getAll()),
+  });
 
-  ngOnInit(): void {
-    this.loading = true;
-    this.specialistService.getAll().subscribe({
-      next: (data) => { this.specialists = data.map(s => this.toCard(s)); this.loading = false; },
-      error: ()    => { this.loading = false; }
-    });
-  }
+  readonly loading = computed(() => this.allSpecialists.isLoading());
+
+  readonly specialists = computed<SpecialistCard[]>(() =>
+    (this.allSpecialists.value() ?? []).map(s => this.toCard(s))
+  );
 
   private toCard(s: Specialist): SpecialistCard {
     const key        = s.firstName.toLowerCase();
@@ -57,4 +57,3 @@ export class DoctorsComponent implements OnInit {
 
   navigateTo(route: string): void { this.router.navigate([route]); }
 }
-
