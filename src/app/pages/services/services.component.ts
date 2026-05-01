@@ -1,5 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, resource } from '@angular/core';
 import { CommonModule, UpperCasePipe } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 import { SpecialistService } from '../../services/specialist.service';
 
 interface ServiceItem {
@@ -48,7 +49,7 @@ const AREA_CONFIGS: AreaConfig[] = [
   {
     key: 'nutrizione',
     areaName: 'Area Nutrizione',
-    roleMatcher: (role) => /nutri/i.test(role),
+    roleMatcher: (role) => /nutri|dietol/i.test(role),
     services: [
       { icon: 'restaurant_menu', name: 'Piano Alimentare Personalizzato', duration: '60 min',
         description: 'Elaborazione di piani nutrizionali su misura basati su analisi della composizione corporea e obiettivi specifici.' },
@@ -88,7 +89,7 @@ const AREA_CONFIGS: AreaConfig[] = [
   {
     key: 'fisioterapia',
     areaName: 'Area Fisioterapia',
-    roleMatcher: (role) => /fisioterapi/i.test(role),
+    roleMatcher: (role) => /fisioterapi|physio/i.test(role),
     services: [
       { icon: 'back_hand', name: 'Fisioterapia Muscoloscheletrica', duration: '60 min',
         description: 'Trattamento di patologie muscolo-scheletriche: dolori articolari, tendinopatie, lombalgie e cervicalgie attraverso tecniche fisioterapiche mirate.' },
@@ -111,51 +112,41 @@ const AREA_CONFIGS: AreaConfig[] = [
   imports: [CommonModule, UpperCasePipe],
   templateUrl: './services.component.html'
 })
-export class ServicesComponent implements OnInit {
+export class ServicesComponent {
   private readonly specialistSvc = inject(SpecialistService);
 
-  categories: ServiceCategory[] = [];
-  loading = true;
-  error   = false;
+  private readonly allSpecialists = resource({
+    loader: () => firstValueFrom(this.specialistSvc.getAll()),
+  });
 
-  ngOnInit(): void {
-    this.specialistSvc.getAll().subscribe({
-      next: (specialists) => {
-        this.categories = this.buildCategories(specialists);
-        this.loading = false;
-      },
-      error: () => {
-        // Show all categories when API is temporarily unreachable
-        this.categories = AREA_CONFIGS.map(config => ({
-          key:      config.key,
-          label:    config.areaName,
-          color:    '#112D4E',
-          bgColor:  '#DBE2EF',
-          services: config.services,
-          open:     true
-        } as ServiceCategory));
-        this.loading = false;
-      }
-    });
-  }
+  readonly loading = computed(() => this.allSpecialists.isLoading());
 
-  private buildCategories(specialists: { role: string }[]): ServiceCategory[] {
+  readonly categories = computed<ServiceCategory[]>(() => {
+    const specialists = this.allSpecialists.value();
+
+    // On error or before data arrives, show all configured areas as a fallback.
+    if (this.allSpecialists.error() || !specialists) {
+      return AREA_CONFIGS.map(config => ({
+        key:      config.key,
+        label:    config.areaName,
+        color:    '#112D4E',
+        bgColor:  '#DBE2EF',
+        services: config.services,
+        open:     true,
+      }));
+    }
+
     return AREA_CONFIGS
-      .map(config => {
-        const matched = specialists.filter(s => config.roleMatcher(s.role));
-        if (matched.length === 0) return null;
-
-        return {
-          key:      config.key,
-          label:    config.areaName,
-          color:    '#112D4E',
-          bgColor:  '#DBE2EF',
-          services: config.services,
-          open:     true
-        } as ServiceCategory;
-      })
-      .filter((c): c is ServiceCategory => c !== null);
-  }
+      .filter(config => specialists.some(s => config.roleMatcher(s.role)))
+      .map(config => ({
+        key:      config.key,
+        label:    config.areaName,
+        color:    '#112D4E',
+        bgColor:  '#DBE2EF',
+        services: config.services,
+        open:     true,
+      }));
+  });
 
   toggle(cat: ServiceCategory): void {
     cat.open = !cat.open;
